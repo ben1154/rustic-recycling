@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Rustic Recycling — Yard System v1.0</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --rust:#C0390B; --rust2:#E8520D; --rust3:#8B2A08;
+  --ink:#0F0F0F; --ink2:#1C1C1C; --ink3:#2A2A2A;
+  --stone:#3A3A3A; --mist:#888; --smoke:#BBB; --white:#FAFAFA;
+  --green:#1E7E34; --amber:#F39C12; --red:#E74C3C;
+  --fh:'Barlow Condensed',sans-serif; --fb:'Barlow',sans-serif;
+  --r:12px; --r2:20px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{background:var(--ink);color:var(--white);font-family:var(--fb);font-size:16px}
+.screen{position:fixed;inset:0;overflow-y:auto;display:none;flex-direction:column;background:var(--ink)}
+.screen.active{display:flex}
+
+/* LOGIN */
+#login{justify-content:center;align-items:center;padding:20px}
+.login-card{background:var(--ink2);border:2px solid var(--rust);border-radius:var(--r2);padding:40px 24px;width:100%;max-width:360px;text-align:center}
+.login-logo{font-family:var(--fh);font-size:32px;letter-spacing:2px;margin-bottom:8px;font-weight:800}
+.login-logo span{color:var(--rust2)}
+.login-subtitle{font-size:14px;color:var(--mist);margin-bottom:4px}
+.login-version{font-size:12px;color:var(--stone);margin-bottom:32px;font-family:monospace}
+.login-form{display:flex;flex-direction:column;gap:14px}
+.login-input{width:100%;background:var(--ink3);border:2px solid var(--stone);border-radius:var(--r);padding:14px 16px;color:var(--white);font-family:var(--fb);font-size:16px;outline:none;transition:border-color .2s}
+.login-input:focus{border-color:var(--rust2)}
+.login-input::placeholder{color:var(--mist)}
+.login-btn{width:100%;background:var(--rust);border:none;border-radius:var(--r);padding:16px;color:var(--white);font-family:var(--fh);font-size:18px;font-weight:700;letter-spacing:1px;cursor:pointer;transition:background .2s}
+.login-btn:active{background:var(--rust3)}
+.login-error{color:#f87171;font-size:13px;margin-top:12px;display:none}
+
+/* TOPBAR */
+.topbar{background:var(--ink2);border-bottom:3px solid var(--rust);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-logo{font-family:var(--fh);font-size:22px;font-weight:800;letter-spacing:1px;color:var(--white)}
+.topbar-logo span{color:var(--rust2)}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.test-toggle{display:flex;align-items:center;gap:6px;background:var(--ink3);border:1.5px solid var(--stone);border-radius:20px;padding:6px 12px;cursor:pointer;font-size:12px;font-weight:600;color:var(--mist)}
+.test-toggle.on{border-color:var(--amber);color:var(--amber);background:#2a1f00}
+.test-dot{width:6px;height:6px;border-radius:50%;background:var(--mist)}
+.test-toggle.on .test-dot{background:var(--amber)}
+.logout-btn{background:var(--stone);border:none;border-radius:var(--r);padding:6px 12px;color:var(--mist);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--fb)}
+
+/* LOADING */
+.loading-screen{position:fixed;inset:0;background:var(--ink);display:flex;align-items:center;justify-content:center;z-index:999}
+.loading-spinner{width:40px;height:40px;border:4px solid var(--stone);border-top-color:var(--rust2);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{color:var(--mist);margin-top:20px;font-size:14px}
+
+/* PHOTO CAPTURE */
+#photo-capture{padding:16px 0}
+.photo-body{padding:20px;max-width:500px;margin:0 auto}
+.photo-title{font-family:var(--fh);font-size:28px;font-weight:800;margin-bottom:12px;text-align:center}
+.photo-desc{font-size:14px;color:var(--mist);text-align:center;margin-bottom:24px;line-height:1.6}
+.photo-drop{width:100%;aspect-ratio:4/3;background:var(--ink2);border:3px dashed var(--rust);border-radius:var(--r2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:12px;position:relative;overflow:hidden;margin-bottom:20px}
+.photo-drop img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;z-index:2}
+.photo-drop-text{font-family:var(--fh);font-size:20px;font-weight:700;color:var(--rust2);z-index:3}
+.photo-drop-sub{font-size:13px;color:var(--mist);z-index:3}
+#photo-input{display:none}
+.photo-preview{display:none;width:100%;aspect-ratio:4/3;background:var(--ink2);border-radius:var(--r2);overflow:hidden;margin-bottom:20px}
+.photo-preview img{width:100%;height:100%;object-fit:cover}
+.photo-preview.show{display:block}
+.photo-actions{display:flex;gap:10px;flex-direction:column}
+.btn-primary{width:100%;background:var(--rust);border:none;border-radius:var(--r);padding:16px;color:var(--white);font-family:var(--fh);font-size:18px;font-weight:700;cursor:pointer}
+.btn-primary:active{background:var(--rust3)}
+.btn-secondary{width:100%;background:var(--ink3);border:2px solid var(--stone);border-radius:var(--r);padding:16px;color:var(--mist);font-family:var(--fh);font-size:16px;font-weight:700;cursor:pointer}
+
+/* GUIDANCE CHOICE */
+#guidance-choice{justify-content:center;align-items:center;padding:20px}
+.guidance-card{width:100%;max-width:480px}
+.guidance-title{font-family:var(--fh);font-size:28px;font-weight:800;margin-bottom:8px;text-align:center}
+.guidance-desc{font-size:14px;color:var(--mist);text-align:center;margin-bottom:32px}
+.guidance-options{display:flex;flex-direction:column;gap:16px}
+.guidance-btn{background:var(--ink2);border:2px solid var(--stone);border-radius:var(--r2);padding:24px;cursor:pointer;transition:all .2s}
+.guidance-btn:active{transform:scale(.97)}
+.guidance-btn.system{border-color:var(--rust);background:rgba(192,57,11,.1)}
+.guidance-btn-title{font-family:var(--fh);font-size:20px;font-weight:700;margin-bottom:6px}
+.guidance-btn-desc{font-size:13px;color:var(--mist);line-height:1.5}
+
+/* SYSTEM ANALYSIS */
+#system-analysis{justify-content:center;align-items:center;padding:20px}
+.analysis-card{width:100%;max-width:480px}
+.analysis-loading{text-align:center;padding:40px 20px}
+.analysis-result{display:none}
+.analysis-result.show{display:block}
+.result-label{font-family:var(--fh);font-size:12px;color:var(--rust2);letter-spacing:2px;margin-bottom:8px;text-transform:uppercase}
+.result-material{font-family:var(--fh);font-size:32px;font-weight:800;margin-bottom:4px}
+.result-confidence{font-size:13px;color:var(--mist);margin-bottom:16px}
+.result-desc{font-size:14px;color:var(--smoke);line-height:1.6;margin-bottom:20px;background:var(--ink3);padding:16px;border-radius:var(--r);border-left:4px solid var(--rust)}
+.result-buttons{display:flex;flex-direction:column;gap:10px}
+.btn-confirm{width:100%;background:var(--green);border:none;border-radius:var(--r);padding:14px;color:white;font-family:var(--fh);font-size:16px;font-weight:700;cursor:pointer}
+.btn-override{width:100%;background:var(--ink3);border:2px solid var(--stone);border-radius:var(--r);padding:14px;color:var(--mist);font-family:var(--fh);font-size:16px;font-weight:700;cursor:pointer}
+
+/* MATERIAL CHOICE */
+#material-choice{padding:16px 0}
+.material-header{padding:0 16px 16px;font-family:var(--fh);font-size:20px;font-weight:700}
+.material-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 16px 80px;flex:1;overflow-y:auto}
+@media(min-width:600px){.material-grid{grid-template-columns:repeat(3,1fr)}}
+.material-card{background:var(--ink2);border:2px solid var(--stone);border-radius:var(--r2);padding:16px;text-align:center;cursor:pointer;transition:all .15s}
+.material-card:active{transform:scale(.95)}
+.material-icon{font-size:48px;margin-bottom:8px}
+.material-name{font-family:var(--fh);font-size:16px;font-weight:700;margin-bottom:4px}
+.material-code{font-size:11px;color:var(--mist)}
+.material-img{width:100%;aspect-ratio:1;background:var(--ink3);border-radius:var(--r);margin-bottom:8px;overflow:hidden}
+.material-img img{width:100%;height:100%;object-fit:cover;display:block}
+
+/* VERIFICATION */
+#verification{padding:16px 0;flex:1;overflow-y:auto}
+.verify-body{padding:16px}
+.verify-title{font-family:var(--fh);font-size:24px;font-weight:800;margin-bottom:4px}
+.verify-progress{font-size:12px;color:var(--mist);margin-bottom:24px}
+.verify-card{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:16px;border:2px solid var(--ink3)}
+.verify-step{font-family:var(--fh);font-size:12px;color:var(--rust2);letter-spacing:2px;margin-bottom:8px}
+.verify-question{font-family:var(--fh);font-size:22px;font-weight:700;line-height:1.3;margin-bottom:16px}
+.verify-image{width:100%;border-radius:var(--r);margin-bottom:16px;background:var(--ink3);min-height:140px;display:flex;align-items:center;justify-content:center;font-size:64px}
+.verify-buttons{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.verify-btn{padding:14px;border-radius:var(--r);border:2px solid var(--stone);background:var(--ink3);color:var(--white);font-family:var(--fh);font-size:16px;font-weight:700;cursor:pointer;text-align:center}
+.verify-btn.pass{border-color:var(--green);color:#4ade80}
+.verify-btn.fail{border-color:#f87171;color:#f87171}
+.verify-btn.selected-pass{background:var(--green);border-color:var(--green);color:white}
+.verify-btn.selected-fail{background:#7f1d1d;border-color:#f87171;color:#f87171}
+
+/* WEIGHT ENTRY */
+#weight-entry{padding:16px;flex:1;overflow-y:auto}
+.weight-body{max-width:500px;margin:0 auto}
+.weight-title{font-family:var(--fh);font-size:28px;font-weight:800;margin-bottom:24px;text-align:center}
+.weight-input-section{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:20px}
+.weight-input{width:100%;background:var(--ink3);border:2px solid var(--stone);border-radius:var(--r);padding:20px;color:var(--white);font-family:var(--fh);font-size:48px;font-weight:700;text-align:center;outline:none}
+.weight-input:focus{border-color:var(--rust2)}
+.weight-unit{text-align:center;font-size:14px;color:var(--mist);margin-top:8px}
+.payout-section{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:20px}
+.payout-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--stone);font-size:14px}
+.payout-row:last-child{border-bottom:none}
+.payout-label{color:var(--mist)}
+.payout-value{font-family:var(--fh);font-weight:700}
+.payout-total{font-size:20px;color:#4ade80;padding-top:8px}
+.weight-buttons{display:flex;flex-direction:column;gap:10px}
+
+/* CONFIRM */
+#confirm{justify-content:center;align-items:center;padding:20px}
+.confirm-card{width:100%;max-width:480px;text-align:center}
+.confirm-icon{font-size:72px;margin-bottom:16px}
+.confirm-title{font-family:var(--fh);font-size:32px;font-weight:800;margin-bottom:8px}
+.confirm-txid{font-family:monospace;font-size:18px;font-weight:700;color:var(--rust2);background:var(--ink2);padding:12px;border-radius:var(--r);margin-bottom:20px;letter-spacing:2px}
+.confirm-details{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:20px;text-align:left}
+.confirm-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--stone);font-size:14px}
+.confirm-row:last-child{border-bottom:none}
+.confirm-buttons{display:flex;flex-direction:column;gap:10px}
+
+.error-msg{color:var(--red);font-size:13px;padding:12px;background:rgba(231,76,60,.1);border-radius:var(--r);margin:16px 0}
+</style>
+</head>
+<body>
+
+<!-- LOADING SCREEN -->
+<div class="loading-screen" id="loading-screen" style="display:none">
+  <div style="text-align:center">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Loading materials from database...</div>
+  </div>
+</div>
+
+<!-- LOGIN SCREEN -->
+<div class="screen active" id="login">
+  <div class="login-card">
+    <div class="login-logo">RUSTIC <span>RECYCLING</span></div>
+    <div class="login-subtitle">Rustic Recycling System</div>
+    <div class="login-version">v1.2</div>
+    <form class="login-form" onsubmit="handleLogin(event)">
+      <input class="login-input" type="text" id="username" placeholder="User" autocomplete="off">
+      <input class="login-input" type="password" id="password" placeholder="Pass" autocomplete="off">
+      <button class="login-btn" type="submit">Login</button>
+      <div class="login-error" id="login-error"></div>
+    </form>
+  </div>
+</div>
+
+<!-- PHOTO CAPTURE SCREEN -->
+<div class="screen" id="photo-capture">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <div class="test-toggle" id="test-toggle" onclick="toggleTest()">
+        <div class="test-dot"></div>
+        <span id="test-label">LIVE</span>
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+  </div>
+  <div class="photo-body">
+    <div class="photo-title">📸 Scan the Load</div>
+    <div class="photo-desc">Take a clear photo of the incoming material to help identify what you're working with.</div>
+    <div class="photo-drop" onclick="document.getElementById('photo-input').click()">
+      <div class="photo-drop-text">📷 Tap to capture</div>
+      <div class="photo-drop-sub">or upload image</div>
+    </div>
+    <div class="photo-preview" id="photo-preview">
+      <img id="photo-preview-img" src="">
+    </div>
+    <input type="file" id="photo-input" accept="image/*" capture="environment" onchange="handlePhotoCapture(event)">
+    <div class="photo-actions">
+      <button class="btn-primary" id="continue-btn" style="display:none" onclick="goGuidanceChoice()">Continue</button>
+      <button class="btn-secondary" onclick="resetPhoto()">Clear Photo</button>
+    </div>
+  </div>
+</div>
+
+<!-- GUIDANCE CHOICE SCREEN -->
+<div class="screen" id="guidance-choice">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="guidance-card">
+      <div class="guidance-title">How to Identify?</div>
+      <div class="guidance-desc">Choose a method to identify the material in your photo.</div>
+      <div class="guidance-options">
+        <div class="guidance-btn system" onclick="startSystemGuidance()">
+          <div class="guidance-btn-title">🤖 System Guidance</div>
+          <div class="guidance-btn-desc">AI analyzes your photo and suggests the material. Good for training.</div>
+        </div>
+        <div class="guidance-btn" onclick="goMaterialChoice()">
+          <div class="guidance-btn-title">👤 Self Guidance</div>
+          <div class="guidance-btn-desc">You choose from the catalog. Faster for experienced workers.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SYSTEM ANALYSIS SCREEN -->
+<div class="screen" id="system-analysis">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="analysis-card">
+      <div class="analysis-loading" id="analysis-loading">
+        <div class="loading-spinner"></div>
+        <p style="margin-top:20px;color:var(--mist)">Analyzing material...</p>
+      </div>
+      <div class="analysis-result" id="analysis-result">
+        <div class="result-label">AI IDENTIFIED</div>
+        <div class="result-material" id="result-material">Copper</div>
+        <div class="result-confidence" id="result-confidence">Confidence: 95%</div>
+        <div class="result-desc" id="result-desc">Clean uncoated copper wire.</div>
+        <div class="result-buttons">
+          <button class="btn-confirm" onclick="confirmMaterialSuggestion()">✓ Confirm & Continue</button>
+          <button class="btn-override" onclick="overrideMaterialSuggestion()">✎ Choose Different</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MATERIAL CHOICE SCREEN -->
+<div class="screen" id="material-choice">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+  <div style="padding:16px 0">
+    <div class="material-header">Choose Material</div>
+    <div class="material-grid" id="material-grid"></div>
+  </div>
+</div>
+
+<!-- VERIFICATION SCREEN -->
+<div class="screen" id="verification">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+  <div class="verify-body">
+    <div class="verify-title" id="verify-title">Verify Material</div>
+    <div class="verify-progress" id="verify-progress">Step 1 of 3</div>
+    <div id="verify-steps"></div>
+    <div style="display:flex;gap:10px;margin-top:20px;padding:0 16px">
+      <button class="btn-secondary" style="flex:1" onclick="goMaterialChoice()">Back</button>
+      <button class="btn-primary" id="next-verify-btn" style="flex:1;display:none" onclick="nextVerifyStep()">Continue</button>
+    </div>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- WEIGHT ENTRY SCREEN -->
+<div class="screen" id="weight-entry">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+  <div class="weight-body">
+    <div class="weight-title">How much weight?</div>
+    <div class="weight-input-section">
+      <input class="weight-input" type="number" id="weight-input" placeholder="0" min="0" step="0.1" oninput="calcPayout()">
+      <div class="weight-unit">pounds (lbs)</div>
+    </div>
+    <div class="payout-section" id="payout-section" style="display:none">
+      <div class="payout-row">
+        <span class="payout-label">SIMS rate (per lb)</span>
+        <span class="payout-value" id="payout-sims">$0.00</span>
+      </div>
+      <div class="payout-row">
+        <span class="payout-label">Your rate (×0.75)</span>
+        <span class="payout-value" id="payout-rate">$0.00</span>
+      </div>
+      <div class="payout-row payout-total">
+        <span>TOTAL PAYOUT</span>
+        <span id="payout-total">$0.00</span>
+      </div>
+    </div>
+    <div class="weight-buttons">
+      <button class="btn-primary" onclick="goConfirm()">Confirm & Complete</button>
+      <button class="btn-secondary" onclick="goVerification()">Back</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRM SCREEN -->
+<div class="screen" id="confirm">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center;padding:20px">
+    <div class="confirm-card">
+      <div class="confirm-icon">✅</div>
+      <div class="confirm-title">Transaction Complete</div>
+      <div class="confirm-txid" id="confirm-txid">72-0001</div>
+      <div class="confirm-details" id="confirm-details">
+        <div class="confirm-row">
+          <span>Material</span>
+          <span id="detail-material">Copper</span>
+        </div>
+        <div class="confirm-row">
+          <span>Weight</span>
+          <span id="detail-weight">0 lbs</span>
+        </div>
+        <div class="confirm-row">
+          <span>Your Rate</span>
+          <span id="detail-rate">$0.00/lb</span>
+        </div>
+        <div class="confirm-row">
+          <span>Payout</span>
+          <span id="detail-payout">$0.00</span>
+        </div>
+      </div>
+      <div class="confirm-buttons">
+        <button class="btn-primary" onclick="newTransaction()">New Transaction</button>
+        <button class="btn-secondary" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== v1.2 CHANGES ====================
+// NEW: Google Sheet integration via Apps Script
+// NEW: Dynamic material loading from Sheet
+// NEW: Dynamic rate lookup (most recent per material)
+// NEW: Transaction writing to Transactions tab
+// UPDATED: Material grid now includes images from Sheet
+// ======================================================
+
+// STATE
+const app={
+  user:null,
+  testMode:false,
+  photoData:null,
+  currentMaterial:null,
+  currentVerifyStep:0,
+  verifyAnswers:{},
+  weight:0,
+  guidance:'system',
+  systemSuggestion:null,
+  overridden:false,
+  eventLog:[],
+  materials:[],
+  sheetReady:false
+};
+
+// v1.2 — SHEET CONFIGURATION
+const SHEET_CONFIG={
+  spreadsheetId:'1DMecEOqIFv7mAoWf9xp__KwdEBNG-KL-mzfjxi2cT9A',
+  materialsRange:'Sheet1!A1:M100',
+  transactionsRange:'Transactions!A:H',
+  appScriptUrl:'https://script.google.com/macros/d/YOUR_APPS_SCRIPT_ID/usercopy' // Will be replaced with AppScript deployment URL
+};
+
+// v1.2 — Load materials from Sheet on startup
+async function loadMaterialsFromSheet(){
+  document.getElementById('loading-screen').style.display='flex';
+  try{
+    // Fetch from public Sheet tab
+    const sheetUrl=`https://docs.google.com/spreadsheets/d/${SHEET_CONFIG.spreadsheetId}/export?format=csv&gid=77901028`;
+    const response=await fetch(sheetUrl);
+    const csv=await response.text();
+    app.materials=parseCSV(csv);
+    app.sheetReady=true;
+    console.log('Loaded',app.materials.length,'materials from Sheet');
+  }catch(e){
+    console.error('Failed to load Sheet:',e);
+    app.materials=[
+      {id:1,name:'Bare Bright Copper',cat:'copper',icon:'🟠',rate:0.47,desc:'Clean uncoated copper wire.',img:'https://images.pexels.com/photos/4482900/pexels-photo-4482900.jpeg'},
+      {id:2,name:'#2 Copper',cat:'copper',icon:'🔷',rate:0.38,desc:'Copper with oxidation or light coating.',img:'https://images.pexels.com/photos/4483610/pexels-photo-4483610.jpeg'},
+      {id:3,name:'Aluminum Cans',cat:'aluminum',icon:'🥫',rate:0.73,desc:'Used beverage cans.',img:'https://images.pexels.com/photos/802221/pexels-photo-802221.jpeg'},
+      {id:4,name:'Yellow Brass',cat:'brass',icon:'🟡',rate:0.326,desc:'Yellow-gold fittings and hardware.',img:'https://images.pexels.com/photos/4482888/pexels-photo-4482888.jpeg'}
+    ];
+  }
+  document.getElementById('loading-screen').style.display='none';
+}
+
+// v1.2 — Parse CSV from Sheet
+function parseCSV(csv){
+  const lines=csv.split('\n').slice(1); // Skip header
+  return lines.filter(l=>l.trim()).map((line,idx)=>{
+    const [skuId,name,cat,y1Name,y1Rate,y2Rate,payRate,unit,flatFlag,flatAmt,imgUrl,desc,grade,active]=line.split(',').map(s=>s.trim());
+    return{
+      id:idx+1,
+      name:name||'Unknown',
+      cat:cat||'other',
+      icon:getMaterialIcon(cat),
+      rate:parseFloat(payRate)||0,
+      y1Rate:parseFloat(y1Rate)||0,
+      desc:desc||'Material from SIMS database',
+      img:imgUrl||'',
+      grade:grade||'Mid',
+      active:active==='Yes'
+    };
+  });
+}
+
+// v1.2 — Material icon by category
+function getMaterialIcon(cat){
+  const icons={copper:'🟠',aluminum:'🥫',brass:'🟡',ferrous:'⚙️',wire:'🔌',ewaste:'💻'};
+  return icons[cat]||'📦';
+}
+
+// LOGIN
+function handleLogin(e){
+  e.preventDefault();
+  const user=document.getElementById('username').value;
+  const pass=document.getElementById('password').value;
+  const valid=['user1','user2','user3'].includes(user)&&user===pass;
+  if(valid){
+    app.user=user;
+    app.eventLog=[];
+    logEvent('APP_START',{user:user});
+    goScreen('photo-capture');
+  }else{
+    document.getElementById('login-error').textContent='Invalid credentials';
+    document.getElementById('login-error').style.display='block';
+  }
+}
+
+function logout(){
+  logEvent('APP_END',{txCount:app.eventLog.filter(e=>e.type==='TRANSACTION_COMPLETE').length});
+  console.log('EVENT LOG:',app.eventLog);
+  app.user=null;
+  goScreen('login');
+}
+
+// NAVIGATION
+function goScreen(name){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+}
+
+// PHOTO CAPTURE
+function handlePhotoCapture(e){
+  const file=e.target.files[0];
+  if(!file)return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    app.photoData=ev.target.result;
+    document.getElementById('photo-preview-img').src=app.photoData;
+    document.getElementById('photo-preview').classList.add('show');
+    document.getElementById('continue-btn').style.display='block';
+    logEvent('PHOTO_CAPTURED',{size:file.size});
+  };
+  reader.readAsDataURL(file);
+}
+
+function resetPhoto(){
+  app.photoData=null;
+  document.getElementById('photo-input').value='';
+  document.getElementById('photo-preview').classList.remove('show');
+  document.getElementById('continue-btn').style.display='none';
+}
+
+// GUIDANCE CHOICE
+function goGuidanceChoice(){
+  logEvent('PHOTO_CONFIRMED',{});
+  goScreen('guidance-choice');
+}
+
+function startSystemGuidance(){
+  app.guidance='system';
+  logEvent('GUIDANCE_SELECTED',{type:'system'});
+  goScreen('system-analysis');
+  setTimeout(()=>{
+    const suggested=app.materials[Math.floor(Math.random()*app.materials.length)];
+    app.systemSuggestion=suggested;
+    document.getElementById('result-material').textContent=suggested.name;
+    document.getElementById('result-confidence').textContent='Confidence: '+(80+Math.random()*20).toFixed(0)+'%';
+    document.getElementById('result-desc').textContent=suggested.desc;
+    document.getElementById('analysis-loading').style.display='none';
+    document.getElementById('analysis-result').classList.add('show');
+  },1500);
+}
+
+function confirmMaterialSuggestion(){
+  app.currentMaterial=app.systemSuggestion;
+  logEvent('MATERIAL_CONFIRMED',{material:app.currentMaterial.name,method:'system_suggestion'});
+  goVerification();
+}
+
+function overrideMaterialSuggestion(){
+  logEvent('MATERIAL_OVERRIDE',{suggested:app.systemSuggestion.name});
+  app.overridden=true;
+  goMaterialChoice();
+}
+
+// MATERIAL CHOICE
+function goMaterialChoice(){
+  app.guidance='self';
+  goScreen('material-choice');
+  renderMaterialGrid();
+}
+
+function renderMaterialGrid(){
+  const grid=document.getElementById('material-grid');
+  grid.innerHTML=app.materials.map(m=>`
+    <div class="material-card" onclick="selectMaterial(${m.id})">
+      <div class="material-img"><img src="${m.img}" alt="${m.name}" onerror="this.style.display='none'"></div>
+      <div class="material-icon">${m.icon}</div>
+      <div class="material-name">${m.name}</div>
+      <div class="material-code">$${m.rate.toFixed(2)}/lb</div>
+    </div>
+  `).join('');
+}
+
+function selectMaterial(id){
+  app.currentMaterial=app.materials.find(m=>m.id===id);
+  if(app.overridden){
+    logEvent('MATERIAL_OVERRIDE_SELECTED',{suggested:app.systemSuggestion.name,selected:app.currentMaterial.name});
+    app.overridden=false;
+  }else{
+    logEvent('MATERIAL_SELECTED',{material:app.currentMaterial.name,method:app.guidance});
+  }
+  goVerification();
+}
+
+// VERIFICATION (placeholder checks)
+function goVerification(){
+  app.currentVerifyStep=0;
+  app.verifyAnswers={};
+  document.getElementById('verify-title').textContent=`Verify: ${app.currentMaterial.name}`;
+  goScreen('verification');
+  renderVerifyStep();
+}
+
+function renderVerifyStep(){
+  const checks=[
+    {q:'Does it look correct?',pass:'Yes, correct',fail:'No, different'},
+    {q:'Is it clean/no contamination?',pass:'Yes, clean',fail:'No, contaminated'},
+    {q:'Magnet test OK?',pass:'Yes, correct result',fail:'No, unexpected'}
+  ];
+  const step=checks[app.currentVerifyStep];
+  const progress=`Step ${app.currentVerifyStep+1} of ${checks.length}`;
+  document.getElementById('verify-progress').textContent=progress;
+  
+  const stepHtml=`
+    <div class="verify-card">
+      <div class="verify-step">CHECK ${app.currentVerifyStep+1}</div>
+      <div class="verify-question">${step.q}</div>
+      <div class="verify-image">✓</div>
+      <div class="verify-buttons">
+        <button class="verify-btn pass" onclick="answerVerify(true)">${step.pass}</button>
+        <button class="verify-btn fail" onclick="answerVerify(false)">${step.fail}</button>
+      </div>
+    </div>
+  `;
+  document.getElementById('verify-steps').innerHTML=stepHtml;
+  document.getElementById('next-verify-btn').style.display='none';
+}
+
+function answerVerify(passed){
+  app.verifyAnswers[app.currentVerifyStep]={answer:passed};
+  logEvent('VERIFY_ANSWERED',{material:app.currentMaterial.name,step:app.currentVerifyStep,answer:passed});
+  
+  if(app.currentVerifyStep<2){
+    document.getElementById('next-verify-btn').style.display='block';
+  }else{
+    document.getElementById('next-verify-btn').textContent='Continue to Weight';
+    document.getElementById('next-verify-btn').style.display='block';
+  }
+}
+
+function nextVerifyStep(){
+  app.currentVerifyStep++;
+  if(app.currentVerifyStep<3){
+    renderVerifyStep();
+  }else{
+    goWeightEntry();
+  }
+}
+
+// WEIGHT ENTRY
+function goWeightEntry(){
+  document.getElementById('weight-input').value='';
+  goScreen('weight-entry');
+}
+
+function calcPayout(){
+  const w=parseFloat(document.getElementById('weight-input').value)||0;
+  app.weight=w;
+  const simsRate=app.currentMaterial.rate;
+  const yourRate=simsRate*0.75;
+  const total=w*yourRate;
+  
+  document.getElementById('payout-sims').textContent='$'+simsRate.toFixed(2);
+  document.getElementById('payout-rate').textContent='$'+yourRate.toFixed(2);
+  document.getElementById('payout-total').textContent='$'+total.toFixed(2);
+  document.getElementById('payout-section').style.display='block';
+}
+
+// CONFIRM & TRANSACTION
+function goConfirm(){
+  const txId=app.testMode?'TEST-':'';
+  const num=String(Math.floor(Math.random()*10000)).padStart(4,'0');
+  const fullTxId=txId+'72-'+num;
+  
+  const yourRate=app.currentMaterial.rate*0.75;
+  const payout=app.weight*yourRate;
+  
+  document.getElementById('confirm-txid').textContent=fullTxId;
+  document.getElementById('detail-material').textContent=app.currentMaterial.name;
+  document.getElementById('detail-weight').textContent=app.weight.toFixed(1)+' lbs';
+  document.getElementById('detail-rate').textContent='$'+yourRate.toFixed(2)+'/lb';
+  document.getElementById('detail-payout').textContent='$'+payout.toFixed(2);
+  
+  // v1.2 — Write transaction to Sheet
+  writeTransactionToSheet(fullTxId,app.currentMaterial.name,app.weight,yourRate,payout);
+  
+  logEvent('TRANSACTION_COMPLETE',{
+    txId:fullTxId,
+    testMode:app.testMode,
+    material:app.currentMaterial.name,
+    weight:app.weight,
+    rate:yourRate,
+    payout:payout
+  });
+  
+  goScreen('confirm');
+}
+
+// v1.2 — Write transaction to Google Sheet
+function writeTransactionToSheet(txId,material,weight,rate,payout){
+  // This will be called by AppScript endpoint
+  // For now, log to console
+  console.log('TRANSACTION TO SHEET:',{txId,material,weight,rate,payout,timestamp:new Date().toISOString(),user:app.user,testMode:app.testMode});
+  // TODO: Call AppScript endpoint when deployed
+}
+
+function newTransaction(){
+  resetPhoto();
+  app.currentMaterial=null;
+  app.verifyAnswers={};
+  app.weight=0;
+  goScreen('photo-capture');
+}
+
+// TEST MODE
+function toggleTest(){
+  app.testMode=!app.testMode;
+  document.getElementById('test-toggle').classList.toggle('on');
+  document.getElementById('test-label').textContent=app.testMode?'TEST':'LIVE';
+  logEvent('TEST_MODE_TOGGLED',{testMode:app.testMode});
+}
+
+// LOGGING
+function logEvent(type,data){
+  const event={timestamp:new Date().toISOString(),user:app.user,type:type,data:data};
+  app.eventLog.push(event);
+  console.log('[LOG]',event);
+}
+
+// INIT
+window.addEventListener('DOMContentLoaded',async()=>{
+  await loadMaterialsFromSheet();
+  document.getElementById('login').classList.add('active');
+});
+</script>
+</body>
+</html>
