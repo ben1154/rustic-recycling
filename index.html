@@ -1,1 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Rustic Recycling</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ─── TOKENS ─────────────────────────────────────────────────────────── */
+:root{
+  --rust:#C0390B; --rust2:#E8520D; --rust3:#8B2A08;
+  --ink:#0F0F0F; --ink2:#1C1C1C; --ink3:#2A2A2A;
+  --stone:#3A3A3A; --mist:#888; --smoke:#BBB; --fog:#E8E8E8; --white:#FAFAFA;
+  --green:#1E7E34; --green2:#D4EDDA; --amber:#856404; --amber2:#FFF3CD;
+  --red:#721C24; --red2:#F8D7DA;
+  --blue:#0C5460; --blue2:#D1ECF1;
+  --fh:'Barlow Condensed',sans-serif;
+  --fb:'Barlow',sans-serif;
+  --r:12px; --r2:20px;
+  --shadow:0 2px 12px rgba(0,0,0,.12);
+  --shadow2:0 4px 24px rgba(0,0,0,.18);
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;overflow:hidden}
+body{background:var(--ink);color:var(--white);font-family:var(--fb);font-size:16px}
 
+/* ─── SCREENS ────────────────────────────────────────────────────────── */
+.screen{position:fixed;inset:0;overflow-y:auto;display:none;flex-direction:column;background:var(--ink)}
+.screen.active{display:flex}
+
+/* ─── TOP BAR ────────────────────────────────────────────────────────── */
+.topbar{background:var(--ink2);border-bottom:3px solid var(--rust);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50}
+.topbar-logo{font-family:var(--fh);font-size:24px;font-weight:800;letter-spacing:1px;color:var(--white);line-height:1}
+.topbar-logo span{color:var(--rust2)}
+.topbar-right{display:flex;gap:8px;align-items:center}
+.test-toggle{display:flex;align-items:center;gap:6px;background:var(--ink3);border:1.5px solid var(--stone);border-radius:20px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--mist)}
+.test-toggle.on{border-color:var(--amber);color:var(--amber);background:#2a1f00}
+.test-dot{width:8px;height:8px;border-radius:50%;background:var(--mist)}
+.test-toggle.on .test-dot{background:var(--amber)}
+
+/* ─── CATEGORY TABS ─────────────────────────────────────────────────── */
+.cats{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;background:var(--ink2);border-bottom:1px solid var(--ink3)}
+.cats::-webkit-scrollbar{display:none}
+.cat-btn{flex-shrink:0;padding:8px 16px;border-radius:20px;border:1.5px solid var(--stone);background:transparent;color:var(--mist);font-family:var(--fb);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
+.cat-btn.on{background:var(--rust);border-color:var(--rust);color:var(--white)}
+
+/* ─── SCAN BAR ───────────────────────────────────────────────────────── */
+.scan-bar{padding:12px 16px;background:var(--ink2);border-bottom:1px solid var(--ink3);flex-shrink:0}
+.scan-btn{width:100%;padding:13px;background:var(--ink3);border:2px dashed var(--rust);border-radius:var(--r);color:var(--rust2);font-family:var(--fb);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+.scan-btn:active{opacity:.8}
+
+/* ─── MATERIAL GRID ─────────────────────────────────────────────────── */
+.mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 16px 80px;flex:1}
+@media(min-width:600px){.mat-grid{grid-template-columns:repeat(3,1fr)}}
+
+.mat-card{background:var(--ink2);border:1.5px solid var(--ink3);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:border-color .15s,transform .1s;active:transform scale(.97)}
+.mat-card:active{transform:scale(.97)}
+
+.mat-img{width:100%;aspect-ratio:4/3;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.mat-img img{width:100%;height:100%;object-fit:cover;display:block}
+.mat-img .mat-emoji{font-size:56px;position:absolute}
+.mat-grade{position:absolute;top:8px;right:8px;font-size:10px;font-family:var(--fh);font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;z-index:2}
+.grade-top{background:#1a3a25;color:#4ade80}
+.grade-mid{background:#3a2a00;color:#fbbf24}
+.grade-low{background:#3a1010;color:#f87171}
+.mat-cat-label{position:absolute;top:8px;left:8px;font-size:9px;font-family:var(--fh);font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;z-index:2;text-transform:uppercase}
+
+.mat-body{padding:12px}
+.mat-name{font-family:var(--fh);font-size:18px;font-weight:700;line-height:1.2;margin-bottom:8px;color:var(--white)}
+.mat-rate-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
+.mat-rate-label{font-size:12px;color:var(--mist)}
+.mat-rate-val{font-size:16px;font-weight:600;font-family:var(--fh)}
+.rate-pay{color:#4ade80}
+.mat-code{font-size:11px;color:var(--stone);margin-top:4px}
+
+/* ─── INTAKE FLOW SCREEN ────────────────────────────────────────────── */
+#intake{background:var(--ink)}
+
+.intake-hero{position:relative;width:100%;background:var(--ink3);flex-shrink:0}
+.intake-hero img{width:100%;max-height:280px;object-fit:cover;display:block}
+.intake-hero-fb{width:100%;height:220px;display:flex;align-items:center;justify-content:center;font-size:96px}
+.intake-back{position:absolute;top:14px;left:14px;width:40px;height:40px;background:rgba(0,0,0,.6);border-radius:50%;border:none;color:var(--white);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.intake-test-badge{position:absolute;top:14px;right:14px;background:var(--amber);color:#000;font-family:var(--fh);font-size:13px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:1px;display:none}
+.intake-test-badge.show{display:block}
+
+.intake-body{padding:16px;flex:1}
+.intake-mat-name{font-family:var(--fh);font-size:32px;font-weight:800;line-height:1.1;margin-bottom:4px}
+.intake-mat-desc{font-size:15px;color:var(--smoke);line-height:1.6;margin-bottom:16px}
+
+/* ─── VERIFY STEP ───────────────────────────────────────────────────── */
+.verify-card{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:16px;border:2px solid var(--ink3)}
+.verify-card.critical{border-color:var(--rust)}
+.verify-step-num{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--rust2);letter-spacing:2px;margin-bottom:6px}
+.verify-question{font-family:var(--fh);font-size:24px;font-weight:700;line-height:1.3;margin-bottom:16px}
+.verify-img{width:100%;border-radius:var(--r);margin-bottom:16px;background:var(--ink3);min-height:120px;display:flex;align-items:center;justify-content:center;font-size:48px}
+.verify-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.verify-btn{padding:16px;border-radius:var(--r);border:2px solid var(--stone);background:var(--ink3);color:var(--white);font-family:var(--fh);font-size:20px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s}
+.verify-btn.pass{border-color:var(--green);color:#4ade80}
+.verify-btn.fail{border-color:var(--red2);color:#f87171}
+.verify-btn.selected-pass{background:var(--green);border-color:var(--green);color:var(--white)}
+.verify-btn.selected-fail{background:#7f1d1d;border-color:#f87171;color:#f87171}
+
+/* ─── WEIGHT & PAYOUT ───────────────────────────────────────────────── */
+.weight-section{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:16px}
+.section-label{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--rust2);letter-spacing:2px;margin-bottom:12px}
+.weight-input{width:100%;background:var(--ink3);border:2px solid var(--stone);border-radius:var(--r);padding:16px;color:var(--white);font-family:var(--fh);font-size:36px;font-weight:700;text-align:center;outline:none;transition:border-color .15s}
+.weight-input:focus{border-color:var(--rust2)}
+.weight-unit{text-align:center;font-size:14px;color:var(--mist);margin-top:6px}
+.payout-display{background:var(--ink3);border-radius:var(--r);padding:16px;margin-top:12px}
+.payout-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--stone)}
+.payout-row:last-child{border-bottom:none;padding-top:10px;margin-top:4px}
+.payout-label{font-size:14px;color:var(--mist)}
+.payout-val{font-family:var(--fh);font-size:20px;font-weight:700}
+.payout-total{font-size:28px;color:#4ade80}
+
+/* ─── SUPPLIER ID ───────────────────────────────────────────────────── */
+.id-section{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:16px}
+.id-input{width:100%;background:var(--ink3);border:2px solid var(--stone);border-radius:var(--r);padding:14px 16px;color:var(--white);font-family:var(--fb);font-size:17px;outline:none;margin-bottom:10px;transition:border-color .15s}
+.id-input:focus{border-color:var(--rust2)}
+.id-input::placeholder{color:var(--stone)}
+.photo-btn{width:100%;padding:13px;background:var(--ink3);border:2px dashed var(--stone);border-radius:var(--r);color:var(--mist);font-family:var(--fb);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+
+/* ─── ACTION BTN ────────────────────────────────────────────────────── */
+.action-btn{width:100%;padding:18px;background:var(--rust);border:none;border-radius:var(--r);color:var(--white);font-family:var(--fh);font-size:22px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:background .15s;margin-bottom:8px}
+.action-btn:active{background:var(--rust3)}
+.action-btn:disabled{background:var(--stone);cursor:not-allowed}
+.action-btn.secondary{background:transparent;border:2px solid var(--stone);color:var(--smoke)}
+
+/* ─── CONFIRM SCREEN ────────────────────────────────────────────────── */
+#confirm{background:var(--ink)}
+.confirm-body{padding:32px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;flex:1}
+.confirm-icon{font-size:72px;margin-bottom:16px}
+.confirm-title{font-family:var(--fh);font-size:36px;font-weight:800;margin-bottom:8px}
+.confirm-sub{font-size:16px;color:var(--smoke);margin-bottom:24px;line-height:1.6}
+.confirm-card{background:var(--ink2);border-radius:var(--r2);padding:20px;width:100%;text-align:left;margin-bottom:24px}
+.confirm-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--stone);font-size:15px}
+.confirm-row:last-child{border-bottom:none}
+.confirm-key{color:var(--mist)}
+.confirm-val{font-weight:600;color:var(--white)}
+.confirm-txid{font-family:var(--fh);font-size:28px;font-weight:800;color:var(--rust2);text-align:center;margin-bottom:8px}
+
+/* ─── AI ANALYZER SCREEN ─────────────────────────────────────────────── */
+#analyzer{background:var(--ink)}
+.analyzer-body{padding:20px;flex:1;display:flex;flex-direction:column;gap:16px}
+.analyzer-drop{width:100%;aspect-ratio:4/3;background:var(--ink2);border:3px dashed var(--rust);border-radius:var(--r2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:12px;position:relative;overflow:hidden}
+.analyzer-drop img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.analyzer-drop-text{font-family:var(--fh);font-size:22px;font-weight:700;color:var(--rust2);z-index:2}
+.analyzer-drop-sub{font-size:14px;color:var(--mist);z-index:2}
+#analyzer-file{display:none}
+.analyzer-result{background:var(--ink2);border-radius:var(--r2);padding:20px;display:none}
+.analyzer-result.show{display:block}
+.analyzer-result-label{font-family:var(--fh);font-size:13px;color:var(--rust2);letter-spacing:2px;margin-bottom:8px}
+.analyzer-mat{font-family:var(--fh);font-size:28px;font-weight:800;margin-bottom:6px}
+.analyzer-conf{font-size:14px;color:var(--mist);margin-bottom:12px}
+.analyzer-desc{font-size:15px;color:var(--smoke);line-height:1.6;margin-bottom:16px}
+.analyzer-loading{text-align:center;padding:20px;color:var(--mist);font-size:15px;display:none}
+.spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--stone);border-top-color:var(--rust2);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ─── BOTTOM NAV ────────────────────────────────────────────────────── */
+.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink2);border-top:1px solid var(--ink3);display:flex;z-index:100;padding:0 0 env(safe-area-inset-bottom,0)}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 8px;cursor:pointer;border:none;background:transparent;color:var(--mist);font-family:var(--fb);font-size:11px;font-weight:600;gap:4px;transition:color .15s}
+.nav-item.on{color:var(--rust2)}
+.nav-icon{font-size:22px;line-height:1}
+
+/* ─── MATERIAL COLOR THEMES ─────────────────────────────────────────── */
+.theme-copper{background:linear-gradient(135deg,#7B2D00,#3D1500)}
+.theme-wire{background:linear-gradient(135deg,#2D1B4E,#1A0F30)}
+.theme-aluminum{background:linear-gradient(135deg,#0E2535,#071520)}
+.theme-brass{background:linear-gradient(135deg,#3D2E00,#1F1800)}
+.theme-ferrous{background:linear-gradient(135deg,#1A1A2E,#0D0D1A)}
+.theme-ewaste{background:linear-gradient(135deg,#0A2E1A,#051A0D)}
+
+.cat-copper{background:rgba(123,45,0,.85);color:#FF8C42}
+.cat-wire{background:rgba(45,27,78,.85);color:#C39BD3}
+.cat-aluminum{background:rgba(14,37,53,.85);color:#5DADE2}
+.cat-brass{background:rgba(61,46,0,.85);color:#F7DC6F}
+.cat-ferrous{background:rgba(26,26,46,.85);color:#8899BB}
+.cat-ewaste{background:rgba(10,46,26,.85);color:#58D68D}
+
+/* ─── WARNING OVERLAY ───────────────────────────────────────────────── */
+.warning-overlay{position:fixed;inset:0;background:rgba(139,0,0,.95);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
+.warning-overlay.show{display:flex}
+.warning-icon{font-size:80px;margin-bottom:16px}
+.warning-title{font-family:var(--fh);font-size:36px;font-weight:800;margin-bottom:12px;color:var(--white)}
+.warning-text{font-size:17px;color:rgba(255,255,255,.85);line-height:1.7;margin-bottom:28px}
+.warning-dismiss{padding:16px 32px;background:var(--white);border:none;border-radius:var(--r);color:var(--red);font-family:var(--fh);font-size:20px;font-weight:800;cursor:pointer}
+
+/* ─── TOAST ─────────────────────────────────────────────────────────── */
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--ink2);border:1px solid var(--stone);border-radius:var(--r);padding:12px 20px;font-size:14px;font-weight:600;z-index:300;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- ── CATALOG SCREEN ─────────────────────────────────────────────────── -->
+<div class="screen active" id="catalog">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+    <div class="topbar-right">
+      <div class="test-toggle" id="test-toggle" onclick="toggleTest()">
+        <div class="test-dot"></div>
+        <span id="test-label">LIVE</span>
+      </div>
+    </div>
+  </div>
+  <div class="cats" id="cat-tabs">
+    <button class="cat-btn on" onclick="filterCat('all',this)">All</button>
+    <button class="cat-btn" onclick="filterCat('copper',this)">Copper</button>
+    <button class="cat-btn" onclick="filterCat('wire',this)">Wire</button>
+    <button class="cat-btn" onclick="filterCat('aluminum',this)">Aluminum</button>
+    <button class="cat-btn" onclick="filterCat('brass',this)">Brass</button>
+    <button class="cat-btn" onclick="filterCat('ferrous',this)">Ferrous</button>
+    <button class="cat-btn" onclick="filterCat('ewaste',this)">E-Waste</button>
+  </div>
+  <div class="scan-bar">
+    <button class="scan-btn" onclick="goAnalyzer()">📷 &nbsp;Scan material to identify</button>
+  </div>
+  <div class="mat-grid" id="mat-grid"></div>
+</div>
+
+<!-- ── INTAKE SCREEN ──────────────────────────────────────────────────── -->
+<div class="screen" id="intake">
+  <div class="intake-hero" id="intake-hero">
+    <button class="intake-back" onclick="goScreen('catalog')">←</button>
+    <div class="intake-test-badge" id="intake-test-badge">TEST MODE</div>
+  </div>
+  <div class="intake-body" id="intake-body">
+    <div class="intake-mat-name" id="intake-name"></div>
+    <div class="intake-mat-desc" id="intake-desc"></div>
+
+
+    <!-- Test mode toggle at start of every transaction -->
+    <div id="tx-mode-banner" style="display:flex;gap:8px;margin-bottom:16px;border-radius:12px;overflow:hidden;border:2px solid #3A3A3A">
+      <button id="btn-live" onclick="setTxMode(false)" style="flex:1;padding:14px;border:none;background:#1E7E34;color:#fff;font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:700;cursor:pointer">&#x2705; LIVE</button>
+      <button id="btn-test" onclick="setTxMode(true)" style="flex:1;padding:14px;border:none;background:#2A2A2A;color:#888;font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:700;cursor:pointer">&#x1F9EA; TEST</button>
+    </div>
+    <div id="tx-mode-note" style="font-size:13px;color:#888;text-align:center;margin-top:-10px;margin-bottom:16px">Live transaction — will log to real records</div>
+    <!-- Verification steps -->
+    <div id="verify-steps"></div>
+
+    <!-- Weight -->
+    <div class="weight-section" id="weight-section" style="display:none">
+      <div class="section-label">WEIGHT</div>
+      <input class="weight-input" type="number" id="weight-input" placeholder="0" min="0" step="0.1" oninput="calcPayout()">
+      <div class="weight-unit">pounds (lbs)</div>
+      <div class="payout-display" id="payout-display" style="display:none">
+        <div class="payout-row">
+          <span class="payout-label">Y1 rate</span>
+          <span class="payout-val" id="pd-y1">—</span>
+        </div>
+        <div class="payout-row">
+          <span class="payout-label">Your pay rate (×0.75)</span>
+          <span class="payout-val" id="pd-rate">—</span>
+        </div>
+        <div class="payout-row">
+          <span class="payout-label">TOTAL PAYOUT</span>
+          <span class="payout-val payout-total" id="pd-total">$0.00</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Supplier ID -->
+    <div class="id-section" id="id-section" style="display:none">
+      <div class="section-label">SUPPLIER ID — COLLECTED AT CASHIER</div>
+      <input class="id-input" type="text" id="supplier-name" placeholder="Supplier name">
+      <input class="id-input" type="text" id="supplier-id" placeholder="ID number (license, state ID)">
+      <button class="photo-btn" onclick="toast('Camera feature coming in Phase 2')">📷 &nbsp;Take photo of ID</button>
+    </div>
+
+    <button class="action-btn" id="main-action-btn" onclick="nextStep()">CONTINUE</button>
+    <button class="action-btn secondary" onclick="goScreen('catalog')">Cancel</button>
+    <div style="height:20px"></div>
+  </div>
+</div>
+
+<!-- ── CONFIRM SCREEN ─────────────────────────────────────────────────── -->
+<div class="screen" id="confirm">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+  </div>
+  <div class="confirm-body">
+    <div class="confirm-icon">✅</div>
+    <div class="confirm-title" id="confirm-title">Transaction Complete</div>
+    <div class="confirm-sub" id="confirm-sub">Payout confirmed. Transaction logged.</div>
+    <div class="confirm-txid" id="confirm-txid"></div>
+    <div class="confirm-card" id="confirm-card"></div>
+    <button class="action-btn" onclick="newTransaction()">New Transaction</button>
+    <button class="action-btn secondary" onclick="goScreen('catalog')">Back to Catalog</button>
+  </div>
+</div>
+
+<!-- ── AI ANALYZER SCREEN ─────────────────────────────────────────────── -->
+<div class="screen" id="analyzer">
+  <div class="topbar">
+    <div class="topbar-logo">📷 &nbsp;IDENTIFY MATERIAL</div>
+    <button style="background:none;border:none;color:var(--mist);font-size:20px;cursor:pointer" onclick="goScreen('catalog')">✕</button>
+  </div>
+  <div class="analyzer-body">
+    <div class="analyzer-drop" id="analyzer-drop" onclick="document.getElementById('analyzer-file').click()">
+      <div style="font-size:48px;z-index:2">📷</div>
+      <div class="analyzer-drop-text">Tap to take photo</div>
+      <div class="analyzer-drop-sub">or upload from gallery</div>
+      <img id="analyzer-preview" style="display:none">
+    </div>
+    <input type="file" id="analyzer-file" accept="image/*" capture="environment" onchange="analyzeImage(this)">
+
+    <div class="analyzer-loading" id="analyzer-loading">
+      <span class="spinner"></span> Analyzing material...
+    </div>
+
+    <div class="analyzer-result" id="analyzer-result">
+      <div class="analyzer-result-label">AI IDENTIFIED</div>
+      <div class="analyzer-mat" id="ar-mat"></div>
+      <div class="analyzer-conf" id="ar-conf"></div>
+      <div class="analyzer-desc" id="ar-desc"></div>
+      <button class="action-btn" id="ar-start-btn" onclick="startFromAnalyzer()">Start Intake with This Material</button>
+      <button class="action-btn secondary" onclick="resetAnalyzer()">Try Another Photo</button>
+    </div>
+
+    <div style="background:var(--ink2);border-radius:var(--r2);padding:16px;font-size:14px;color:var(--mist);line-height:1.6">
+      <strong style="color:var(--white)">How it works:</strong> Take a photo of the material the supplier brought in. The AI will identify the type, suggest the correct catalog entry, and walk you through verification checks before payout.
+    </div>
+  </div>
+</div>
+
+<!-- ── WARNING OVERLAY ────────────────────────────────────────────────── -->
+<div class="warning-overlay" id="warning-overlay">
+  <div class="warning-icon">🚨</div>
+  <div class="warning-title" id="warning-title">RED FLAG</div>
+  <div class="warning-text" id="warning-text"></div>
+  <button class="warning-dismiss" onclick="dismissWarning()">I UNDERSTAND — PROCEED WITH CAUTION</button>
+</div>
+
+<!-- ── BOTTOM NAV ─────────────────────────────────────────────────────── -->
+<div class="bottom-nav">
+  <button class="nav-item on" id="nav-catalog" onclick="goScreen('catalog')">
+    <span class="nav-icon">📋</span>Catalog
+  </button>
+  <button class="nav-item" id="nav-analyzer" onclick="goAnalyzer()">
+    <span class="nav-icon">📷</span>Scan
+  </button>
+  <button class="nav-item" id="nav-log" onclick="goScreen('log')">
+    <span class="nav-icon">📊</span>Log
+  </button>
+</div>
+
+<!-- ── TOAST ──────────────────────────────────────────────────────────── -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ─── DATA ──────────────────────────────────────────────────────────────
+// In production this loads from Google Sheet via service account
+// POC has 4 materials inline; all other data driven from sheet
+
+const MATERIALS = [
+  {
+    id:'26-CU001', cat:'copper', name:'Bare Bright Copper', code:'2040',
+    y1:0.47, grade:'top', unit:'LB', flat:false,
+    img:'https://upload.wikimedia.org/wikipedia/commons/3/38/CopperCables.jpg',
+    desc:'The highest copper grade. Clean, shiny, uncoated, unalloyed wire. No insulation, no solder, no paint.',
+    redFlag: null,
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No stick', fail:'Sticks — NOT copper', critical:true, passImg:'🧲', failText:'If it sticks to the magnet this is NOT copper. Stop and reclassify.'},
+      {q:'Is the wire shiny reddish-orange with no coating?', pass:'Yes — bare and shiny', fail:'No — has coating or insulation', critical:true},
+      {q:'Is it at least 1/16 inch thick?', pass:'Yes', fail:'Too thin — classify as Light Cu', critical:false},
+    ]
+  },
+  {
+    id:'26-CU002', cat:'copper', name:'#2 Copper', code:'2010',
+    y1:0.38, grade:'mid', unit:'LB', flat:false,
+    img:'https://upload.wikimedia.org/wikipedia/commons/1/18/Electrical_wire.jpg',
+    desc:'Copper with oxidation, light coating, some solder, or minor contamination. Darker, dull surface.',
+    redFlag: null,
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No stick — confirmed copper', fail:'Sticks — NOT copper', critical:true},
+      {q:'Is there heavy contamination or is it fire-stripped?', pass:'No — light contamination only', fail:'Yes — downgrade to burnt copper', critical:false},
+    ]
+  },
+  {
+    id:'26-AL001', cat:'aluminum', name:'Aluminum Cans (UBC)', code:'1596',
+    y1:0.73, grade:'top', unit:'LB', flat:false,
+    img:'https://upload.wikimedia.org/wikipedia/commons/e/ea/Crushed_aluminium_cans.jpg',
+    desc:'Used beverage cans. Very light, crushes easily by hand. Does not stick to magnet.',
+    redFlag: null,
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — aluminum confirmed', fail:'Sticks — these are STEEL cans, reject or reclassify', critical:true},
+      {q:'Are the cans clean with no excessive liquid or food waste?', pass:'Yes — clean', fail:'Contaminated — deduct or reject', critical:false},
+    ]
+  },
+  {
+    id:'26-BR001', cat:'brass', name:'Yellow Brass', code:'4076',
+    y1:0.326, grade:'mid', unit:'LB', flat:false,
+    img:'https://upload.wikimedia.org/wikipedia/commons/b/b8/Brass_fittings.jpg',
+    desc:'Yellow-gold fittings, valves, plumbing hardware. Does not stick to magnet. Distinctly yellow-gold color.',
+    redFlag: null,
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — non-ferrous confirmed', fail:'Sticks — likely plated steel, NOT brass', critical:true},
+      {q:'Is the color yellow-gold (not reddish)?', pass:'Yes — yellow brass', fail:'Reddish — classify as Red Brass instead (higher rate)', critical:false},
+      {q:'Are there iron or steel attachments?', pass:'No iron', fail:'Remove iron parts before weighing', critical:false},
+    ]
+  },
+];
+
+// Red flag materials (to be driven from sheet in production)
+const RED_FLAGS = {
+  'municipal': {title:'MUNICIPAL PROPERTY DETECTED', text:'This material may be marked as property of a municipality, utility company, or public infrastructure. Accepting stolen municipal property is a criminal offense. Check for markings: water authority, electric company, city seals, or serial numbers. If any markings present — DO NOT ACCEPT. Call supervisor immediately.'},
+  'cemetery': {title:'POSSIBLE STOLEN PROPERTY', text:'Cemetery or memorial materials (bronze plaques, decorative metals) are frequently stolen. These are irreplaceable and carry serious criminal penalties for receivers. Inspect carefully. If suspicious — DO NOT ACCEPT.'},
+};
+
+// ─── STATE ─────────────────────────────────────────────────────────────
+let testMode = false;
+let activeCat = 'all';
+let currentMat = null;
+let currentStep = 'verify'; // verify | weight | id
+let checkResults = [];
+let txCounter = parseInt(localStorage.getItem('rr_tx') || '0');
+let analyzedMat = null;
+let warningCallback = null;
+
+// ─── SCREEN MGMT ───────────────────────────────────────────────────────
+function goScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id)?.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
+  const navMap = {catalog:'nav-catalog', analyzer:'nav-analyzer', log:'nav-log'};
+  if(navMap[id]) document.getElementById(navMap[id])?.classList.add('on');
+}
+
+// ─── TEST MODE ─────────────────────────────────────────────────────────
+function toggleTest(){
+  testMode = !testMode;
+  const t = document.getElementById('test-toggle');
+  const l = document.getElementById('test-label');
+  t.classList.toggle('on', testMode);
+  l.textContent = testMode ? 'TEST' : 'LIVE';
+  toast(testMode ? '⚠️ TEST MODE ON — transactions won\'t affect real inventory' : '✅ LIVE MODE — real transactions');
+}
+
+function setTxMode(isTest){
+  testMode = isTest;
+  const t = document.getElementById('test-toggle');
+  const l = document.getElementById('test-label');
+  if(t){ t.classList.toggle('on', isTest); }
+  if(l){ l.textContent = isTest ? 'TEST' : 'LIVE'; }
+  const btnLive = document.getElementById('btn-live');
+  const btnTest = document.getElementById('btn-test');
+  const note = document.getElementById('tx-mode-note');
+  const badge = document.getElementById('intake-test-badge');
+  if(btnLive){ btnLive.style.background = isTest ? '#2A2A2A' : '#1E7E34'; btnLive.style.color = isTest ? '#888' : '#fff'; }
+  if(btnTest){ btnTest.style.background = isTest ? '#856404' : '#2A2A2A'; btnTest.style.color = isTest ? '#000' : '#888'; }
+  if(note){ note.textContent = isTest ? '⚠️ TEST — will NOT affect real inventory' : 'Live transaction — logs to real records'; note.style.color = isTest ? '#fbbf24' : '#888'; }
+  if(badge){ badge.className = 'intake-test-badge' + (isTest ? ' show' : ''); }
+}
+
+// ─── CATALOG ───────────────────────────────────────────────────────────
+function filterCat(cat, btn){
+  activeCat = cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on'));
+  btn.classList.add('on');
+  renderGrid();
+}
+
+function renderGrid(){
+  const grid = document.getElementById('mat-grid');
+  const mats = activeCat === 'all' ? MATERIALS : MATERIALS.filter(m=>m.cat===activeCat);
+  grid.innerHTML = mats.map(m=>`
+    <div class="mat-card" onclick="startIntake('${m.id}')">
+      <div class="mat-img theme-${m.cat}">
+        <img src="${m.img}" alt="${m.name}" onerror="this.style.display='none'">
+        <div class="mat-emoji">${catEmoji(m.cat)}</div>
+        <span class="mat-grade ${gradeClass(m.grade)}">${gradeLabel(m.grade)}</span>
+        <span class="mat-cat-label cat-${m.cat}">${m.cat}</span>
+      </div>
+      <div class="mat-body">
+        <div class="mat-name">${m.name}</div>
+        <div class="mat-rate-row">
+          <span class="mat-rate-label">You pay</span>
+          <span class="mat-rate-val rate-pay">$${yr(m.y1)}/lb</span>
+        </div>
+        ${m.flat ? `<div class="mat-rate-row"><span class="mat-rate-label">Flat rate</span><span class="mat-rate-val rate-pay">$${m.flatAmt}</span></div>` : ''}
+        <div class="mat-code">SKU: ${m.id} · Code: ${m.code}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ─── INTAKE FLOW ────────────────────────────────────────────────────────
+function startIntake(id){
+  currentMat = MATERIALS.find(m=>m.id===id);
+  if(!currentMat) return;
+  checkResults = [];
+  currentStep = 'verify';
+
+  // Set hero
+  const hero = document.getElementById('intake-hero');
+  hero.className = 'intake-hero theme-' + currentMat.cat;
+  hero.innerHTML = `
+    <button class="intake-back" onclick="goScreen('catalog')">←</button>
+    <div class="intake-test-badge ${testMode?'show':''}">TEST MODE</div>
+    <img src="${currentMat.img}" alt="${currentMat.name}" style="width:100%;max-height:280px;object-fit:cover;display:block" onerror="this.style.display='none'">
+  `;
+
+  document.getElementById('intake-name').textContent = currentMat.name;
+  document.getElementById('intake-desc').textContent = currentMat.desc;
+
+  // Build verification steps
+  renderVerifySteps(0);
+
+  document.getElementById('weight-section').style.display = 'none';
+  document.getElementById('id-section').style.display = 'none';
+  document.getElementById('main-action-btn').textContent = 'CONFIRM & CONTINUE';
+
+  goScreen('intake');
+}
+
+function renderVerifySteps(activeIdx){
+  const container = document.getElementById('verify-steps');
+  const checks = currentMat.checks;
+
+  container.innerHTML = checks.map((c,i)=>`
+    <div class="verify-card ${c.critical?'critical':''}" id="check-${i}" style="${i>activeIdx?'opacity:.4;pointer-events:none':''}">
+      <div class="verify-step-num">CHECK ${i+1} OF ${checks.length}${c.critical?' · CRITICAL':''}</div>
+      <div class="verify-question">${c.q}</div>
+      <div class="verify-img">${c.passImg||catEmoji(currentMat.cat)}</div>
+      <div class="verify-btns">
+        <button class="verify-btn ${checkResults[i]==='pass'?'selected-pass':''}" onclick="recordCheck(${i},'pass')">✅ ${c.pass}</button>
+        <button class="verify-btn ${checkResults[i]==='fail'?'selected-fail':''}" onclick="recordCheck(${i},'fail')">❌ ${c.fail||'Fail'}</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function recordCheck(idx, result){
+  checkResults[idx] = result;
+  const check = currentMat.checks[idx];
+
+  if(result === 'fail' && check.critical){
+    // Show warning
+    showWarning(
+      check.failText || `Critical check failed: ${check.q}`,
+      ()=>{
+        checkResults[idx] = 'fail-override';
+        advanceChecks(idx);
+      }
+    );
+    return;
+  }
+
+  advanceChecks(idx);
+}
+
+function advanceChecks(idx){
+  renderVerifySteps(idx+1);
+
+  // If all checks done, show weight
+  if(idx >= currentMat.checks.length - 1){
+    document.getElementById('weight-section').style.display = 'block';
+    document.getElementById('main-action-btn').textContent = currentMat.flat ? 'CONFIRM FLAT RATE' : 'CONFIRM WEIGHT & PROCEED';
+    currentStep = 'weight';
+    // Scroll to weight
+    setTimeout(()=>document.getElementById('weight-section').scrollIntoView({behavior:'smooth'}),100);
+  }
+}
+
+function calcPayout(){
+  const w = parseFloat(document.getElementById('weight-input').value) || 0;
+  const m = currentMat;
+  if(!m) return;
+
+  const payRate = yr(m.y1);
+  const total = (w * parseFloat(payRate)).toFixed(2);
+
+  document.getElementById('pd-y1').textContent = `$${m.y1.toFixed(2)}/lb`;
+  document.getElementById('pd-rate').textContent = `$${payRate}/lb`;
+  document.getElementById('pd-total').textContent = `$${total}`;
+  document.getElementById('payout-display').style.display = 'block';
+}
+
+function nextStep(){
+  if(currentStep === 'verify'){
+    // Check all checks done
+    if(checkResults.length < currentMat.checks.length){
+      toast('Complete all checks before continuing');
+      return;
+    }
+    currentStep = 'weight';
+    document.getElementById('weight-section').style.display = 'block';
+  } else if(currentStep === 'weight'){
+    const w = parseFloat(document.getElementById('weight-input').value) || 0;
+    if(!currentMat.flat && w <= 0){
+      toast('Enter weight before continuing');
+      return;
+    }
+    currentStep = 'id';
+    document.getElementById('id-section').style.display = 'block';
+    document.getElementById('main-action-btn').textContent = 'CONFIRM PAYOUT';
+    setTimeout(()=>document.getElementById('id-section').scrollIntoView({behavior:'smooth'}),100);
+  } else if(currentStep === 'id'){
+    confirmTransaction();
+  }
+}
+
+function confirmTransaction(){
+  txCounter++;
+  localStorage.setItem('rr_tx', txCounter);
+  const prefix = testMode ? 'T72' : '72';
+  const txId = `${prefix}-${String(txCounter).padStart(4,'0')}`;
+  const w = parseFloat(document.getElementById('weight-input').value) || 0;
+  const payRate = parseFloat(yr(currentMat.y1));
+  const total = currentMat.flat ? currentMat.flatAmt : (w * payRate).toFixed(2);
+  const supplierName = document.getElementById('supplier-name').value || 'Not provided';
+  const supplierId = document.getElementById('supplier-id').value || 'Not provided';
+  const now = new Date();
+
+  // Build confirm screen
+  document.getElementById('confirm-title').textContent = testMode ? 'TEST Transaction Logged' : 'Transaction Complete';
+  document.getElementById('confirm-sub').textContent = testMode ? 'This was a TEST transaction. No real payout.' : 'Payout confirmed. Send supplier to cashier.';
+  document.getElementById('confirm-txid').textContent = txId;
+  document.getElementById('confirm-card').innerHTML = `
+    <div class="confirm-row"><span class="confirm-key">Material</span><span class="confirm-val">${currentMat.name}</span></div>
+    <div class="confirm-row"><span class="confirm-key">Weight</span><span class="confirm-val">${currentMat.flat ? 'Flat rate' : w + ' lbs'}</span></div>
+    <div class="confirm-row"><span class="confirm-key">Pay rate</span><span class="confirm-val">$${payRate}/lb</span></div>
+    <div class="confirm-row"><span class="confirm-key">PAYOUT</span><span class="confirm-val" style="color:#4ade80;font-size:22px">$${total}</span></div>
+    <div class="confirm-row"><span class="confirm-key">Supplier</span><span class="confirm-val">${supplierName}</span></div>
+    <div class="confirm-row"><span class="confirm-key">ID#</span><span class="confirm-val">${supplierId}</span></div>
+    <div class="confirm-row"><span class="confirm-key">Time</span><span class="confirm-val">${now.toLocaleTimeString()}</span></div>
+    ${testMode ? '<div class="confirm-row"><span class="confirm-key">Mode</span><span class="confirm-val" style="color:var(--amber)">⚠️ TEST</span></div>' : ''}
+  `;
+
+  // Log to localStorage (Phase 2 will write to Google Sheet)
+  const txLog = JSON.parse(localStorage.getItem('rr_log') || '[]');
+  txLog.push({txId, mat:currentMat.name, sku:currentMat.id, weight:w, payRate, total, supplier:supplierName, supplierId, test:testMode, time:now.toISOString()});
+  localStorage.setItem('rr_log', JSON.stringify(txLog));
+
+  goScreen('confirm');
+}
+
+function newTransaction(){
+  document.getElementById('weight-input').value = '';
+  document.getElementById('supplier-name').value = '';
+  document.getElementById('supplier-id').value = '';
+  goScreen('catalog');
+}
+
+// ─── AI ANALYZER ───────────────────────────────────────────────────────
+function goAnalyzer(){
+  resetAnalyzer();
+  goScreen('analyzer');
+}
+
+function analyzeImage(input){
+  const file = input.files[0];
+  if(!file) return;
+
+  // Show preview
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('analyzer-preview');
+    prev.src = e.target.result;
+    prev.style.display = 'block';
+    document.getElementById('analyzer-loading').style.display = 'block';
+    document.getElementById('analyzer-result').classList.remove('show');
+
+    // Call Anthropic API
+    callAIAnalyzer(e.target.result);
+  };
+  reader.readAsDataURL(file);
+}
+
+async function callAIAnalyzer(dataUrl){
+  const base64 = dataUrl.split(',')[1];
+  const mimeType = dataUrl.split(';')[0].split(':')[1];
+
+  const matList = MATERIALS.map(m=>`- ${m.name} (${m.id}): ${m.desc}`).join('\n');
+
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:500,
+        messages:[{
+          role:'user',
+          content:[
+            {type:'image', source:{type:'base64', media_type:mimeType, data:base64}},
+            {type:'text', text:`You are a scrap metal identification expert. Look at this image and identify what scrap metal material it is.
+
+Our catalog includes:
+${matList}
+
+Respond in JSON only:
+{"material_id":"26-CU001","material_name":"Bare Bright Copper","confidence":"high","reasoning":"One sentence why","warning":null}
+
+If you see any signs of municipal property, cemetery materials, or stolen goods, set warning to a brief alert string. If not, set warning to null. Respond with JSON only, no other text.`}
+          ]
+        }]
+      })
+    });
+
+    const data = await resp.json();
+    const text = data.content[0].text;
+    const result = JSON.parse(text);
+
+    document.getElementById('analyzer-loading').style.display = 'none';
+
+    const mat = MATERIALS.find(m=>m.id===result.material_id);
+    analyzedMat = mat || null;
+
+    document.getElementById('ar-mat').textContent = result.material_name || 'Unknown material';
+    document.getElementById('ar-conf').textContent = `Confidence: ${result.confidence} · ${result.reasoning}`;
+    document.getElementById('ar-desc').textContent = mat ? mat.desc : 'Material not in current catalog. Please identify manually.';
+    document.getElementById('ar-start-btn').style.display = mat ? 'block' : 'none';
+    document.getElementById('analyzer-result').classList.add('show');
+
+    if(result.warning){
+      setTimeout(()=>showWarning(result.warning, null), 500);
+    }
+  } catch(e){
+    document.getElementById('analyzer-loading').style.display = 'none';
+    document.getElementById('ar-mat').textContent = 'Could not analyze';
+    document.getElementById('ar-conf').textContent = 'API error — identify manually from catalog';
+    document.getElementById('ar-desc').textContent = '';
+    document.getElementById('ar-start-btn').style.display = 'none';
+    document.getElementById('analyzer-result').classList.add('show');
+  }
+}
+
+function startFromAnalyzer(){
+  if(analyzedMat) startIntake(analyzedMat.id);
+}
+
+function resetAnalyzer(){
+  document.getElementById('analyzer-file').value = '';
+  const prev = document.getElementById('analyzer-preview');
+  prev.src = '';
+  prev.style.display = 'none';
+  document.getElementById('analyzer-loading').style.display = 'none';
+  document.getElementById('analyzer-result').classList.remove('show');
+  analyzedMat = null;
+}
+
+// ─── WARNING ────────────────────────────────────────────────────────────
+function showWarning(text, callback){
+  warningCallback = callback;
+  document.getElementById('warning-title').textContent = '🚨 STOP — RED FLAG';
+  document.getElementById('warning-text').textContent = text;
+  document.getElementById('warning-overlay').classList.add('show');
+}
+
+function dismissWarning(){
+  document.getElementById('warning-overlay').classList.remove('show');
+  if(warningCallback) warningCallback();
+  warningCallback = null;
+}
+
+// ─── HELPERS ────────────────────────────────────────────────────────────
+function yr(y1){ return (y1*0.75).toFixed(2); }
+function catEmoji(cat){ return {copper:'🔶',wire:'🔌',aluminum:'⬜',brass:'🟡',ferrous:'⚙️',ewaste:'💻'}[cat]||'📦'; }
+function gradeClass(g){ return {top:'grade-top',mid:'grade-mid',low:'grade-low'}[g]||'grade-low'; }
+function gradeLabel(g){ return {top:'⭐ TOP',mid:'✔ MID',low:'▼ LOW'}[g]||'LOW'; }
+
+function toast(msg){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'), 2800);
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────
+// Password gate
+(function(){
+  const PASS = 'hashemhavaya';
+  const SESSION_KEY = 'rr_auth';
+  if(sessionStorage.getItem(SESSION_KEY) === '1'){ renderGrid(); return; }
+
+  // Build gate screen
+  document.body.innerHTML = `
+    <div style="position:fixed;inset:0;background:#0F0F0F;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;font-family:'Barlow Condensed',sans-serif">
+      <div style="font-size:48px;margin-bottom:8px">♻️</div>
+      <div style="font-size:32px;font-weight:800;color:#FAFAFA;letter-spacing:2px;margin-bottom:4px">RUSTIC <span style="color:#E8520D">RECYCLING</span></div>
+      <div style="font-size:14px;color:#888;margin-bottom:40px;letter-spacing:1px">YARD OPERATIONS — AUTHORIZED ACCESS ONLY</div>
+      <input id="gate-input" type="password" placeholder="Enter passphrase" autocomplete="off"
+        style="width:100%;max-width:320px;background:#1C1C1C;border:2px solid #3A3A3A;border-radius:12px;padding:16px;color:#FAFAFA;font-family:'Barlow Condensed',sans-serif;font-size:20px;text-align:center;outline:none;margin-bottom:12px;letter-spacing:2px"
+        onkeydown="if(event.key==='Enter')checkPass()">
+      <button onclick="checkPass()"
+        style="width:100%;max-width:320px;padding:16px;background:#C0390B;border:none;border-radius:12px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;cursor:pointer;letter-spacing:1px">
+        ENTER
+      </button>
+      <div id="gate-err" style="margin-top:16px;color:#f87171;font-size:15px;min-height:20px"></div>
+    </div>
+  ` + document.body.innerHTML;
+
+  window.checkPass = function(){
+    const val = document.getElementById('gate-input').value.trim().toLowerCase();
+    if(val === PASS){
+      sessionStorage.setItem(SESSION_KEY, '1');
+      location.reload();
+    } else {
+      document.getElementById('gate-err').textContent = 'Incorrect passphrase. Try again.';
+      document.getElementById('gate-input').value = '';
+      document.getElementById('gate-input').focus();
+    }
+  };
+})();
+</script>
+</body>
+</html>
