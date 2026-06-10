@@ -2,808 +2,2214 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Rustic Recycling</title>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Rustic Yard">
+<meta name="theme-color" content="#C0390B">
+<link rel="manifest" href="data:application/manifest+json,{%22name%22:%22Rustic%20Recycling%22,%22short_name%22:%22RusticYard%22,%22display%22:%22standalone%22,%22background_color%22:%22%230F0F0F%22,%22theme_color%22:%22%23C0390B%22,%22start_url%22:%22.%22,%22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20192%20192'%3E%3Crect%20width='192'%20height='192'%20fill='%23C0390B'/%3E%3Ctext%20x='96'%20y='130'%20font-size='100'%20text-anchor='middle'%20fill='white'%3E%E2%99%BB%3C/text%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]}">
+<title>Rustic Yard Operations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-/* ─── TOKENS ─────────────────────────────────────────────────────────── */
-:root{
+:root {
   --rust:#C0390B; --rust2:#E8520D; --rust3:#8B2A08;
   --ink:#0F0F0F; --ink2:#1C1C1C; --ink3:#2A2A2A;
   --stone:#3A3A3A; --mist:#888; --smoke:#BBB; --fog:#E8E8E8; --white:#FAFAFA;
   --green:#1E7E34; --green2:#D4EDDA; --amber:#856404; --amber2:#FFF3CD;
-  --red:#721C24; --red2:#F8D7DA;
-  --blue:#0C5460; --blue2:#D1ECF1;
-  --fh:'Barlow Condensed',sans-serif;
-  --fb:'Barlow',sans-serif;
+  --red:#721C24; --red2:#F8D7DA; --blue:#0C5460; --blue2:#D1ECF1;
+  --fh:'Barlow Condensed',sans-serif; --fb:'Barlow',sans-serif;
   --r:12px; --r2:20px;
   --shadow:0 2px 12px rgba(0,0,0,.12);
-  --shadow2:0 4px 24px rgba(0,0,0,.18);
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;overflow:hidden}
-body{background:var(--ink);color:var(--white);font-family:var(--fb);font-size:16px}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overflow:hidden;background:var(--ink);}
+body{font-family:var(--fb);color:var(--white);}
 
-/* ─── SCREENS ────────────────────────────────────────────────────────── */
-.screen{position:fixed;inset:0;overflow-y:auto;display:none;flex-direction:column;background:var(--ink)}
-.screen.active{display:flex}
+.screen{display:none;position:fixed;inset:0;overflow-y:auto;background:var(--ink);-webkit-overflow-scrolling:touch;}
+.screen.active{display:flex;flex-direction:column;}
 
-/* ─── TOP BAR ────────────────────────────────────────────────────────── */
-.topbar{background:var(--ink2);border-bottom:3px solid var(--rust);padding:14px 16px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0;position:sticky;top:0;z-index:50}
-.topbar-logo{font-family:var(--fh);font-size:24px;font-weight:800;letter-spacing:1px;color:var(--white);line-height:1}
-.topbar-logo span{color:var(--rust2)}
-.topbar-right{display:flex;gap:8px;align-items:center}
-.test-toggle{display:flex;align-items:center;gap:6px;background:var(--ink3);border:1.5px solid var(--stone);border-radius:20px;padding:6px 12px;cursor:pointer;font-size:13px;font-weight:600;color:var(--mist)}
-.test-toggle.on{border-color:var(--amber);color:var(--amber);background:#2a1f00}
-.test-dot{width:8px;height:8px;border-radius:50%;background:var(--mist)}
-.test-toggle.on .test-dot{background:var(--amber)}
+/* TOP BAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--ink2);border-bottom:2px solid var(--rust);position:sticky;top:0;z-index:100;flex-shrink:0;}
+.topbar-logo{font-family:var(--fh);font-size:20px;font-weight:800;color:var(--rust2);letter-spacing:1px;}
+.topbar-logo span{color:var(--smoke);}
+.user-chip{background:var(--stone);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:600;color:var(--smoke);}
 
-/* ─── CATEGORY TABS ─────────────────────────────────────────────────── */
-.cats{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;flex-shrink:0;background:var(--ink2);border-bottom:1px solid var(--ink3)}
-.cats::-webkit-scrollbar{display:none}
-.cat-btn{flex-shrink:0;padding:8px 16px;border-radius:20px;border:1.5px solid var(--stone);background:transparent;color:var(--mist);font-family:var(--fb);font-size:14px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .15s}
-.cat-btn.on{background:var(--rust);border-color:var(--rust);color:var(--white)}
+/* BOTTOM NAV */
+.bottom-nav{display:flex;background:var(--ink2);border-top:1px solid var(--stone);position:sticky;bottom:0;z-index:100;flex-shrink:0;}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px 4px;font-size:9px;font-weight:600;color:var(--mist);text-transform:uppercase;letter-spacing:.5px;cursor:pointer;transition:color .2s;}
+.nav-btn.active,.nav-btn:active{color:var(--rust2);}
+.nav-btn svg{width:20px;height:20px;margin-bottom:3px;}
 
-/* ─── SCAN BAR ───────────────────────────────────────────────────────── */
-.scan-bar{padding:12px 16px;background:var(--ink2);border-bottom:1px solid var(--ink3);flex-shrink:0}
-.scan-btn{width:100%;padding:13px;background:var(--ink3);border:2px dashed var(--rust);border-radius:var(--r);color:var(--rust2);font-family:var(--fb);font-size:15px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
-.scan-btn:active{opacity:.8}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:14px 24px;border-radius:var(--r);border:none;font-family:var(--fh);font-size:16px;font-weight:700;letter-spacing:.5px;cursor:pointer;transition:all .15s;text-transform:uppercase;}
+.btn-primary{background:var(--rust);color:var(--white);}
+.btn-primary:active{background:var(--rust3);}
+.btn-secondary{background:var(--stone);color:var(--white);}
+.btn-secondary:active{background:#555;}
+.btn-success{background:var(--green);color:var(--white);}
+.btn-success:active{background:#155724;}
+.btn-danger{background:var(--red);color:var(--white);}
+.btn-block{width:100%;display:flex;}
+.btn-sm{padding:8px 16px;font-size:13px;}
+.btn-lg{padding:18px 32px;font-size:20px;}
 
-/* ─── MATERIAL GRID ─────────────────────────────────────────────────── */
-.mat-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:12px 16px 80px;flex:1}
-@media(min-width:600px){.mat-grid{grid-template-columns:repeat(3,1fr)}}
+/* INPUTS */
+.form-group{margin-bottom:16px;}
+.form-label{display:block;font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--smoke);margin-bottom:6px;}
+.form-input{width:100%;padding:13px 14px;background:var(--ink3);border:1.5px solid var(--stone);border-radius:var(--r);color:var(--white);font-family:var(--fb);font-size:16px;outline:none;transition:border-color .2s;}
+.form-input:focus{border-color:var(--rust2);}
+.form-input::placeholder{color:var(--mist);}
+select.form-input{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.5' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;}
 
-.mat-card{background:var(--ink2);border:1.5px solid var(--ink3);border-radius:var(--r2);overflow:hidden;cursor:pointer;transition:border-color .15s,transform .1s;active:transform scale(.97)}
-.mat-card:active{transform:scale(.97)}
+/* CARDS */
+.card{background:var(--ink2);border-radius:var(--r2);padding:16px;border:1px solid var(--stone);margin-bottom:12px;}
+.card-title{font-family:var(--fh);font-size:18px;font-weight:700;margin-bottom:4px;}
 
-.mat-img{width:100%;aspect-ratio:4/3;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
-.mat-img img{width:100%;height:100%;object-fit:cover;display:block}
-.mat-img .mat-emoji{font-size:56px;position:absolute}
-.mat-grade{position:absolute;top:8px;right:8px;font-size:10px;font-family:var(--fh);font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;z-index:2}
-.grade-top{background:#1a3a25;color:#4ade80}
-.grade-mid{background:#3a2a00;color:#fbbf24}
-.grade-low{background:#3a1010;color:#f87171}
-.mat-cat-label{position:absolute;top:8px;left:8px;font-size:9px;font-family:var(--fh);font-weight:700;letter-spacing:1px;padding:3px 8px;border-radius:4px;z-index:2;text-transform:uppercase}
+/* STATUS CHIPS */
+.chip{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;}
+.chip-open{background:var(--amber2);color:var(--amber);}
+.chip-weighed{background:var(--blue2);color:var(--blue);}
+.chip-complete{background:var(--green2);color:var(--green);}
+.chip-flagged{background:var(--red2);color:var(--red);}
+.chip-test{background:#2d2d2d;color:var(--smoke);border:1px dashed var(--mist);}
 
-.mat-body{padding:12px}
-.mat-name{font-family:var(--fh);font-size:18px;font-weight:700;line-height:1.2;margin-bottom:8px;color:var(--white)}
-.mat-rate-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0}
-.mat-rate-label{font-size:12px;color:var(--mist)}
-.mat-rate-val{font-size:16px;font-weight:600;font-family:var(--fh)}
-.rate-pay{color:#4ade80}
-.mat-code{font-size:11px;color:var(--stone);margin-top:4px}
+/* GRADE BADGES */
+.grade-badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:10px;font-weight:700;text-transform:uppercase;}
+.grade-top{background:var(--green2);color:var(--green);}
+.grade-mid{background:var(--amber2);color:var(--amber);}
+.grade-low{background:var(--red2);color:var(--red);}
 
-/* ─── INTAKE FLOW SCREEN ────────────────────────────────────────────── */
-#intake{background:var(--ink)}
+/* CATEGORY THEMES */
+.theme-copper{border-left:4px solid #b45309;}
+.theme-wire{border-left:4px solid #1d4ed8;}
+.theme-aluminum{border-left:4px solid #6b7280;}
+.theme-brass{border-left:4px solid #d97706;}
+.theme-ferrous{border-left:4px solid #374151;}
+.theme-ewaste{border-left:4px solid #7c3aed;}
 
-.intake-hero{position:relative;width:100%;background:var(--ink3);flex-shrink:0}
-.intake-hero img{width:100%;max-height:280px;object-fit:cover;display:block}
-.intake-hero-fb{width:100%;height:220px;display:flex;align-items:center;justify-content:center;font-size:96px}
-.intake-back{position:absolute;top:14px;left:14px;width:40px;height:40px;background:rgba(0,0,0,.6);border-radius:50%;border:none;color:var(--white);font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.intake-test-badge{position:absolute;top:14px;right:14px;background:var(--amber);color:#000;font-family:var(--fh);font-size:13px;font-weight:700;padding:4px 10px;border-radius:4px;letter-spacing:1px;display:none}
-.intake-test-badge.show{display:block}
+/* MATERIAL CARDS */
+.mat-card{background:var(--ink2);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:space-between;border:1px solid var(--stone);}
+.mat-card:active{opacity:.7;}
+.mat-card-left{flex:1;}
+.mat-card-name{font-family:var(--fh);font-size:17px;font-weight:700;}
+.mat-card-sku{font-size:11px;color:var(--mist);margin-top:2px;}
+.mat-card-right{text-align:right;}
+.mat-card-rate{font-family:var(--fh);font-size:22px;font-weight:800;color:var(--rust2);}
+.mat-card-unit{font-size:11px;color:var(--mist);}
 
-.intake-body{padding:16px;flex:1}
-.intake-mat-name{font-family:var(--fh);font-size:32px;font-weight:800;line-height:1.1;margin-bottom:4px}
-.intake-mat-desc{font-size:15px;color:var(--smoke);line-height:1.6;margin-bottom:16px}
+/* FILTER TABS */
+.filter-tabs{display:flex;gap:8px;overflow-x:auto;padding:12px 16px;scrollbar-width:none;flex-shrink:0;}
+.filter-tabs::-webkit-scrollbar{display:none;}
+.filter-tab{white-space:nowrap;padding:6px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;transition:all .15s;border:1.5px solid var(--stone);color:var(--smoke);background:transparent;}
+.filter-tab.active{background:var(--rust);border-color:var(--rust);color:var(--white);}
 
-/* ─── VERIFY STEP ───────────────────────────────────────────────────── */
-.verify-card{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:16px;border:2px solid var(--ink3)}
-.verify-card.critical{border-color:var(--rust)}
-.verify-step-num{font-family:var(--fh);font-size:13px;font-weight:700;color:var(--rust2);letter-spacing:2px;margin-bottom:6px}
-.verify-question{font-family:var(--fh);font-size:24px;font-weight:700;line-height:1.3;margin-bottom:16px}
-.verify-img{width:100%;border-radius:var(--r);margin-bottom:16px;background:var(--ink3);min-height:120px;display:flex;align-items:center;justify-content:center;font-size:48px}
-.verify-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.verify-btn{padding:16px;border-radius:var(--r);border:2px solid var(--stone);background:var(--ink3);color:var(--white);font-family:var(--fh);font-size:20px;font-weight:700;cursor:pointer;text-align:center;transition:all .15s}
-.verify-btn.pass{border-color:var(--green);color:#4ade80}
-.verify-btn.fail{border-color:var(--red2);color:#f87171}
-.verify-btn.selected-pass{background:var(--green);border-color:var(--green);color:var(--white)}
-.verify-btn.selected-fail{background:#7f1d1d;border-color:#f87171;color:#f87171}
+/* MODE TOGGLE */
+.mode-toggle{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;}
+.mode-btn{padding:16px;border-radius:var(--r);border:2px solid var(--stone);background:transparent;color:var(--smoke);font-family:var(--fh);font-size:18px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;}
+.mode-btn.active-live{border-color:var(--green);background:#0a2e12;color:#4ade80;}
+.mode-btn.active-test{border-color:var(--amber);background:#2a1f00;color:#fbbf24;}
 
-/* ─── WEIGHT & PAYOUT ───────────────────────────────────────────────── */
-.weight-section{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:16px}
-.section-label{font-family:var(--fh);font-size:14px;font-weight:700;color:var(--rust2);letter-spacing:2px;margin-bottom:12px}
-.weight-input{width:100%;background:var(--ink3);border:2px solid var(--stone);border-radius:var(--r);padding:16px;color:var(--white);font-family:var(--fh);font-size:36px;font-weight:700;text-align:center;outline:none;transition:border-color .15s}
-.weight-input:focus{border-color:var(--rust2)}
-.weight-unit{text-align:center;font-size:14px;color:var(--mist);margin-top:6px}
-.payout-display{background:var(--ink3);border-radius:var(--r);padding:16px;margin-top:12px}
-.payout-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--stone)}
-.payout-row:last-child{border-bottom:none;padding-top:10px;margin-top:4px}
-.payout-label{font-size:14px;color:var(--mist)}
-.payout-val{font-family:var(--fh);font-size:20px;font-weight:700}
-.payout-total{font-size:28px;color:#4ade80}
+/* STEP WIZARD */
+.wizard-header{padding:16px;background:var(--ink2);border-bottom:1px solid var(--stone);flex-shrink:0;}
+.step-counter{font-size:12px;color:var(--mist);margin-bottom:4px;text-transform:uppercase;letter-spacing:.5px;}
+.step-title{font-family:var(--fh);font-size:22px;font-weight:800;}
+.step-progress{display:flex;gap:6px;margin-top:10px;}
+.step-dot{height:4px;border-radius:2px;flex:1;background:var(--stone);transition:background .3s;}
+.step-dot.done{background:var(--rust);}
+.step-dot.active{background:var(--rust2);}
+.wizard-body{flex:1;padding:16px;overflow-y:auto;}
+.wizard-footer{padding:16px;border-top:1px solid var(--stone);display:flex;gap:10px;flex-shrink:0;}
 
-/* ─── SUPPLIER ID ───────────────────────────────────────────────────── */
-.id-section{background:var(--ink2);border-radius:var(--r2);padding:20px;margin-bottom:16px}
-.id-input{width:100%;background:var(--ink3);border:2px solid var(--stone);border-radius:var(--r);padding:14px 16px;color:var(--white);font-family:var(--fb);font-size:17px;outline:none;margin-bottom:10px;transition:border-color .15s}
-.id-input:focus{border-color:var(--rust2)}
-.id-input::placeholder{color:var(--stone)}
-.photo-btn{width:100%;padding:13px;background:var(--ink3);border:2px dashed var(--stone);border-radius:var(--r);color:var(--mist);font-family:var(--fb);font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px}
+/* PHOTO CAPTURE */
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.photo-slot{background:var(--ink3);border:2px dashed var(--stone);border-radius:var(--r);aspect-ratio:4/3;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;}
+.photo-slot.captured{border-style:solid;border-color:var(--green);}
+.photo-slot img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;}
+.photo-slot-label{font-size:11px;font-weight:600;text-transform:uppercase;color:var(--mist);margin-top:6px;}
+.photo-slot-icon{font-size:28px;pointer-events:none;}
+.photo-slot .check-badge{position:absolute;top:6px;right:6px;background:var(--green);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:12px;}
 
-/* ─── ACTION BTN ────────────────────────────────────────────────────── */
-.action-btn{width:100%;padding:18px;background:var(--rust);border:none;border-radius:var(--r);color:var(--white);font-family:var(--fh);font-size:22px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:background .15s;margin-bottom:8px}
-.action-btn:active{background:var(--rust3)}
-.action-btn:disabled{background:var(--stone);cursor:not-allowed}
-.action-btn.secondary{background:transparent;border:2px solid var(--stone);color:var(--smoke)}
+/* CHECK SCREEN */
+.check-card{background:var(--ink2);border-radius:var(--r2);padding:24px;border:1px solid var(--stone);}
+.check-question{font-family:var(--fh);font-size:22px;font-weight:700;line-height:1.3;margin-bottom:24px;}
+.check-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.check-pass{background:#0a2e12;border:2px solid var(--green);color:#4ade80;}
+.check-fail{background:#2a0a0a;border:2px solid var(--red);color:#f87171;}
+.critical-badge{display:inline-flex;align-items:center;gap:4px;background:var(--red2);color:var(--red);padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;margin-bottom:16px;}
 
-/* ─── CONFIRM SCREEN ────────────────────────────────────────────────── */
-#confirm{background:var(--ink)}
-.confirm-body{padding:32px 20px;display:flex;flex-direction:column;align-items:center;text-align:center;flex:1}
-.confirm-icon{font-size:72px;margin-bottom:16px}
-.confirm-title{font-family:var(--fh);font-size:36px;font-weight:800;margin-bottom:8px}
-.confirm-sub{font-size:16px;color:var(--smoke);margin-bottom:24px;line-height:1.6}
-.confirm-card{background:var(--ink2);border-radius:var(--r2);padding:20px;width:100%;text-align:left;margin-bottom:24px}
-.confirm-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--stone);font-size:15px}
-.confirm-row:last-child{border-bottom:none}
-.confirm-key{color:var(--mist)}
-.confirm-val{font-weight:600;color:var(--white)}
-.confirm-txid{font-family:var(--fh);font-size:28px;font-weight:800;color:var(--rust2);text-align:center;margin-bottom:8px}
+/* OVERLAY */
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.85);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.overlay.active{display:flex;}
+.overlay-box{background:var(--ink2);border-radius:var(--r2);padding:24px;width:100%;max-width:400px;border:2px solid var(--red);}
+.overlay-box.warn{border-color:var(--amber);}
 
-/* ─── AI ANALYZER SCREEN ─────────────────────────────────────────────── */
-#analyzer{background:var(--ink)}
-.analyzer-body{padding:20px;flex:1;display:flex;flex-direction:column;gap:16px}
-.analyzer-drop{width:100%;aspect-ratio:4/3;background:var(--ink2);border:3px dashed var(--rust);border-radius:var(--r2);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:12px;position:relative;overflow:hidden}
-.analyzer-drop img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
-.analyzer-drop-text{font-family:var(--fh);font-size:22px;font-weight:700;color:var(--rust2);z-index:2}
-.analyzer-drop-sub{font-size:14px;color:var(--mist);z-index:2}
-#analyzer-file{display:none}
-.analyzer-result{background:var(--ink2);border-radius:var(--r2);padding:20px;display:none}
-.analyzer-result.show{display:block}
-.analyzer-result-label{font-family:var(--fh);font-size:13px;color:var(--rust2);letter-spacing:2px;margin-bottom:8px}
-.analyzer-mat{font-family:var(--fh);font-size:28px;font-weight:800;margin-bottom:6px}
-.analyzer-conf{font-size:14px;color:var(--mist);margin-bottom:12px}
-.analyzer-desc{font-size:15px;color:var(--smoke);line-height:1.6;margin-bottom:16px}
-.analyzer-loading{text-align:center;padding:20px;color:var(--mist);font-size:15px;display:none}
-.spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--stone);border-top-color:var(--rust2);border-radius:50%;animation:spin .8s linear infinite;vertical-align:middle;margin-right:8px}
-@keyframes spin{to{transform:rotate(360deg)}}
+/* CODE DISPLAY */
+.code-display{background:var(--ink3);border:2px solid var(--rust2);border-radius:var(--r2);padding:24px;text-align:center;margin:16px 0;}
+.code-big{font-family:var(--fh);font-size:64px;font-weight:800;color:var(--rust2);letter-spacing:8px;}
+.code-label{font-size:12px;color:var(--mist);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;}
 
-/* ─── BOTTOM NAV ────────────────────────────────────────────────────── */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;background:var(--ink2);border-top:1px solid var(--ink3);display:flex;z-index:100;padding:0 0 env(safe-area-inset-bottom,0)}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px 4px 8px;cursor:pointer;border:none;background:transparent;color:var(--mist);font-family:var(--fb);font-size:11px;font-weight:600;gap:4px;transition:color .15s}
-.nav-item.on{color:var(--rust2)}
-.nav-icon{font-size:22px;line-height:1}
+/* PAYOUT DISPLAY */
+.payout-display{background:#0a2e12;border:2px solid var(--green);border-radius:var(--r2);padding:20px;text-align:center;}
+.payout-amount{font-family:var(--fh);font-size:56px;font-weight:800;color:#4ade80;}
+.payout-label{font-size:13px;color:var(--green);text-transform:uppercase;letter-spacing:1px;}
 
-/* ─── MATERIAL COLOR THEMES ─────────────────────────────────────────── */
-.theme-copper{background:linear-gradient(135deg,#7B2D00,#3D1500)}
-.theme-wire{background:linear-gradient(135deg,#2D1B4E,#1A0F30)}
-.theme-aluminum{background:linear-gradient(135deg,#0E2535,#071520)}
-.theme-brass{background:linear-gradient(135deg,#3D2E00,#1F1800)}
-.theme-ferrous{background:linear-gradient(135deg,#1A1A2E,#0D0D1A)}
-.theme-ewaste{background:linear-gradient(135deg,#0A2E1A,#051A0D)}
+/* TRANSACTION ROW */
+.tx-row{background:var(--ink2);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;cursor:pointer;border:1px solid var(--stone);display:flex;align-items:center;justify-content:space-between;gap:12px;}
+.tx-row.flagged{border-color:var(--red);border-width:2px;}
+.tx-row:active{opacity:.7;}
+.tx-row-left{flex:1;min-width:0;}
+.tx-code{font-family:var(--fh);font-size:22px;font-weight:800;color:var(--rust2);}
+.tx-name{font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.tx-mat{font-size:12px;color:var(--mist);}
+.tx-row-right{text-align:right;flex-shrink:0;}
+.tx-payout{font-family:var(--fh);font-size:18px;font-weight:700;color:#4ade80;}
+.tx-elapsed{font-size:11px;color:var(--mist);}
 
-.cat-copper{background:rgba(123,45,0,.85);color:#FF8C42}
-.cat-wire{background:rgba(45,27,78,.85);color:#C39BD3}
-.cat-aluminum{background:rgba(14,37,53,.85);color:#5DADE2}
-.cat-brass{background:rgba(61,46,0,.85);color:#F7DC6F}
-.cat-ferrous{background:rgba(26,26,46,.85);color:#8899BB}
-.cat-ewaste{background:rgba(10,46,26,.85);color:#58D68D}
+/* SYNC BADGE */
+.sync-badge{background:var(--amber2);color:var(--amber);border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;display:none;}
+.sync-badge.show{display:inline-block;}
 
-/* ─── WARNING OVERLAY ───────────────────────────────────────────────── */
-.warning-overlay{position:fixed;inset:0;background:rgba(139,0,0,.95);z-index:200;display:none;flex-direction:column;align-items:center;justify-content:center;padding:32px;text-align:center}
-.warning-overlay.show{display:flex}
-.warning-icon{font-size:80px;margin-bottom:16px}
-.warning-title{font-family:var(--fh);font-size:36px;font-weight:800;margin-bottom:12px;color:var(--white)}
-.warning-text{font-size:17px;color:rgba(255,255,255,.85);line-height:1.7;margin-bottom:28px}
-.warning-dismiss{padding:16px 32px;background:var(--white);border:none;border-radius:var(--r);color:var(--red);font-family:var(--fh);font-size:20px;font-weight:800;cursor:pointer}
+/* OFFLINE BANNER */
+.offline-banner{background:var(--red2);color:var(--red);padding:10px 16px;text-align:center;font-size:13px;font-weight:600;display:none;}
+.offline-banner.show{display:block;}
 
-/* ─── TOAST ─────────────────────────────────────────────────────────── */
-.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:var(--ink2);border:1px solid var(--stone);border-radius:var(--r);padding:12px 20px;font-size:14px;font-weight:600;z-index:300;opacity:0;transition:opacity .3s;white-space:nowrap;pointer-events:none}
-.toast.show{opacity:1}
+/* RECEIPT MODAL */
+.receipt-modal{background:var(--white);color:var(--ink);font-family:'Courier New',monospace;font-size:13px;border-radius:var(--r);padding:20px;white-space:pre;line-height:1.6;max-height:60vh;overflow-y:auto;}
+
+/* WEIGHT CALC */
+.weight-calc{background:var(--ink3);border-radius:var(--r);padding:12px 16px;margin-top:8px;}
+.weight-calc-row{display:flex;justify-content:space-between;align-items:center;padding:4px 0;}
+.weight-calc-row.total{border-top:1px solid var(--stone);margin-top:6px;padding-top:8px;}
+.weight-calc-label{font-size:13px;color:var(--mist);}
+.weight-calc-val{font-family:var(--fh);font-size:18px;font-weight:700;}
+.weight-net{color:#4ade80;}
+
+/* DETAIL GRID */
+.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.detail-item{background:var(--ink3);border-radius:var(--r);padding:10px 12px;}
+.detail-item-label{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(--mist);margin-bottom:3px;}
+.detail-item-val{font-size:15px;font-weight:600;}
+.detail-item.full{grid-column:1/-1;}
+
+/* PHOTO THUMB GRID */
+.photo-thumb-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+.photo-thumb{aspect-ratio:1;border-radius:var(--r);background:var(--ink3);overflow:hidden;cursor:pointer;}
+.photo-thumb img{width:100%;height:100%;object-fit:cover;}
+.photo-thumb-empty{display:flex;align-items:center;justify-content:center;font-size:20px;color:var(--stone);}
+
+/* GAYLOAD FORM */
+.payment-tabs{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px;}
+.payment-tab{padding:10px;border-radius:var(--r);border:1.5px solid var(--stone);background:transparent;color:var(--smoke);font-family:var(--fh);font-size:15px;font-weight:700;cursor:pointer;text-align:center;transition:all .2s;}
+.payment-tab.active{border-color:var(--rust2);background:#2a0f08;color:var(--rust2);}
+
+/* VARIANCE */
+.variance-ok{color:#4ade80;font-weight:700;}
+.variance-warn{color:#fbbf24;font-weight:700;}
+.variance-bad{color:#f87171;font-weight:700;}
+
+/* LOADING SPINNER */
+.spinner{width:24px;height:24px;border:3px solid var(--stone);border-top-color:var(--rust2);border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* SECTION HEADER */
+.section-hdr{font-family:var(--fh);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--mist);padding:16px 16px 6px;}
+
+/* TOAST */
+#toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--ink3);color:var(--white);padding:10px 20px;border-radius:30px;font-size:14px;font-weight:600;opacity:0;transition:all .3s;z-index:999;pointer-events:none;white-space:nowrap;}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+/* MISC */
+.divider{height:1px;background:var(--stone);margin:16px 0;}
+.text-muted{color:var(--mist);font-size:13px;}
+.text-center{text-align:center;}
+.mt-8{margin-top:8px;}
+.mt-16{margin-top:16px;}
+.mb-16{margin-bottom:16px;}
+.p-16{padding:16px;}
+.flex-between{display:flex;justify-content:space-between;align-items:center;}
 </style>
 </head>
 <body>
 
-<!-- ── CATALOG SCREEN ─────────────────────────────────────────────────── -->
-<div class="screen active" id="catalog">
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- ============================================================
+     LOGIN SCREEN
+     ============================================================ -->
+<div id="screen-login" class="screen active">
+  <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;">
+    <div style="text-align:center;margin-bottom:40px;">
+      <div style="font-size:64px;margin-bottom:12px;">♻</div>
+      <div style="font-family:var(--fh);font-size:36px;font-weight:800;color:var(--rust2);letter-spacing:2px;">RUSTIC</div>
+      <div style="font-family:var(--fh);font-size:16px;font-weight:600;color:var(--smoke);letter-spacing:4px;margin-top:-4px;">YARD OPERATIONS</div>
+    </div>
+    <div id="offline-banner-login" class="offline-banner" style="width:100%;margin-bottom:16px;border-radius:var(--r);">
+      ⚠ System offline — contact supervisor
+    </div>
+    <div style="width:100%;max-width:360px;">
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input id="login-user" class="form-input" type="text" autocomplete="username" autocapitalize="none" placeholder="Enter username">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input id="login-pass" class="form-input" type="password" autocomplete="current-password" placeholder="Enter password">
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" id="login-btn" onclick="doLogin()">ENTER</button>
+      <div id="login-error" style="color:#f87171;font-size:13px;text-align:center;margin-top:12px;display:none;"></div>
+    </div>
+  </div>
+  <div style="padding:16px;text-align:center;font-size:11px;color:var(--stone);">v2.0</div>
+</div>
+
+<!-- ============================================================
+     CATALOG SCREEN (intake home)
+     ============================================================ -->
+<div id="screen-catalog" class="screen">
   <div class="topbar">
-    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
-    <div class="topbar-right">
-      <div class="test-toggle" id="test-toggle" onclick="toggleTest()">
-        <div class="test-dot"></div>
-        <span id="test-label">LIVE</span>
+    <div class="topbar-logo">RUSTIC<span> YARD</span></div>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <span id="catalog-mode-badge" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;background:#0a2e12;color:#4ade80;">LIVE</span>
+      <span id="catalog-user-chip" class="user-chip">Staff</span>
+    </div>
+  </div>
+  <div class="filter-tabs" id="cat-filter-tabs">
+    <div class="filter-tab active" data-cat="all" onclick="filterCatalog('all',this)">All</div>
+    <div class="filter-tab" data-cat="copper" onclick="filterCatalog('copper',this)">Copper</div>
+    <div class="filter-tab" data-cat="wire" onclick="filterCatalog('wire',this)">Wire</div>
+    <div class="filter-tab" data-cat="aluminum" onclick="filterCatalog('aluminum',this)">Aluminum</div>
+    <div class="filter-tab" data-cat="brass" onclick="filterCatalog('brass',this)">Brass</div>
+    <div class="filter-tab" data-cat="ferrous" onclick="filterCatalog('ferrous',this)">Ferrous</div>
+    <div class="filter-tab" data-cat="ewaste" onclick="filterCatalog('e-waste',this)">E-Waste</div>
+  </div>
+  <div id="catalog-list" style="flex:1;overflow-y:auto;padding:8px 16px 16px;"></div>
+  <div style="flex-shrink:0;">
+    <div id="bottom-nav-catalog"></div>
+  </div>
+</div>
+
+<!-- ============================================================
+     INTAKE WIZARD SCREEN
+     ============================================================ -->
+<div id="screen-intake" class="screen">
+  <div class="wizard-header">
+    <div class="step-counter" id="intake-step-counter">Step 1 of 5</div>
+    <div class="step-title" id="intake-step-title">Transaction Setup</div>
+    <div class="step-progress" id="intake-step-progress"></div>
+  </div>
+  <div class="wizard-body" id="intake-step-body"></div>
+  <div class="wizard-footer">
+    <button class="btn btn-secondary" id="intake-back-btn" onclick="intakeBack()" style="display:none;">BACK</button>
+    <button class="btn btn-primary btn-block" id="intake-next-btn" onclick="intakeNext()">NEXT →</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     SCALE LOOKUP SCREEN
+     ============================================================ -->
+<div id="screen-scale" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC<span> SCALE</span></div>
+    <span id="scale-user-chip" class="user-chip">Scale</span>
+  </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;">
+    <div class="form-group">
+      <label class="form-label">Confirmation Code</label>
+      <div style="display:flex;gap:10px;">
+        <input id="scale-code-input" class="form-input" type="text" placeholder="e.g. 7F3K" maxlength="4" autocapitalize="characters" style="font-family:var(--fh);font-size:28px;font-weight:700;text-align:center;letter-spacing:6px;text-transform:uppercase;">
+        <button class="btn btn-primary" onclick="scaleLookup()" style="flex-shrink:0;">LOOK UP</button>
+      </div>
+    </div>
+    <div id="scale-result" style="display:none;">
+      <div id="scale-tx-summary"></div>
+      <div class="divider"></div>
+      <div id="scale-weight-section"></div>
+      <div id="scale-weight-calc"></div>
+      <div style="margin-top:16px;">
+        <button class="btn btn-success btn-block btn-lg" onclick="confirmWeights()">CONFIRM WEIGHTS</button>
       </div>
     </div>
   </div>
-  <div class="cats" id="cat-tabs">
-    <button class="cat-btn on" onclick="filterCat('all',this)">All</button>
-    <button class="cat-btn" onclick="filterCat('copper',this)">Copper</button>
-    <button class="cat-btn" onclick="filterCat('wire',this)">Wire</button>
-    <button class="cat-btn" onclick="filterCat('aluminum',this)">Aluminum</button>
-    <button class="cat-btn" onclick="filterCat('brass',this)">Brass</button>
-    <button class="cat-btn" onclick="filterCat('ferrous',this)">Ferrous</button>
-    <button class="cat-btn" onclick="filterCat('ewaste',this)">E-Waste</button>
-  </div>
-  <div class="scan-bar">
-    <button class="scan-btn" onclick="goAnalyzer()">📷 &nbsp;Scan material to identify</button>
-  </div>
-  <div class="mat-grid" id="mat-grid"></div>
+  <div style="flex-shrink:0;"><div id="bottom-nav-scale"></div></div>
 </div>
 
-<!-- ── INTAKE SCREEN ──────────────────────────────────────────────────── -->
-<div class="screen" id="intake">
-  <div class="intake-hero" id="intake-hero">
-    <button class="intake-back" onclick="goScreen('catalog')">←</button>
-    <div class="intake-test-badge" id="intake-test-badge">TEST MODE</div>
+<!-- ============================================================
+     CASHIER SCREEN
+     ============================================================ -->
+<div id="screen-cashier" class="screen">
+  <div class="topbar">
+    <div class="topbar-logo">RUSTIC<span> CASHIER</span></div>
+    <span id="cashier-user-chip" class="user-chip">Cashier</span>
   </div>
-  <div class="intake-body" id="intake-body">
-    <div class="intake-mat-name" id="intake-name"></div>
-    <div class="intake-mat-desc" id="intake-desc"></div>
-
-
-    <!-- Test mode toggle at start of every transaction -->
-    <div id="tx-mode-banner" style="display:flex;gap:8px;margin-bottom:16px;border-radius:12px;overflow:hidden;border:2px solid #3A3A3A">
-      <button id="btn-live" onclick="setTxMode(false)" style="flex:1;padding:14px;border:none;background:#1E7E34;color:#fff;font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:700;cursor:pointer">&#x2705; LIVE</button>
-      <button id="btn-test" onclick="setTxMode(true)" style="flex:1;padding:14px;border:none;background:#2A2A2A;color:#888;font-family:Barlow Condensed,sans-serif;font-size:18px;font-weight:700;cursor:pointer">&#x1F9EA; TEST</button>
-    </div>
-    <div id="tx-mode-note" style="font-size:13px;color:#888;text-align:center;margin-top:-10px;margin-bottom:16px">Live transaction — will log to real records</div>
-    <!-- Verification steps -->
-    <div id="verify-steps"></div>
-
-    <!-- Weight -->
-    <div class="weight-section" id="weight-section" style="display:none">
-      <div class="section-label">WEIGHT</div>
-      <input class="weight-input" type="number" id="weight-input" placeholder="0" min="0" step="0.1" oninput="calcPayout()">
-      <div class="weight-unit">pounds (lbs)</div>
-      <div class="payout-display" id="payout-display" style="display:none">
-        <div class="payout-row">
-          <span class="payout-label">Y1 rate</span>
-          <span class="payout-val" id="pd-y1">—</span>
-        </div>
-        <div class="payout-row">
-          <span class="payout-label">Your pay rate (×0.75)</span>
-          <span class="payout-val" id="pd-rate">—</span>
-        </div>
-        <div class="payout-row">
-          <span class="payout-label">TOTAL PAYOUT</span>
-          <span class="payout-val payout-total" id="pd-total">$0.00</span>
-        </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;">
+    <div class="form-group">
+      <label class="form-label">Confirmation Code</label>
+      <div style="display:flex;gap:10px;">
+        <input id="cashier-code-input" class="form-input" type="text" placeholder="e.g. 7F3K" maxlength="4" autocapitalize="characters" style="font-family:var(--fh);font-size:28px;font-weight:700;text-align:center;letter-spacing:6px;text-transform:uppercase;">
+        <button class="btn btn-primary" onclick="cashierLookup()" style="flex-shrink:0;">LOOK UP</button>
       </div>
     </div>
-
-    <!-- Supplier ID -->
-    <div class="id-section" id="id-section" style="display:none">
-      <div class="section-label">SUPPLIER ID — COLLECTED AT CASHIER</div>
-      <input class="id-input" type="text" id="supplier-name" placeholder="Supplier name">
-      <input class="id-input" type="text" id="supplier-id" placeholder="ID number (license, state ID)">
-      <button class="photo-btn" onclick="toast('Camera feature coming in Phase 2')">📷 &nbsp;Take photo of ID</button>
+    <div id="cashier-result" style="display:none;">
+      <div id="cashier-tx-info"></div>
+      <div class="divider"></div>
+      <div class="form-group">
+        <label class="form-label">Supplier ID Type</label>
+        <select id="cashier-id-type" class="form-input">
+          <option value="">Select ID type…</option>
+          <option value="drivers_license">Driver's License</option>
+          <option value="state_id">State ID</option>
+          <option value="passport">Passport</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">ID Number</label>
+        <input id="cashier-id-num" class="form-input" type="text" placeholder="Enter ID number" autocapitalize="characters">
+      </div>
+      <div style="background:var(--amber2);color:var(--amber);border-radius:var(--r);padding:12px 16px;font-size:13px;font-weight:600;margin-bottom:16px;">
+        ⚠ Verify supplier face matches photo before payout
+      </div>
+      <button class="btn btn-success btn-block btn-lg" onclick="confirmPayout()" style="margin-bottom:10px;">CONFIRM PAYOUT — PAY CASH</button>
+      <button class="btn btn-secondary btn-block" onclick="printReceipt()" id="cashier-print-btn" style="display:none;margin-bottom:10px;">🖨 PRINT RECEIPT</button>
+      <button class="btn btn-secondary btn-block" onclick="sendSMSReceipt()" id="cashier-sms-btn" style="display:none;">📱 SEND SMS RECEIPT</button>
     </div>
-
-    <button class="action-btn" id="main-action-btn" onclick="nextStep()">CONTINUE</button>
-    <button class="action-btn secondary" onclick="goScreen('catalog')">Cancel</button>
-    <div style="height:20px"></div>
   </div>
+  <div style="flex-shrink:0;"><div id="bottom-nav-cashier"></div></div>
 </div>
 
-<!-- ── CONFIRM SCREEN ─────────────────────────────────────────────────── -->
-<div class="screen" id="confirm">
+<!-- ============================================================
+     DASHBOARD SCREEN (supervisor)
+     ============================================================ -->
+<div id="screen-dashboard" class="screen">
   <div class="topbar">
-    <div class="topbar-logo">RUSTIC <span>RECYCLING</span></div>
+    <div class="topbar-logo">RUSTIC<span> SUPERVISOR</span></div>
+    <div style="display:flex;align-items:center;gap:8px;">
+      <span id="sync-badge" class="sync-badge">⚡ 0 pending</span>
+      <button class="btn btn-secondary btn-sm" onclick="loadDashboard()">↺</button>
+    </div>
   </div>
-  <div class="confirm-body">
-    <div class="confirm-icon">✅</div>
-    <div class="confirm-title" id="confirm-title">Transaction Complete</div>
-    <div class="confirm-sub" id="confirm-sub">Payout confirmed. Transaction logged.</div>
-    <div class="confirm-txid" id="confirm-txid"></div>
-    <div class="confirm-card" id="confirm-card"></div>
-    <button class="action-btn" onclick="newTransaction()">New Transaction</button>
-    <button class="action-btn secondary" onclick="goScreen('catalog')">Back to Catalog</button>
+  <div style="flex:1;overflow-y:auto;padding:0 0 16px;">
+    <div class="section-hdr">Open Transactions</div>
+    <div id="dashboard-list" style="padding:0 16px;"></div>
   </div>
+  <div style="padding:16px;border-top:1px solid var(--stone);flex-shrink:0;">
+    <button class="btn btn-primary btn-block" onclick="showScreen('screen-gayload')">CLOSE GAYLOAD</button>
+  </div>
+  <div style="flex-shrink:0;"><div id="bottom-nav-dashboard"></div></div>
 </div>
 
-<!-- ── AI ANALYZER SCREEN ─────────────────────────────────────────────── -->
-<div class="screen" id="analyzer">
+<!-- ============================================================
+     TX DETAIL SCREEN (supervisor drill-down)
+     ============================================================ -->
+<div id="screen-txdetail" class="screen">
   <div class="topbar">
-    <div class="topbar-logo">📷 &nbsp;IDENTIFY MATERIAL</div>
-    <button style="background:none;border:none;color:var(--mist);font-size:20px;cursor:pointer" onclick="goScreen('catalog')">✕</button>
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-dashboard')">← Back</button>
+      <div class="topbar-logo">TX DETAIL</div>
+    </div>
+    <span id="txdetail-code" style="font-family:var(--fh);font-size:22px;font-weight:800;color:var(--rust2);"></span>
   </div>
-  <div class="analyzer-body">
-    <div class="analyzer-drop" id="analyzer-drop" onclick="document.getElementById('analyzer-file').click()">
-      <div style="font-size:48px;z-index:2">📷</div>
-      <div class="analyzer-drop-text">Tap to take photo</div>
-      <div class="analyzer-drop-sub">or upload from gallery</div>
-      <img id="analyzer-preview" style="display:none">
-    </div>
-    <input type="file" id="analyzer-file" accept="image/*" capture="environment" onchange="analyzeImage(this)">
+  <div style="flex:1;overflow-y:auto;padding:16px;" id="txdetail-body"></div>
+</div>
 
-    <div class="analyzer-loading" id="analyzer-loading">
-      <span class="spinner"></span> Analyzing material...
-    </div>
-
-    <div class="analyzer-result" id="analyzer-result">
-      <div class="analyzer-result-label">AI IDENTIFIED</div>
-      <div class="analyzer-mat" id="ar-mat"></div>
-      <div class="analyzer-conf" id="ar-conf"></div>
-      <div class="analyzer-desc" id="ar-desc"></div>
-      <button class="action-btn" id="ar-start-btn" onclick="startFromAnalyzer()">Start Intake with This Material</button>
-      <button class="action-btn secondary" onclick="resetAnalyzer()">Try Another Photo</button>
-    </div>
-
-    <div style="background:var(--ink2);border-radius:var(--r2);padding:16px;font-size:14px;color:var(--mist);line-height:1.6">
-      <strong style="color:var(--white)">How it works:</strong> Take a photo of the material the supplier brought in. The AI will identify the type, suggest the correct catalog entry, and walk you through verification checks before payout.
+<!-- ============================================================
+     GAYLOAD CLOSE SCREEN
+     ============================================================ -->
+<div id="screen-gayload" class="screen">
+  <div class="topbar">
+    <div style="display:flex;align-items:center;gap:10px;">
+      <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-dashboard')">← Back</button>
+      <div class="topbar-logo">CLOSE GAYLOAD</div>
     </div>
   </div>
+  <div style="flex:1;overflow-y:auto;padding:16px;">
+    <div class="form-group">
+      <label class="form-label">Select Gayload</label>
+      <select id="gl-select" class="form-input" onchange="onGayloadSelect()">
+        <option value="">Loading…</option>
+      </select>
+    </div>
+    <div id="gl-form" style="display:none;">
+      <div class="form-group">
+        <label class="form-label">Consumer / Buyer</label>
+        <input id="gl-consumer" class="form-input" type="text" value="SIMS Y1">
+      </div>
+      <div class="form-group">
+        <label class="form-label">SIMS Ticket #</label>
+        <input id="gl-ticket" class="form-input" type="text" placeholder="Ticket number">
+      </div>
+      <div class="form-group">
+        <label class="form-label">SIMS Weight (lbs)</label>
+        <input id="gl-sims-weight" class="form-input" type="number" placeholder="0" oninput="calcGlVariance()">
+      </div>
+      <div id="gl-variance" style="margin-bottom:12px;display:none;"></div>
+      <div class="form-group">
+        <label class="form-label">Sale Amount Received ($)</label>
+        <input id="gl-sale-amount" class="form-input" type="number" placeholder="0.00" step="0.01" oninput="calcGlSummary()">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Payment Method</label>
+        <div class="payment-tabs">
+          <div class="payment-tab active" data-pm="cash" onclick="selectPayMethod('cash',this)">CASH</div>
+          <div class="payment-tab" data-pm="check" onclick="selectPayMethod('check',this)">CHECK</div>
+          <div class="payment-tab" data-pm="ach" onclick="selectPayMethod('ach',this)">ACH</div>
+        </div>
+      </div>
+      <div id="gl-check-num-wrap" class="form-group" style="display:none;">
+        <label class="form-label">Check #</label>
+        <input id="gl-check-num" class="form-input" type="text" placeholder="Check number">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Payment Date</label>
+        <input id="gl-pay-date" class="form-input" type="date">
+      </div>
+      <div id="gl-summary" class="card" style="display:none;">
+        <div class="card-title">Summary</div>
+        <div id="gl-summary-body" style="margin-top:12px;"></div>
+      </div>
+      <div style="margin-top:16px;">
+        <button class="btn btn-primary btn-block btn-lg" onclick="closeGayload()">CLOSE GAYLOAD</button>
+      </div>
+    </div>
+  </div>
 </div>
 
-<!-- ── WARNING OVERLAY ────────────────────────────────────────────────── -->
-<div class="warning-overlay" id="warning-overlay">
-  <div class="warning-icon">🚨</div>
-  <div class="warning-title" id="warning-title">RED FLAG</div>
-  <div class="warning-text" id="warning-text"></div>
-  <button class="warning-dismiss" onclick="dismissWarning()">I UNDERSTAND — PROCEED WITH CAUTION</button>
+<!-- ============================================================
+     CRITICAL FAIL OVERLAY
+     ============================================================ -->
+<div id="overlay-critfail" class="overlay">
+  <div class="overlay-box">
+    <div style="font-size:32px;text-align:center;margin-bottom:8px;">🚨</div>
+    <div style="font-family:var(--fh);font-size:22px;font-weight:800;color:#f87171;text-align:center;margin-bottom:8px;">CRITICAL FAIL</div>
+    <div id="critfail-text" style="font-size:14px;color:var(--smoke);text-align:center;margin-bottom:20px;"></div>
+    <div class="form-group">
+      <label class="form-label">Override Reason (required)</label>
+      <input id="critfail-reason" class="form-input" type="text" placeholder="Enter reason for override">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px;">
+      <button class="btn btn-danger" onclick="critfailOverride()">SUPERVISOR OVERRIDE</button>
+      <button class="btn btn-secondary" onclick="critfailReclassify()">RECLASSIFY MATERIAL</button>
+    </div>
+  </div>
 </div>
 
-<!-- ── BOTTOM NAV ─────────────────────────────────────────────────────── -->
-<div class="bottom-nav">
-  <button class="nav-item on" id="nav-catalog" onclick="goScreen('catalog')">
-    <span class="nav-icon">📋</span>Catalog
-  </button>
-  <button class="nav-item" id="nav-analyzer" onclick="goAnalyzer()">
-    <span class="nav-icon">📷</span>Scan
-  </button>
-  <button class="nav-item" id="nav-log" onclick="goScreen('log')">
-    <span class="nav-icon">📊</span>Log
-  </button>
+<!-- ============================================================
+     RECEIPT MODAL
+     ============================================================ -->
+<div id="overlay-receipt" class="overlay">
+  <div class="overlay-box warn" style="max-width:400px;width:100%;">
+    <div style="font-family:var(--fh);font-size:20px;font-weight:800;margin-bottom:4px;">RECEIPT</div>
+    <div style="font-size:12px;color:var(--mist);margin-bottom:16px;">No Bluetooth printer found — screenshot to save</div>
+    <div id="receipt-content" class="receipt-modal"></div>
+    <button class="btn btn-secondary btn-block" style="margin-top:16px;" onclick="closeOverlay('overlay-receipt')">CLOSE</button>
+  </div>
 </div>
 
-<!-- ── TOAST ──────────────────────────────────────────────────────────── -->
-<div class="toast" id="toast"></div>
+<!-- ============================================================
+     SUPERVISOR OVERRIDE MODAL (for rate/weight edits)
+     ============================================================ -->
+<div id="overlay-override" class="overlay">
+  <div class="overlay-box warn" style="max-width:400px;width:100%;">
+    <div style="font-family:var(--fh);font-size:20px;font-weight:800;margin-bottom:16px;">SUPERVISOR OVERRIDE</div>
+    <div class="form-group">
+      <label class="form-label">Supervisor Password</label>
+      <input id="override-pass" class="form-input" type="password" placeholder="Re-enter password">
+    </div>
+    <div class="form-group">
+      <label class="form-label" id="override-field-label">Field</label>
+      <input id="override-new-val" class="form-input" type="text" placeholder="New value">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Reason (required)</label>
+      <input id="override-reason" class="form-input" type="text" placeholder="Reason for override">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <button class="btn btn-secondary" onclick="closeOverlay('overlay-override')">CANCEL</button>
+      <button class="btn btn-primary" onclick="submitOverride()">CONFIRM</button>
+    </div>
+  </div>
+</div>
+
 
 <script>
-// ─── DATA ──────────────────────────────────────────────────────────────
-// In production this loads from Google Sheet via service account
-// POC has 4 materials inline; all other data driven from sheet
+// ============================================================
+// CONSTANTS & STATE
+// ============================================================
+const APPSCRIPT_URL = 'https://script.google.com/macros/s/AKfycbyTDUWXw1UkldR96ytj4OFVIVeUV5LdJ-C1Ib3x-vUgfwsnaXDaLcvNchbRc8sTwXfN/exec
+';
 
-const MATERIALS = [
-  {
-    id:'26-CU001', cat:'copper', name:'Bare Bright Copper', code:'2040',
-    y1:0.47, grade:'top', unit:'LB', flat:false,
-    img:'https://upload.wikimedia.org/wikipedia/commons/3/38/CopperCables.jpg',
-    desc:'The highest copper grade. Clean, shiny, uncoated, unalloyed wire. No insulation, no solder, no paint.',
-    redFlag: null,
-    checks:[
-      {q:'Does it stick to the magnet?', pass:'No stick', fail:'Sticks — NOT copper', critical:true, passImg:'🧲', failText:'If it sticks to the magnet this is NOT copper. Stop and reclassify.'},
-      {q:'Is the wire shiny reddish-orange with no coating?', pass:'Yes — bare and shiny', fail:'No — has coating or insulation', critical:true},
-      {q:'Is it at least 1/16 inch thick?', pass:'Yes', fail:'Too thin — classify as Light Cu', critical:false},
-    ]
-  },
-  {
-    id:'26-CU002', cat:'copper', name:'#2 Copper', code:'2010',
-    y1:0.38, grade:'mid', unit:'LB', flat:false,
-    img:'https://upload.wikimedia.org/wikipedia/commons/1/18/Electrical_wire.jpg',
-    desc:'Copper with oxidation, light coating, some solder, or minor contamination. Darker, dull surface.',
-    redFlag: null,
-    checks:[
-      {q:'Does it stick to the magnet?', pass:'No stick — confirmed copper', fail:'Sticks — NOT copper', critical:true},
-      {q:'Is there heavy contamination or is it fire-stripped?', pass:'No — light contamination only', fail:'Yes — downgrade to burnt copper', critical:false},
-    ]
-  },
-  {
-    id:'26-AL001', cat:'aluminum', name:'Aluminum Cans (UBC)', code:'1596',
-    y1:0.73, grade:'top', unit:'LB', flat:false,
-    img:'https://upload.wikimedia.org/wikipedia/commons/e/ea/Crushed_aluminium_cans.jpg',
-    desc:'Used beverage cans. Very light, crushes easily by hand. Does not stick to magnet.',
-    redFlag: null,
-    checks:[
-      {q:'Does it stick to the magnet?', pass:'No — aluminum confirmed', fail:'Sticks — these are STEEL cans, reject or reclassify', critical:true},
-      {q:'Are the cans clean with no excessive liquid or food waste?', pass:'Yes — clean', fail:'Contaminated — deduct or reject', critical:false},
-    ]
-  },
-  {
-    id:'26-BR001', cat:'brass', name:'Yellow Brass', code:'4076',
-    y1:0.326, grade:'mid', unit:'LB', flat:false,
-    img:'https://upload.wikimedia.org/wikipedia/commons/b/b8/Brass_fittings.jpg',
-    desc:'Yellow-gold fittings, valves, plumbing hardware. Does not stick to magnet. Distinctly yellow-gold color.',
-    redFlag: null,
-    checks:[
-      {q:'Does it stick to the magnet?', pass:'No — non-ferrous confirmed', fail:'Sticks — likely plated steel, NOT brass', critical:true},
-      {q:'Is the color yellow-gold (not reddish)?', pass:'Yes — yellow brass', fail:'Reddish — classify as Red Brass instead (higher rate)', critical:false},
-      {q:'Are there iron or steel attachments?', pass:'No iron', fail:'Remove iron parts before weighing', critical:false},
-    ]
-  },
+const FALLBACK_MATERIALS = [
+  {sku:'26-CU001', name:'Bare Bright Copper', category:'copper', y1_rate:0.47, grade:'top', unit:'lb', description:'Clean bare bright copper wire, 1/16" min diameter, no coating', checks:[
+    {q:'Does it stick to a magnet?', critical:true, fail_text:'If it sticks — NOT copper. Stop and reclassify.'},
+    {q:'Is wire shiny reddish-orange with no coating?', critical:true, fail_text:'Coated or dull wire is not bare bright. Reclassify to #1 or #2 copper.'},
+    {q:'Is it at least 1/16 inch thick?', critical:false, fail_text:''}
+  ]},
+  {sku:'26-CU002', name:'#2 Copper', category:'copper', y1_rate:0.38, grade:'mid', unit:'lb', description:'Copper with some oxidation, coatings, or minor contamination', checks:[
+    {q:'Does it stick to a magnet?', critical:true, fail_text:'Not copper — reclassify to ferrous or reject.'},
+    {q:'Heavy contamination or fire-stripped?', critical:false, fail_text:''}
+  ]},
+  {sku:'26-AL001', name:'Aluminum Cans (UBC)', category:'aluminum', y1_rate:0.73, grade:'top', unit:'lb', description:'Used beverage cans, crushed or whole, aluminum only', checks:[
+    {q:'Does it stick to a magnet?', critical:true, fail_text:'Steel cans present — sort out or reject lot. Steel cans are not UBC.'},
+    {q:'Are cans clean with no excessive liquid?', critical:false, fail_text:''}
+  ]},
+  {sku:'26-BR001', name:'Yellow Brass', category:'brass', y1_rate:0.326, grade:'mid', unit:'lb', description:'Yellow brass fittings, valves, hardware — no iron/steel attached', checks:[
+    {q:'Does it stick to a magnet?', critical:true, fail_text:'Iron/steel attachments present — must be removed before weighing.'},
+    {q:'Is the color yellow-gold (not reddish)?', critical:false, fail_text:'Reddish color may indicate red brass — verify grade.'},
+    {q:'Are there iron/steel attachments to remove?', critical:false, fail_text:''}
+  ]}
 ];
 
-// Red flag materials (to be driven from sheet in production)
-const RED_FLAGS = {
-  'municipal': {title:'MUNICIPAL PROPERTY DETECTED', text:'This material may be marked as property of a municipality, utility company, or public infrastructure. Accepting stolen municipal property is a criminal offense. Check for markings: water authority, electric company, city seals, or serial numbers. If any markings present — DO NOT ACCEPT. Call supervisor immediately.'},
-  'cemetery': {title:'POSSIBLE STOLEN PROPERTY', text:'Cemetery or memorial materials (bronze plaques, decorative metals) are frequently stolen. These are irreplaceable and carry serious criminal penalties for receivers. Inspect carefully. If suspicious — DO NOT ACCEPT.'},
+// App state
+let appState = {
+  user: null,        // {userId, role, username, phone}
+  mode: 'live',      // 'live' or 'test'
+  materials: [],
+  currentTx: null,   // transaction being looked up (scale/cashier)
+  currentTxDetail: null, // for supervisor detail view
+  intake: {
+    step: 1,
+    mode: 'live',
+    tare_flagged: false,
+    supplier_name: '',
+    supplier_phone: '',
+    sku: null,
+    material: null,
+    photos: {vehicle:null, supplier:null, bulk:null, individual:null},
+    plate_num: '',
+    check_results: [],
+    check_index: 0
+  },
+  gayloads: [],
+  selectedGayload: null,
+  payMethod: 'cash',
+  pendingOverride: null // {tx_id, field, original_value}
 };
 
-// ─── STATE ─────────────────────────────────────────────────────────────
-let testMode = false;
-let activeCat = 'all';
-let currentMat = null;
-let currentStep = 'verify'; // verify | weight | id
-let checkResults = [];
-let txCounter = parseInt(localStorage.getItem('rr_tx') || '0');
-let analyzedMat = null;
-let warningCallback = null;
+// ============================================================
+// INDEXEDDB — offline queue
+// ============================================================
+let idb = null;
 
-// ─── SCREEN MGMT ───────────────────────────────────────────────────────
-function goScreen(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id)?.classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('on'));
-  const navMap = {catalog:'nav-catalog', analyzer:'nav-analyzer', log:'nav-log'};
-  if(navMap[id]) document.getElementById(navMap[id])?.classList.add('on');
-}
-
-// ─── TEST MODE ─────────────────────────────────────────────────────────
-function toggleTest(){
-  testMode = !testMode;
-  const t = document.getElementById('test-toggle');
-  const l = document.getElementById('test-label');
-  t.classList.toggle('on', testMode);
-  l.textContent = testMode ? 'TEST' : 'LIVE';
-  toast(testMode ? '⚠️ TEST MODE ON — transactions won\'t affect real inventory' : '✅ LIVE MODE — real transactions');
-}
-
-function setTxMode(isTest){
-  testMode = isTest;
-  const t = document.getElementById('test-toggle');
-  const l = document.getElementById('test-label');
-  if(t){ t.classList.toggle('on', isTest); }
-  if(l){ l.textContent = isTest ? 'TEST' : 'LIVE'; }
-  const btnLive = document.getElementById('btn-live');
-  const btnTest = document.getElementById('btn-test');
-  const note = document.getElementById('tx-mode-note');
-  const badge = document.getElementById('intake-test-badge');
-  if(btnLive){ btnLive.style.background = isTest ? '#2A2A2A' : '#1E7E34'; btnLive.style.color = isTest ? '#888' : '#fff'; }
-  if(btnTest){ btnTest.style.background = isTest ? '#856404' : '#2A2A2A'; btnTest.style.color = isTest ? '#000' : '#888'; }
-  if(note){ note.textContent = isTest ? '⚠️ TEST — will NOT affect real inventory' : 'Live transaction — logs to real records'; note.style.color = isTest ? '#fbbf24' : '#888'; }
-  if(badge){ badge.className = 'intake-test-badge' + (isTest ? ' show' : ''); }
-}
-
-// ─── CATALOG ───────────────────────────────────────────────────────────
-function filterCat(cat, btn){
-  activeCat = cat;
-  document.querySelectorAll('.cat-btn').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
-  renderGrid();
-}
-
-function renderGrid(){
-  const grid = document.getElementById('mat-grid');
-  const mats = activeCat === 'all' ? MATERIALS : MATERIALS.filter(m=>m.cat===activeCat);
-  grid.innerHTML = mats.map(m=>`
-    <div class="mat-card" onclick="startIntake('${m.id}')">
-      <div class="mat-img theme-${m.cat}">
-        <img src="${m.img}" alt="${m.name}" onerror="this.style.display='none'">
-        <div class="mat-emoji">${catEmoji(m.cat)}</div>
-        <span class="mat-grade ${gradeClass(m.grade)}">${gradeLabel(m.grade)}</span>
-        <span class="mat-cat-label cat-${m.cat}">${m.cat}</span>
-      </div>
-      <div class="mat-body">
-        <div class="mat-name">${m.name}</div>
-        <div class="mat-rate-row">
-          <span class="mat-rate-label">You pay</span>
-          <span class="mat-rate-val rate-pay">$${yr(m.y1)}/lb</span>
-        </div>
-        ${m.flat ? `<div class="mat-rate-row"><span class="mat-rate-label">Flat rate</span><span class="mat-rate-val rate-pay">$${m.flatAmt}</span></div>` : ''}
-        <div class="mat-code">SKU: ${m.id} · Code: ${m.code}</div>
-      </div>
-    </div>
-  `).join('');
-}
-
-// ─── INTAKE FLOW ────────────────────────────────────────────────────────
-function startIntake(id){
-  currentMat = MATERIALS.find(m=>m.id===id);
-  if(!currentMat) return;
-  checkResults = [];
-  currentStep = 'verify';
-
-  // Set hero
-  const hero = document.getElementById('intake-hero');
-  hero.className = 'intake-hero theme-' + currentMat.cat;
-  hero.innerHTML = `
-    <button class="intake-back" onclick="goScreen('catalog')">←</button>
-    <div class="intake-test-badge ${testMode?'show':''}">TEST MODE</div>
-    <img src="${currentMat.img}" alt="${currentMat.name}" style="width:100%;max-height:280px;object-fit:cover;display:block" onerror="this.style.display='none'">
-  `;
-
-  document.getElementById('intake-name').textContent = currentMat.name;
-  document.getElementById('intake-desc').textContent = currentMat.desc;
-
-  // Build verification steps
-  renderVerifySteps(0);
-
-  document.getElementById('weight-section').style.display = 'none';
-  document.getElementById('id-section').style.display = 'none';
-  document.getElementById('main-action-btn').textContent = 'CONFIRM & CONTINUE';
-
-  goScreen('intake');
-}
-
-function renderVerifySteps(activeIdx){
-  const container = document.getElementById('verify-steps');
-  const checks = currentMat.checks;
-
-  container.innerHTML = checks.map((c,i)=>`
-    <div class="verify-card ${c.critical?'critical':''}" id="check-${i}" style="${i>activeIdx?'opacity:.4;pointer-events:none':''}">
-      <div class="verify-step-num">CHECK ${i+1} OF ${checks.length}${c.critical?' · CRITICAL':''}</div>
-      <div class="verify-question">${c.q}</div>
-      <div class="verify-img">${c.passImg||catEmoji(currentMat.cat)}</div>
-      <div class="verify-btns">
-        <button class="verify-btn ${checkResults[i]==='pass'?'selected-pass':''}" onclick="recordCheck(${i},'pass')">✅ ${c.pass}</button>
-        <button class="verify-btn ${checkResults[i]==='fail'?'selected-fail':''}" onclick="recordCheck(${i},'fail')">❌ ${c.fail||'Fail'}</button>
-      </div>
-    </div>
-  `).join('');
-}
-
-function recordCheck(idx, result){
-  checkResults[idx] = result;
-  const check = currentMat.checks[idx];
-
-  if(result === 'fail' && check.critical){
-    // Show warning
-    showWarning(
-      check.failText || `Critical check failed: ${check.q}`,
-      ()=>{
-        checkResults[idx] = 'fail-override';
-        advanceChecks(idx);
+async function openDB() {
+  return new Promise((res, rej) => {
+    const req = indexedDB.open('rusticDB', 1);
+    req.onupgradeneeded = e => {
+      const db = e.target.result;
+      if (!db.objectStoreNames.contains('pendingTx')) {
+        db.createObjectStore('pendingTx', { keyPath: 'localId', autoIncrement: true });
       }
-    );
+    };
+    req.onsuccess = e => res(e.target.result);
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+async function savePendingTx(payload) {
+  if (!idb) idb = await openDB();
+  return new Promise((res, rej) => {
+    const tx  = idb.transaction('pendingTx', 'readwrite');
+    const req = tx.objectStore('pendingTx').add({ ...payload, savedAt: Date.now() });
+    req.onsuccess = () => res(req.result);
+    req.onerror   = e => rej(e.target.error);
+  });
+}
+
+async function getPendingTxCount() {
+  if (!idb) idb = await openDB();
+  return new Promise((res) => {
+    const tx  = idb.transaction('pendingTx', 'readonly');
+    const req = tx.objectStore('pendingTx').count();
+    req.onsuccess = () => res(req.result);
+    req.onerror   = () => res(0);
+  });
+}
+
+async function getAllPendingTx() {
+  if (!idb) idb = await openDB();
+  return new Promise((res) => {
+    const tx  = idb.transaction('pendingTx', 'readonly');
+    const req = tx.objectStore('pendingTx').getAll();
+    req.onsuccess = () => res(req.result);
+    req.onerror   = () => res([]);
+  });
+}
+
+async function clearPendingTx(localId) {
+  if (!idb) idb = await openDB();
+  return new Promise((res) => {
+    const tx  = idb.transaction('pendingTx', 'readwrite');
+    const req = tx.objectStore('pendingTx').delete(localId);
+    req.onsuccess = () => res();
+    req.onerror   = () => res();
+  });
+}
+
+async function syncPendingTx() {
+  if (!navigator.onLine) return;
+  const pending = await getAllPendingTx();
+  if (!pending.length) return;
+  for (const item of pending) {
+    try {
+      const { localId, savedAt, ...payload } = item;
+      const resp = await apiFetch(payload);
+      if (resp.ok) await clearPendingTx(localId);
+    } catch (e) {}
+  }
+  updateSyncBadge();
+}
+
+async function updateSyncBadge() {
+  const count = await getPendingTxCount();
+  const badge = document.getElementById('sync-badge');
+  if (badge) {
+    if (count > 0) {
+      badge.textContent = '⚡ ' + count + ' pending sync';
+      badge.classList.add('show');
+    } else {
+      badge.classList.remove('show');
+    }
+  }
+}
+
+// ============================================================
+// API FETCH — proxies through AppScript
+// ============================================================
+async function apiFetch(body) {
+  const resp = await fetch(APPSCRIPT_URL, {
+    method:  'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body:    JSON.stringify(body)
+  });
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  return resp.json();
+}
+
+async function apiGet(params) {
+  const qs   = new URLSearchParams(params).toString();
+  const resp = await fetch(APPSCRIPT_URL + '?' + qs);
+  if (!resp.ok) throw new Error('HTTP ' + resp.status);
+  return resp.json();
+}
+
+// ============================================================
+// NAVIGATION
+// ============================================================
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) {
+    el.classList.add('active');
+    el.scrollTop = 0;
+  }
+}
+
+function showOverlay(id) { document.getElementById(id).classList.add('active'); }
+function closeOverlay(id) { document.getElementById(id).classList.remove('active'); }
+
+function routeByRole() {
+  const role = appState.user && appState.user.role;
+  if (role === 'intake')      { loadCatalog(); showScreen('screen-catalog'); }
+  else if (role === 'scale')  { showScreen('screen-scale'); }
+  else if (role === 'cashier'){ showScreen('screen-cashier'); }
+  else if (role === 'supervisor') { loadDashboard(); showScreen('screen-dashboard'); }
+  else { loadCatalog(); showScreen('screen-catalog'); }
+}
+
+function renderBottomNav(containerId) {
+  const role = appState.user && appState.user.role;
+  const showAll = role === 'supervisor';
+  const html = `<div class="bottom-nav">
+    ${role !== 'scale' && role !== 'cashier' ? `<div class="nav-btn ${containerId.includes('catalog') ? 'active' : ''}" onclick="showScreen('screen-catalog');loadCatalog()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Catalog
+    </div>` : ''}
+    ${showAll || role === 'scale' ? `<div class="nav-btn ${containerId.includes('scale') ? 'active' : ''}" onclick="showScreen('screen-scale')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3L4 9v12h16V9L12 3z"/><path d="M9 21V12h6v9"/></svg>Scale
+    </div>` : ''}
+    ${showAll || role === 'cashier' ? `<div class="nav-btn ${containerId.includes('cashier') ? 'active' : ''}" onclick="showScreen('screen-cashier')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg>Cashier
+    </div>` : ''}
+    ${showAll ? `<div class="nav-btn ${containerId.includes('dashboard') ? 'active' : ''}" onclick="loadDashboard();showScreen('screen-dashboard')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3h7v9H3zM14 3h7v5h-7zM14 11h7v10h-7zM3 15h7v6H3z"/></svg>Dashboard
+    </div>` : ''}
+    <div class="nav-btn" onclick="logout()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>Log Out
+    </div>
+  </div>`;
+  const el = document.getElementById(containerId);
+  if (el) el.innerHTML = html;
+}
+
+// ============================================================
+// LOGIN
+// ============================================================
+async function doLogin() {
+  const username = document.getElementById('login-user').value.trim();
+  const password = document.getElementById('login-pass').value;
+  const errEl    = document.getElementById('login-error');
+  const btn      = document.getElementById('login-btn');
+
+  if (!username || !password) { showLoginError('Enter username and password'); return; }
+
+  btn.disabled  = true;
+  btn.innerHTML = '<span class="spinner"></span> CHECKING…';
+  errEl.style.display = 'none';
+
+  try {
+    const data = await apiFetch({ action: 'login', username, password });
+    if (data.ok) {
+      appState.user = { userId: data.userId, role: data.role, username: data.username, phone: data.phone || '' };
+      sessionStorage.setItem('rusticUser', JSON.stringify(appState.user));
+      // Update user chips
+      document.querySelectorAll('[id$="-user-chip"]').forEach(el => {
+        el.textContent = appState.user.username;
+      });
+      document.getElementById('catalog-user-chip').textContent = appState.user.username;
+      routeByRole();
+    } else {
+      showLoginError(data.error || 'Login failed');
+    }
+  } catch (e) {
+    showLoginError('Cannot reach server. Check connection.');
+  }
+
+  btn.disabled  = false;
+  btn.innerHTML = 'ENTER';
+}
+
+function showLoginError(msg) {
+  const el = document.getElementById('login-error');
+  el.textContent  = msg;
+  el.style.display = 'block';
+}
+
+function logout() {
+  sessionStorage.removeItem('rusticUser');
+  appState.user = null;
+  showScreen('screen-login');
+  document.getElementById('login-pass').value = '';
+}
+
+// ============================================================
+// CATALOG
+// ============================================================
+async function loadCatalog() {
+  const role = appState.user && appState.user.role;
+  renderBottomNav('bottom-nav-catalog');
+
+  const chip = document.getElementById('catalog-user-chip');
+  if (chip && appState.user) chip.textContent = appState.user.username;
+
+  const badge = document.getElementById('catalog-mode-badge');
+  if (badge) {
+    if (appState.mode === 'test') {
+      badge.textContent = 'TEST';
+      badge.style.background = '#2a1f00';
+      badge.style.color = '#fbbf24';
+    } else {
+      badge.textContent = 'LIVE';
+      badge.style.background = '#0a2e12';
+      badge.style.color = '#4ade80';
+    }
+  }
+
+  // Try cache first
+  const cached = localStorage.getItem('rusticMaterials');
+  const cacheTs = parseInt(localStorage.getItem('rusticMaterialsTs') || '0');
+  const cacheAge = Date.now() - cacheTs;
+
+  if (cached && cacheAge < 3600000) {
+    appState.materials = JSON.parse(cached);
+    renderCatalog(appState.materials);
     return;
   }
 
-  advanceChecks(idx);
-}
-
-function advanceChecks(idx){
-  renderVerifySteps(idx+1);
-
-  // If all checks done, show weight
-  if(idx >= currentMat.checks.length - 1){
-    document.getElementById('weight-section').style.display = 'block';
-    document.getElementById('main-action-btn').textContent = currentMat.flat ? 'CONFIRM FLAT RATE' : 'CONFIRM WEIGHT & PROCEED';
-    currentStep = 'weight';
-    // Scroll to weight
-    setTimeout(()=>document.getElementById('weight-section').scrollIntoView({behavior:'smooth'}),100);
-  }
-}
-
-function calcPayout(){
-  const w = parseFloat(document.getElementById('weight-input').value) || 0;
-  const m = currentMat;
-  if(!m) return;
-
-  const payRate = yr(m.y1);
-  const total = (w * parseFloat(payRate)).toFixed(2);
-
-  document.getElementById('pd-y1').textContent = `$${m.y1.toFixed(2)}/lb`;
-  document.getElementById('pd-rate').textContent = `$${payRate}/lb`;
-  document.getElementById('pd-total').textContent = `$${total}`;
-  document.getElementById('payout-display').style.display = 'block';
-}
-
-function nextStep(){
-  if(currentStep === 'verify'){
-    // Check all checks done
-    if(checkResults.length < currentMat.checks.length){
-      toast('Complete all checks before continuing');
-      return;
-    }
-    currentStep = 'weight';
-    document.getElementById('weight-section').style.display = 'block';
-  } else if(currentStep === 'weight'){
-    const w = parseFloat(document.getElementById('weight-input').value) || 0;
-    if(!currentMat.flat && w <= 0){
-      toast('Enter weight before continuing');
-      return;
-    }
-    currentStep = 'id';
-    document.getElementById('id-section').style.display = 'block';
-    document.getElementById('main-action-btn').textContent = 'CONFIRM PAYOUT';
-    setTimeout(()=>document.getElementById('id-section').scrollIntoView({behavior:'smooth'}),100);
-  } else if(currentStep === 'id'){
-    confirmTransaction();
-  }
-}
-
-function confirmTransaction(){
-  txCounter++;
-  localStorage.setItem('rr_tx', txCounter);
-  const prefix = testMode ? 'T72' : '72';
-  const txId = `${prefix}-${String(txCounter).padStart(4,'0')}`;
-  const w = parseFloat(document.getElementById('weight-input').value) || 0;
-  const payRate = parseFloat(yr(currentMat.y1));
-  const total = currentMat.flat ? currentMat.flatAmt : (w * payRate).toFixed(2);
-  const supplierName = document.getElementById('supplier-name').value || 'Not provided';
-  const supplierId = document.getElementById('supplier-id').value || 'Not provided';
-  const now = new Date();
-
-  // Build confirm screen
-  document.getElementById('confirm-title').textContent = testMode ? 'TEST Transaction Logged' : 'Transaction Complete';
-  document.getElementById('confirm-sub').textContent = testMode ? 'This was a TEST transaction. No real payout.' : 'Payout confirmed. Send supplier to cashier.';
-  document.getElementById('confirm-txid').textContent = txId;
-  document.getElementById('confirm-card').innerHTML = `
-    <div class="confirm-row"><span class="confirm-key">Material</span><span class="confirm-val">${currentMat.name}</span></div>
-    <div class="confirm-row"><span class="confirm-key">Weight</span><span class="confirm-val">${currentMat.flat ? 'Flat rate' : w + ' lbs'}</span></div>
-    <div class="confirm-row"><span class="confirm-key">Pay rate</span><span class="confirm-val">$${payRate}/lb</span></div>
-    <div class="confirm-row"><span class="confirm-key">PAYOUT</span><span class="confirm-val" style="color:#4ade80;font-size:22px">$${total}</span></div>
-    <div class="confirm-row"><span class="confirm-key">Supplier</span><span class="confirm-val">${supplierName}</span></div>
-    <div class="confirm-row"><span class="confirm-key">ID#</span><span class="confirm-val">${supplierId}</span></div>
-    <div class="confirm-row"><span class="confirm-key">Time</span><span class="confirm-val">${now.toLocaleTimeString()}</span></div>
-    ${testMode ? '<div class="confirm-row"><span class="confirm-key">Mode</span><span class="confirm-val" style="color:var(--amber)">⚠️ TEST</span></div>' : ''}
-  `;
-
-  // Log to localStorage (Phase 2 will write to Google Sheet)
-  const txLog = JSON.parse(localStorage.getItem('rr_log') || '[]');
-  txLog.push({txId, mat:currentMat.name, sku:currentMat.id, weight:w, payRate, total, supplier:supplierName, supplierId, test:testMode, time:now.toISOString()});
-  localStorage.setItem('rr_log', JSON.stringify(txLog));
-
-  goScreen('confirm');
-}
-
-function newTransaction(){
-  document.getElementById('weight-input').value = '';
-  document.getElementById('supplier-name').value = '';
-  document.getElementById('supplier-id').value = '';
-  goScreen('catalog');
-}
-
-// ─── AI ANALYZER ───────────────────────────────────────────────────────
-function goAnalyzer(){
-  resetAnalyzer();
-  goScreen('analyzer');
-}
-
-function analyzeImage(input){
-  const file = input.files[0];
-  if(!file) return;
-
-  // Show preview
-  const reader = new FileReader();
-  reader.onload = e => {
-    const prev = document.getElementById('analyzer-preview');
-    prev.src = e.target.result;
-    prev.style.display = 'block';
-    document.getElementById('analyzer-loading').style.display = 'block';
-    document.getElementById('analyzer-result').classList.remove('show');
-
-    // Call Anthropic API
-    callAIAnalyzer(e.target.result);
-  };
-  reader.readAsDataURL(file);
-}
-
-async function callAIAnalyzer(dataUrl){
-  const base64 = dataUrl.split(',')[1];
-  const mimeType = dataUrl.split(';')[0].split(':')[1];
-
-  const matList = MATERIALS.map(m=>`- ${m.name} (${m.id}): ${m.desc}`).join('\n');
+  const listEl = document.getElementById('catalog-list');
+  listEl.innerHTML = '<div style="text-align:center;padding:40px;"><div class="spinner"></div><div style="margin-top:12px;color:var(--mist);font-size:13px;">Loading materials…</div></div>';
 
   try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body: JSON.stringify({
-        model:'claude-sonnet-4-20250514',
-        max_tokens:500,
-        messages:[{
-          role:'user',
-          content:[
-            {type:'image', source:{type:'base64', media_type:mimeType, data:base64}},
-            {type:'text', text:`You are a scrap metal identification expert. Look at this image and identify what scrap metal material it is.
-
-Our catalog includes:
-${matList}
-
-Respond in JSON only:
-{"material_id":"26-CU001","material_name":"Bare Bright Copper","confidence":"high","reasoning":"One sentence why","warning":null}
-
-If you see any signs of municipal property, cemetery materials, or stolen goods, set warning to a brief alert string. If not, set warning to null. Respond with JSON only, no other text.`}
-          ]
-        }]
-      })
-    });
-
-    const data = await resp.json();
-    const text = data.content[0].text;
-    const result = JSON.parse(text);
-
-    document.getElementById('analyzer-loading').style.display = 'none';
-
-    const mat = MATERIALS.find(m=>m.id===result.material_id);
-    analyzedMat = mat || null;
-
-    document.getElementById('ar-mat').textContent = result.material_name || 'Unknown material';
-    document.getElementById('ar-conf').textContent = `Confidence: ${result.confidence} · ${result.reasoning}`;
-    document.getElementById('ar-desc').textContent = mat ? mat.desc : 'Material not in current catalog. Please identify manually.';
-    document.getElementById('ar-start-btn').style.display = mat ? 'block' : 'none';
-    document.getElementById('analyzer-result').classList.add('show');
-
-    if(result.warning){
-      setTimeout(()=>showWarning(result.warning, null), 500);
+    const data = await apiGet({ action: 'getMaterials' });
+    if (data.ok && data.materials && data.materials.length > 0) {
+      appState.materials = data.materials;
+      localStorage.setItem('rusticMaterials', JSON.stringify(data.materials));
+      localStorage.setItem('rusticMaterialsTs', String(Date.now()));
+      renderCatalog(appState.materials);
+    } else {
+      appState.materials = FALLBACK_MATERIALS;
+      renderCatalog(appState.materials);
     }
-  } catch(e){
-    document.getElementById('analyzer-loading').style.display = 'none';
-    document.getElementById('ar-mat').textContent = 'Could not analyze';
-    document.getElementById('ar-conf').textContent = 'API error — identify manually from catalog';
-    document.getElementById('ar-desc').textContent = '';
-    document.getElementById('ar-start-btn').style.display = 'none';
-    document.getElementById('analyzer-result').classList.add('show');
+  } catch (e) {
+    appState.materials = FALLBACK_MATERIALS;
+    renderCatalog(appState.materials);
+    showToast('Using offline materials data');
   }
 }
 
-function startFromAnalyzer(){
-  if(analyzedMat) startIntake(analyzedMat.id);
+function filterCatalog(cat, el) {
+  document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  renderCatalog(appState.materials, cat);
 }
 
-function resetAnalyzer(){
-  document.getElementById('analyzer-file').value = '';
-  const prev = document.getElementById('analyzer-preview');
-  prev.src = '';
-  prev.style.display = 'none';
-  document.getElementById('analyzer-loading').style.display = 'none';
-  document.getElementById('analyzer-result').classList.remove('show');
-  analyzedMat = null;
+function renderCatalog(materials, catFilter) {
+  const listEl = document.getElementById('catalog-list');
+  if (!listEl) return;
+
+  const filtered = catFilter && catFilter !== 'all'
+    ? materials.filter(m => (m.category || '').toLowerCase() === catFilter.toLowerCase())
+    : materials;
+
+  if (!filtered.length) {
+    listEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--mist);">No materials found</div>';
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(m => {
+    const payRate = (m.y1_rate * 0.75).toFixed(3);
+    const cat     = (m.category || '').toLowerCase().replace(/[^a-z]/g,'');
+    const gradeClass = m.grade === 'top' ? 'grade-top' : m.grade === 'mid' ? 'grade-mid' : 'grade-low';
+    return `<div class="mat-card theme-${cat}" onclick="startIntake('${m.sku}')">
+      <div class="mat-card-left">
+        <div class="mat-card-name">${m.name}</div>
+        <div class="mat-card-sku">${m.sku}</div>
+        <div style="margin-top:6px;display:flex;gap:6px;align-items:center;">
+          <span class="grade-badge ${gradeClass}">${m.grade || 'std'}</span>
+          <span style="font-size:11px;color:var(--mist);">${m.category}</span>
+        </div>
+      </div>
+      <div class="mat-card-right">
+        <div class="mat-card-rate">$${payRate}</div>
+        <div class="mat-card-unit">per lb</div>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-// ─── WARNING ────────────────────────────────────────────────────────────
-function showWarning(text, callback){
-  warningCallback = callback;
-  document.getElementById('warning-title').textContent = '🚨 STOP — RED FLAG';
-  document.getElementById('warning-text').textContent = text;
-  document.getElementById('warning-overlay').classList.add('show');
-}
+// ============================================================
+// INTAKE WIZARD
+// ============================================================
+const INTAKE_STEPS = [
+  { title: 'Transaction Setup' },
+  { title: 'Photos' },
+  { title: 'Material Selection' },
+  { title: 'Verification Checks' },
+  { title: 'Confirmation' }
+];
 
-function dismissWarning(){
-  document.getElementById('warning-overlay').classList.remove('show');
-  if(warningCallback) warningCallback();
-  warningCallback = null;
-}
-
-// ─── HELPERS ────────────────────────────────────────────────────────────
-function yr(y1){ return (y1*0.75).toFixed(2); }
-function catEmoji(cat){ return {copper:'🔶',wire:'🔌',aluminum:'⬜',brass:'🟡',ferrous:'⚙️',ewaste:'💻'}[cat]||'📦'; }
-function gradeClass(g){ return {top:'grade-top',mid:'grade-mid',low:'grade-low'}[g]||'grade-low'; }
-function gradeLabel(g){ return {top:'⭐ TOP',mid:'✔ MID',low:'▼ LOW'}[g]||'LOW'; }
-
-function toast(msg){
-  const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'), 2800);
-}
-
-// ─── INIT ────────────────────────────────────────────────────────────────
-// Password gate
-(function(){
-  const PASS = 'hashemhavaya';
-  const SESSION_KEY = 'rr_auth';
-  if(sessionStorage.getItem(SESSION_KEY) === '1'){ renderGrid(); return; }
-
-  // Build gate screen
-  document.body.innerHTML = `
-    <div style="position:fixed;inset:0;background:#0F0F0F;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px;font-family:'Barlow Condensed',sans-serif">
-      <div style="font-size:48px;margin-bottom:8px">♻️</div>
-      <div style="font-size:32px;font-weight:800;color:#FAFAFA;letter-spacing:2px;margin-bottom:4px">RUSTIC <span style="color:#E8520D">RECYCLING</span></div>
-      <div style="font-size:14px;color:#888;margin-bottom:40px;letter-spacing:1px">YARD OPERATIONS — AUTHORIZED ACCESS ONLY</div>
-      <input id="gate-input" type="password" placeholder="Enter passphrase" autocomplete="off"
-        style="width:100%;max-width:320px;background:#1C1C1C;border:2px solid #3A3A3A;border-radius:12px;padding:16px;color:#FAFAFA;font-family:'Barlow Condensed',sans-serif;font-size:20px;text-align:center;outline:none;margin-bottom:12px;letter-spacing:2px"
-        onkeydown="if(event.key==='Enter')checkPass()">
-      <button onclick="checkPass()"
-        style="width:100%;max-width:320px;padding:16px;background:#C0390B;border:none;border-radius:12px;color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:22px;font-weight:700;cursor:pointer;letter-spacing:1px">
-        ENTER
-      </button>
-      <div id="gate-err" style="margin-top:16px;color:#f87171;font-size:15px;min-height:20px"></div>
-    </div>
-  ` + document.body.innerHTML;
-
-  window.checkPass = function(){
-    const val = document.getElementById('gate-input').value.trim().toLowerCase();
-    if(val === PASS){
-      sessionStorage.setItem(SESSION_KEY, '1');
-      location.reload();
-    } else {
-      document.getElementById('gate-err').textContent = 'Incorrect passphrase. Try again.';
-      document.getElementById('gate-input').value = '';
-      document.getElementById('gate-input').focus();
-    }
+function startIntake(sku) {
+  const mat = appState.materials.find(m => m.sku === sku);
+  // Reset intake state
+  appState.intake = {
+    step: 1,
+    mode: appState.mode || 'live',
+    tare_flagged: false,
+    supplier_name: '',
+    supplier_phone: '',
+    sku: sku || null,
+    material: mat || null,
+    photos: {vehicle:null, supplier:null, bulk:null, individual:null},
+    plate_num: '',
+    check_results: [],
+    check_index: 0
   };
+  renderIntakeStep();
+  showScreen('screen-intake');
+}
+
+function renderIntakeStep() {
+  const step = appState.intake.step;
+  const total = INTAKE_STEPS.length;
+  document.getElementById('intake-step-counter').textContent = 'Step ' + step + ' of ' + total;
+  document.getElementById('intake-step-title').textContent   = INTAKE_STEPS[step - 1].title;
+
+  // Progress dots
+  const dots = Array.from({length: total}, (_, i) => {
+    const cls = i + 1 < step ? 'done' : i + 1 === step ? 'active' : '';
+    return `<div class="step-dot ${cls}"></div>`;
+  }).join('');
+  document.getElementById('intake-step-progress').innerHTML = dots;
+
+  // Back button
+  const backBtn = document.getElementById('intake-back-btn');
+  backBtn.style.display = step > 1 ? '' : 'none';
+
+  // Next button label
+  const nextBtn = document.getElementById('intake-next-btn');
+  nextBtn.textContent = step === total ? 'SUBMIT' : 'NEXT →';
+
+  // Render body
+  const body = document.getElementById('intake-step-body');
+  switch (step) {
+    case 1: body.innerHTML = renderIntakeStep1(); break;
+    case 2: body.innerHTML = renderIntakeStep2(); break;
+    case 3: body.innerHTML = renderIntakeStep3(); break;
+    case 4: body.innerHTML = renderIntakeStep4(); nextBtn.style.display = 'none'; return;
+    case 5: body.innerHTML = renderIntakeStep5(); nextBtn.style.display = 'none'; return;
+  }
+  nextBtn.style.display = '';
+}
+
+function renderIntakeStep1() {
+  const s = appState.intake;
+  return `<div>
+    <div class="form-group">
+      <label class="form-label">Transaction Mode</label>
+      <div class="mode-toggle">
+        <button class="mode-btn ${s.mode === 'live' ? 'active-live' : ''}" onclick="setIntakeMode('live')">LIVE</button>
+        <button class="mode-btn ${s.mode === 'test' ? 'active-test' : ''}" onclick="setIntakeMode('test')">TEST</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Tare Needed?</label>
+      <div style="font-size:13px;color:var(--mist);margin-bottom:10px;">Did supplier arrive in a vehicle or with a container?</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <button class="btn ${s.tare_flagged ? 'btn-primary' : 'btn-secondary'}" onclick="setTare(true)">YES — needs tare</button>
+        <button class="btn ${!s.tare_flagged ? 'btn-primary' : 'btn-secondary'}" onclick="setTare(false)">NO — walk-in</button>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Supplier First Name</label>
+      <input id="intake-supplier-name" class="form-input" type="text" placeholder="First name" value="${s.supplier_name}" autocapitalize="words">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Supplier Phone <span style="color:var(--mist);font-weight:400;">(optional — for SMS receipt)</span></label>
+      <input id="intake-supplier-phone" class="form-input" type="tel" placeholder="(555) 555-5555" value="${s.supplier_phone}">
+    </div>
+  </div>`;
+}
+
+function renderIntakeStep2() {
+  const s = appState.intake;
+  const photoKeys = ['vehicle','supplier','bulk','individual'];
+  const photoLabels = ['Vehicle','Person / Supplier','Bulk Material','Individual Piece'];
+
+  const slots = photoKeys.map((k, i) => {
+    const hasPhoto = !!s.photos[k];
+    const imgTag   = hasPhoto ? `<img src="${s.photos[k]}" alt="${k}">` : '';
+    const checkBadge = hasPhoto ? '<div class="check-badge">✓</div>' : '';
+    return `<div>
+      <div class="photo-slot ${hasPhoto ? 'captured' : ''}" onclick="capturePhoto('${k}')">
+        ${imgTag}
+        ${!hasPhoto ? '<div class="photo-slot-icon">📷</div>' : ''}
+        ${checkBadge}
+      </div>
+      <div class="photo-slot-label">${photoLabels[i]}</div>
+      ${k === 'vehicle' ? `<input id="intake-plate" class="form-input" type="text" placeholder="Plate #" style="margin-top:6px;font-size:14px;" value="${s.plate_num || ''}" autocapitalize="characters">` : ''}
+    </div>`;
+  }).join('');
+
+  return `<div>
+    <div style="font-size:13px;color:var(--mist);margin-bottom:16px;">Photos are optional but strongly encouraged. Tap each slot to capture.</div>
+    <div class="photo-grid">${slots}</div>
+  </div>`;
+}
+
+function renderIntakeStep3() {
+  const s = appState.intake;
+  const mat = s.material;
+
+  const catClass = mat ? 'theme-' + (mat.category || '').toLowerCase().replace(/[^a-z]/g,'') : '';
+  const gradeClass = mat && mat.grade === 'top' ? 'grade-top' : mat && mat.grade === 'mid' ? 'grade-mid' : 'grade-low';
+  const payRate = mat ? (mat.y1_rate * 0.75).toFixed(3) : '—';
+
+  const currentMat = mat ? `<div class="card ${catClass}" style="margin-bottom:16px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div class="card-title">${mat.name}</div>
+        <div style="font-size:12px;color:var(--mist);">${mat.sku}</div>
+        <div style="margin-top:6px;"><span class="grade-badge ${gradeClass}">${mat.grade || 'std'}</span></div>
+      </div>
+      <div style="text-align:right;">
+        <div style="font-family:var(--fh);font-size:28px;font-weight:800;color:var(--rust2);">$${payRate}</div>
+        <div style="font-size:11px;color:var(--mist);">per lb</div>
+      </div>
+    </div>
+  </div>` : '<div class="card" style="margin-bottom:16px;text-align:center;color:var(--mist);">No material selected — choose below</div>';
+
+  const miniCards = appState.materials.map(m => {
+    const isSel = s.sku === m.sku;
+    const mCat  = 'theme-' + (m.category || '').toLowerCase().replace(/[^a-z]/g,'');
+    return `<div class="mat-card ${mCat} ${isSel ? 'active' : ''}" style="${isSel ? 'border:2px solid var(--rust2);' : ''}" onclick="selectMaterial('${m.sku}')">
+      <div class="mat-card-left">
+        <div class="mat-card-name" style="font-size:15px;">${m.name}</div>
+        <div class="mat-card-sku">${m.sku}</div>
+      </div>
+      <div class="mat-card-right">
+        <div style="font-family:var(--fh);font-size:18px;font-weight:700;color:var(--rust2);">$${(m.y1_rate*0.75).toFixed(3)}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  return `<div>
+    ${currentMat}
+    <div style="font-size:12px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--mist);margin-bottom:10px;">Change Material</div>
+    ${miniCards}
+  </div>`;
+}
+
+function renderIntakeStep4() {
+  const s   = appState.intake;
+  const mat = s.material;
+  if (!mat || !mat.checks || !mat.checks.length) {
+    // No checks — auto-advance
+    setTimeout(() => {
+      appState.intake.check_results = [];
+      appState.intake.step = 5;
+      renderIntakeStep();
+    }, 100);
+    return '<div style="text-align:center;padding:40px;color:var(--mist);">No verification checks for this material.</div>';
+  }
+
+  const checks   = mat.checks;
+  const idx      = s.check_index;
+  if (idx >= checks.length) {
+    setTimeout(() => { appState.intake.step = 5; renderIntakeStep(); }, 100);
+    return '';
+  }
+
+  const check = checks[idx];
+  const critBadge = check.critical ? '<div class="critical-badge">⚠ CRITICAL CHECK</div>' : '';
+
+  return `<div>
+    <div style="font-size:12px;color:var(--mist);margin-bottom:16px;">Check ${idx + 1} of ${checks.length}</div>
+    <div class="check-card">
+      ${critBadge}
+      <div class="check-question">${check.q}</div>
+      <div class="check-btns">
+        <button class="btn check-pass btn-lg" onclick="answerCheck(true)">✓ PASS</button>
+        <button class="btn check-fail btn-lg" onclick="answerCheck(false)">✗ FAIL</button>
+      </div>
+    </div>
+  </div>`;
+}
+
+function renderIntakeStep5() {
+  return `<div id="intake-confirm-body" style="text-align:center;padding:20px 0;">
+    <div class="spinner" style="margin:0 auto 16px;"></div>
+    <div style="color:var(--mist);">Submitting transaction…</div>
+  </div>`;
+}
+
+// Intake helpers
+function setIntakeMode(m) {
+  appState.intake.mode = m;
+  // Re-render step 1 buttons
+  document.querySelectorAll('.mode-btn').forEach(b => {
+    b.classList.remove('active-live','active-test');
+  });
+  const btns = document.querySelectorAll('.mode-btn');
+  if (m === 'live' && btns[0]) btns[0].classList.add('active-live');
+  if (m === 'test' && btns[1]) btns[1].classList.add('active-test');
+}
+
+function setTare(val) {
+  appState.intake.tare_flagged = val;
+  renderIntakeStep();
+}
+
+function selectMaterial(sku) {
+  const mat = appState.materials.find(m => m.sku === sku);
+  if (mat) {
+    appState.intake.sku      = sku;
+    appState.intake.material = mat;
+    appState.intake.check_index  = 0;
+    appState.intake.check_results = [];
+    renderIntakeStep();
+  }
+}
+
+async function capturePhoto(key) {
+  try {
+    const input = document.createElement('input');
+    input.type   = 'file';
+    input.accept = 'image/*';
+    input.capture = 'environment';
+    input.onchange = async (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        appState.intake.photos[key] = ev.target.result;
+        if (key === 'vehicle') {
+          const plateEl = document.getElementById('intake-plate');
+          if (plateEl) appState.intake.plate_num = plateEl.value;
+        }
+        renderIntakeStep();
+      };
+      reader.readAsDataURL(file);
+    };
+    input.click();
+  } catch (e) {
+    showToast('Camera not available');
+  }
+}
+
+function answerCheck(passed) {
+  const s      = appState.intake;
+  const checks = s.material && s.material.checks;
+  if (!checks) return;
+  const check  = checks[s.check_index];
+
+  if (!passed && check.critical) {
+    // Show critical fail overlay
+    const failText = check.fail_text || 'This is a critical check failure. Supervisor override required or reclassify material.';
+    document.getElementById('critfail-text').textContent = failText;
+    document.getElementById('critfail-reason').value = '';
+    showOverlay('overlay-critfail');
+    return;
+  }
+
+  s.check_results.push({ q: check.q, passed, critical: check.critical, overridden: false });
+  s.check_index++;
+
+  if (s.check_index >= checks.length) {
+    s.step = 5;
+    renderIntakeStep();
+    submitIntake();
+  } else {
+    renderIntakeStep();
+  }
+}
+
+function critfailOverride() {
+  const reason = document.getElementById('critfail-reason').value.trim();
+  if (!reason) { showToast('Enter override reason'); return; }
+
+  const s      = appState.intake;
+  const checks = s.material && s.material.checks;
+  const check  = checks[s.check_index];
+
+  s.check_results.push({ q: check.q, passed: false, critical: true, overridden: true, override_reason: reason });
+  s.check_index++;
+  closeOverlay('overlay-critfail');
+
+  if (s.check_index >= checks.length) {
+    s.step = 5;
+    renderIntakeStep();
+    submitIntake();
+  } else {
+    renderIntakeStep();
+  }
+}
+
+function critfailReclassify() {
+  closeOverlay('overlay-critfail');
+  appState.intake.step = 3;
+  appState.intake.sku  = null;
+  appState.intake.material = null;
+  appState.intake.check_index  = 0;
+  appState.intake.check_results = [];
+  renderIntakeStep();
+}
+
+function intakeBack() {
+  if (appState.intake.step > 1) {
+    appState.intake.step--;
+    if (appState.intake.step === 4) appState.intake.check_index = 0;
+    renderIntakeStep();
+  }
+}
+
+function intakeNext() {
+  const step = appState.intake.step;
+  const s    = appState.intake;
+
+  if (step === 1) {
+    // Collect values from DOM
+    const nameEl  = document.getElementById('intake-supplier-name');
+    const phoneEl = document.getElementById('intake-supplier-phone');
+    s.supplier_name  = nameEl  ? nameEl.value.trim()  : '';
+    s.supplier_phone = phoneEl ? phoneEl.value.trim() : '';
+    if (!s.supplier_name) { showToast('Enter supplier first name'); return; }
+  }
+
+  if (step === 2) {
+    const plateEl = document.getElementById('intake-plate');
+    if (plateEl) s.plate_num = plateEl.value.trim();
+  }
+
+  if (step === 3) {
+    if (!s.sku) { showToast('Select a material before continuing'); return; }
+    s.check_index    = 0;
+    s.check_results  = [];
+  }
+
+  s.step++;
+  renderIntakeStep();
+
+  if (step + 1 === 5) {
+    submitIntake();
+  }
+}
+
+async function submitIntake() {
+  const s = appState.intake;
+  const confirmBody = document.getElementById('intake-confirm-body');
+
+  const payload = {
+    action:         'newTransaction',
+    userId:         appState.user && appState.user.userId,
+    mode:           s.mode,
+    tare_flagged:   s.tare_flagged,
+    supplier_name:  s.supplier_name,
+    supplier_phone: s.supplier_phone,
+    sku:            s.sku,
+    y1_rate:        s.material ? s.material.y1_rate : 0,
+    check_results:  s.check_results,
+    photo_urls:     { vehicle: '', supplier: '', bulk: '', individual: '' },
+    gps:            ''
+  };
+
+  // Try to get GPS
+  try {
+    const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 3000 }));
+    payload.gps = pos.coords.latitude + ',' + pos.coords.longitude;
+  } catch (e) {}
+
+  // Photos are base64 data URLs — store them as-is for now (Drive upload is future scope)
+  if (s.photos.vehicle)    payload.photo_urls.vehicle    = s.photos.vehicle.substring(0, 200) + '…(base64)';
+  if (s.photos.supplier)   payload.photo_urls.supplier   = s.photos.supplier.substring(0, 200) + '…(base64)';
+  if (s.photos.bulk)       payload.photo_urls.bulk       = s.photos.bulk.substring(0, 200) + '…(base64)';
+  if (s.photos.individual) payload.photo_urls.individual = s.photos.individual.substring(0, 200) + '…(base64)';
+
+  try {
+    let data;
+    if (!navigator.onLine) throw new Error('offline');
+    data = await apiFetch(payload);
+
+    if (data.ok) {
+      appState.intake.tx_id    = data.tx_id;
+      appState.intake.code     = data.code;
+      appState.intake.pay_rate = data.pay_rate;
+      renderConfirmSlip(data.tx_id, data.code, data.pay_rate);
+    } else {
+      throw new Error(data.error || 'Server error');
+    }
+  } catch (e) {
+    // Save offline
+    await savePendingTx(payload);
+    const localCode = 'PEND';
+    const localId   = 'OFFLINE-' + Date.now();
+    appState.intake.tx_id = localId;
+    appState.intake.code  = localCode;
+    updateSyncBadge();
+    renderConfirmSlip(localId, localCode, (s.material ? s.material.y1_rate * 0.75 : 0), true);
+  }
+}
+
+function renderConfirmSlip(txId, code, payRate, offline) {
+  const s   = appState.intake;
+  const mat = s.material;
+  const el  = document.getElementById('intake-confirm-body');
+  if (!el) return;
+
+  const offlineBanner = offline ? `<div style="background:var(--amber2);color:var(--amber);border-radius:var(--r);padding:10px;font-size:13px;font-weight:600;margin-bottom:16px;">⚡ Saved offline — will sync on reconnect</div>` : '';
+
+  el.innerHTML = `${offlineBanner}
+    <div class="code-display">
+      <div class="code-label">Confirmation Code — show to supplier</div>
+      <div class="code-big">${code}</div>
+      <div style="font-size:12px;color:var(--mist);margin-top:8px;">TX: ${txId}</div>
+    </div>
+    <div class="card" style="margin-top:12px;text-align:left;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span class="text-muted">Supplier</span><span style="font-weight:600;">${s.supplier_name}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span class="text-muted">Material</span><span style="font-weight:600;">${mat ? mat.name : '—'}</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span class="text-muted">Pay rate</span><span style="font-weight:600;">$${payRate ? payRate.toFixed(3) : '—'}/lb</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <span class="text-muted">Tare needed</span><span style="font-weight:600;">${s.tare_flagged ? '⚠ YES' : 'No'}</span>
+      </div>
+    </div>
+    <div style="margin-top:16px;display:grid;gap:10px;">
+      ${s.supplier_phone ? `<button class="btn btn-secondary btn-block" onclick="sendSMSCode('${code}','${s.supplier_phone}','${txId}')">📱 SEND SMS TO ${s.supplier_phone}</button>` : ''}
+      <div style="background:var(--stone);border-radius:var(--r);padding:12px;text-align:center;font-size:13px;color:var(--smoke);">
+        ✓ Supplier has photographed this code
+      </div>
+      <button class="btn btn-primary btn-block btn-lg" onclick="loadCatalog();showScreen('screen-catalog')">DONE — SEND TO SCALE →</button>
+    </div>`;
+}
+
+async function sendSMSCode(code, phone, txId) {
+  try {
+    const text = `Rustic Recycling: Your confirmation code is ${code} (TX: ${txId}). Show this to the scale operator.`;
+    await apiFetch({ action: 'sendSMS', to: phone, text });
+    showToast('SMS sent to ' + phone);
+  } catch (e) {
+    showToast('SMS failed — try again');
+  }
+}
+
+
+// ============================================================
+// SCALE
+// ============================================================
+let scaleTx = null;
+
+async function scaleLookup() {
+  const code  = document.getElementById('scale-code-input').value.trim().toUpperCase();
+  const resEl = document.getElementById('scale-result');
+  if (!code || code.length < 2) { showToast('Enter confirmation code'); return; }
+
+  resEl.style.display = 'none';
+  document.getElementById('scale-tx-summary').innerHTML = '<div style="text-align:center;padding:20px;"><div class="spinner"></div></div>';
+  resEl.style.display = 'block';
+
+  try {
+    const data = await apiFetch({ action: 'getTransaction', code });
+    if (!data.ok || !data.transaction) {
+      document.getElementById('scale-tx-summary').innerHTML = `<div class="card" style="border-color:var(--red);color:#f87171;">Code not found: ${code}</div>`;
+      document.getElementById('scale-weight-section').innerHTML = '';
+      document.getElementById('scale-weight-calc').innerHTML = '';
+      return;
+    }
+    scaleTx = data.transaction;
+    renderScaleTx();
+  } catch (e) {
+    document.getElementById('scale-tx-summary').innerHTML = `<div class="card" style="border-color:var(--red);color:#f87171;">Error: ${e.message}</div>`;
+  }
+}
+
+function renderScaleTx() {
+  const tx = scaleTx;
+  if (!tx) return;
+
+  const tare  = tx.TARE_FLAGGED === 'TRUE' || tx.TARE_FLAGGED === true;
+  const mat   = appState.materials.find(m => m.sku === tx.SKU) || {};
+  const statusChipClass = tx.STATUS === 'OPEN' ? 'chip-open' : tx.STATUS === 'WEIGHED' ? 'chip-weighed' : 'chip-complete';
+
+  const photoThumb = tx.PHOTO_SUPPLIER
+    ? `<div style="width:56px;height:56px;border-radius:8px;overflow:hidden;flex-shrink:0;"><img src="${tx.PHOTO_SUPPLIER}" style="width:100%;height:100%;object-fit:cover;"></div>`
+    : `<div style="width:56px;height:56px;border-radius:8px;background:var(--stone);display:flex;align-items:center;justify-content:center;font-size:24px;">👤</div>`;
+
+  document.getElementById('scale-tx-summary').innerHTML = `
+    <div class="card">
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:12px;">
+        ${photoThumb}
+        <div style="flex:1;">
+          <div style="font-family:var(--fh);font-size:24px;font-weight:800;color:var(--rust2);">${tx.CODE}</div>
+          <div style="font-size:15px;font-weight:600;">${tx.SUPPLIER_NAME}</div>
+          <div style="font-size:13px;color:var(--mist);">${mat.name || tx.SKU}</div>
+        </div>
+        <span class="chip ${statusChipClass}">${tx.STATUS}</span>
+      </div>
+      ${tare ? '<div style="background:var(--amber2);color:var(--amber);border-radius:var(--r);padding:8px 12px;font-size:13px;font-weight:600;">⚠ TARE REQUIRED — supplier arrived with vehicle/container</div>' : ''}
+    </div>`;
+
+  if (tare) {
+    document.getElementById('scale-weight-section').innerHTML = `
+      <div class="form-group">
+        <label class="form-label">Gross Weight (lbs) — with vehicle/container</label>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input id="scale-gross" class="form-input" type="number" placeholder="0.0" oninput="calcNetWeight()" style="font-family:var(--fh);font-size:22px;font-weight:700;">
+          <button class="btn btn-secondary btn-sm" onclick="captureScalePhoto('gross')">📷</button>
+        </div>
+      </div>
+      <div style="background:var(--blue2);color:var(--blue);border-radius:var(--r);padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:12px;">
+        ℹ Ask supplier to remove all material from vehicle/container, then weigh empty.
+      </div>
+      <div class="form-group">
+        <label class="form-label">Tare Weight (lbs) — empty vehicle/container</label>
+        <div style="display:flex;gap:10px;align-items:center;">
+          <input id="scale-tare" class="form-input" type="number" placeholder="0.0" oninput="calcNetWeight()" style="font-family:var(--fh);font-size:22px;font-weight:700;">
+          <button class="btn btn-secondary btn-sm" onclick="captureScalePhoto('tare')">📷</button>
+        </div>
+      </div>`;
+  } else {
+    document.getElementById('scale-weight-section').innerHTML = `
+      <div class="form-group">
+        <label class="form-label">Net Weight (lbs)</label>
+        <input id="scale-net-only" class="form-input" type="number" placeholder="0.0" oninput="calcNetWeight()" style="font-family:var(--fh);font-size:28px;font-weight:700;text-align:center;">
+      </div>`;
+  }
+
+  calcNetWeight();
+}
+
+function calcNetWeight() {
+  const tx    = scaleTx;
+  if (!tx) return;
+  const tare  = tx.TARE_FLAGGED === 'TRUE' || tx.TARE_FLAGGED === true;
+  const calcEl = document.getElementById('scale-weight-calc');
+
+  let gross = 0, tareW = 0, net = 0;
+
+  if (tare) {
+    gross = parseFloat(document.getElementById('scale-gross')?.value) || 0;
+    tareW = parseFloat(document.getElementById('scale-tare')?.value)  || 0;
+    net   = Math.max(gross - tareW, 0);
+  } else {
+    net = parseFloat(document.getElementById('scale-net-only')?.value) || 0;
+    gross = net;
+  }
+
+  const payRate = parseFloat(tx.PAY_RATE) || 0;
+  const payout  = (net * payRate).toFixed(2);
+
+  if (!calcEl) return;
+
+  if (tare) {
+    calcEl.innerHTML = `<div class="weight-calc">
+      <div class="weight-calc-row"><span class="weight-calc-label">Gross</span><span class="weight-calc-val">${gross.toFixed(1)} lbs</span></div>
+      <div class="weight-calc-row"><span class="weight-calc-label">Tare</span><span class="weight-calc-val">− ${tareW.toFixed(1)} lbs</span></div>
+      <div class="weight-calc-row total"><span class="weight-calc-label">Net Weight</span><span class="weight-calc-val weight-net">${net.toFixed(1)} lbs</span></div>
+      ${payRate ? `<div class="weight-calc-row"><span class="weight-calc-label">Est. Payout</span><span class="weight-calc-val" style="color:#4ade80;">$${payout}</span></div>` : ''}
+    </div>`;
+  } else {
+    calcEl.innerHTML = `<div class="weight-calc">
+      <div class="weight-calc-row total"><span class="weight-calc-label">Net Weight</span><span class="weight-calc-val weight-net">${net.toFixed(1)} lbs</span></div>
+      ${payRate ? `<div class="weight-calc-row"><span class="weight-calc-label">Est. Payout</span><span class="weight-calc-val" style="color:#4ade80;">$${payout}</span></div>` : ''}
+    </div>`;
+  }
+}
+
+function captureScalePhoto(type) {
+  const input = document.createElement('input');
+  input.type    = 'file';
+  input.accept  = 'image/*';
+  input.capture = 'environment';
+  input.onchange = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    showToast('Scale photo captured (' + type + ')');
+    // In a full implementation, upload to Drive and store URL on transaction
+  };
+  input.click();
+}
+
+async function confirmWeights() {
+  const tx   = scaleTx;
+  if (!tx) return;
+
+  const tare = tx.TARE_FLAGGED === 'TRUE' || tx.TARE_FLAGGED === true;
+  let gross = 0, tareW = 0, net = 0;
+
+  if (tare) {
+    gross = parseFloat(document.getElementById('scale-gross')?.value) || 0;
+    tareW = parseFloat(document.getElementById('scale-tare')?.value)  || 0;
+    net   = Math.max(gross - tareW, 0);
+  } else {
+    net = parseFloat(document.getElementById('scale-net-only')?.value) || 0;
+    gross = net;
+  }
+
+  if (!net || net <= 0) { showToast('Enter a valid weight'); return; }
+
+  const payRate = parseFloat(tx.PAY_RATE) || 0;
+  const payout  = parseFloat((net * payRate).toFixed(2));
+
+  const updates = {
+    STATUS:       'WEIGHED',
+    GROSS_WEIGHT: gross,
+    TARE_WEIGHT:  tare ? tareW : 0,
+    NET_WEIGHT:   net,
+    PAYOUT:       payout
+  };
+
+  try {
+    const data = await apiFetch({ action: 'updateTransaction', tx_id: tx.TX_ID, updates });
+    if (data.ok) {
+      showToast('Weights confirmed — ' + net.toFixed(1) + ' lbs, payout $' + payout.toFixed(2));
+      document.getElementById('scale-code-input').value = '';
+      document.getElementById('scale-result').style.display = 'none';
+      scaleTx = null;
+    } else {
+      showToast('Error: ' + (data.error || 'Update failed'));
+    }
+  } catch (e) {
+    showToast('Offline — weights saved locally');
+  }
+}
+
+// ============================================================
+// CASHIER
+// ============================================================
+let cashierTx = null;
+
+async function cashierLookup() {
+  const code  = document.getElementById('cashier-code-input').value.trim().toUpperCase();
+  const resEl = document.getElementById('cashier-result');
+  if (!code) { showToast('Enter confirmation code'); return; }
+
+  resEl.style.display = 'none';
+
+  try {
+    const data = await apiFetch({ action: 'getTransaction', code });
+    if (!data.ok || !data.transaction) {
+      showToast('Code not found: ' + code);
+      return;
+    }
+    cashierTx = data.transaction;
+    renderCashierTx();
+    resEl.style.display = 'block';
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+function renderCashierTx() {
+  const tx = cashierTx;
+  if (!tx) return;
+
+  const mat     = appState.materials.find(m => m.sku === tx.SKU) || {};
+  const net     = parseFloat(tx.NET_WEIGHT) || 0;
+  const rate    = parseFloat(tx.PAY_RATE) || 0;
+  const payout  = parseFloat(tx.PAYOUT) || (net * rate);
+
+  const photoThumb = tx.PHOTO_SUPPLIER
+    ? `<img src="${tx.PHOTO_SUPPLIER}" style="width:80px;height:80px;border-radius:var(--r);object-fit:cover;border:2px solid var(--rust2);">`
+    : `<div style="width:80px;height:80px;border-radius:var(--r);background:var(--stone);display:flex;align-items:center;justify-content:center;font-size:36px;">👤</div>`;
+
+  document.getElementById('cashier-tx-info').innerHTML = `
+    <div class="card">
+      <div style="display:flex;gap:16px;align-items:flex-start;margin-bottom:16px;">
+        ${photoThumb}
+        <div style="flex:1;">
+          <div style="font-size:13px;color:var(--mist);">SUPPLIER</div>
+          <div style="font-family:var(--fh);font-size:24px;font-weight:700;">${tx.SUPPLIER_NAME}</div>
+          <div style="font-size:13px;color:var(--mist);margin-top:4px;">TX: ${tx.TX_ID}</div>
+        </div>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="detail-item-label">Material</div>
+          <div class="detail-item-val">${mat.name || tx.SKU}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Net Weight</div>
+          <div class="detail-item-val">${net.toFixed(1)} lbs</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Pay Rate</div>
+          <div class="detail-item-val">$${rate.toFixed(3)}/lb</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Mode</div>
+          <div class="detail-item-val">${tx.MODE === 'test' ? '🔸 TEST' : '✅ LIVE'}</div>
+        </div>
+      </div>
+    </div>
+    <div class="payout-display" style="margin:16px 0;">
+      <div class="payout-label">Total Payout</div>
+      <div class="payout-amount">$${payout.toFixed(2)}</div>
+    </div>`;
+
+  // Show SMS/print buttons
+  document.getElementById('cashier-print-btn').style.display = '';
+  if (tx.SUPPLIER_PHONE) {
+    document.getElementById('cashier-sms-btn').style.display = '';
+  }
+}
+
+async function confirmPayout() {
+  const tx = cashierTx;
+  if (!tx) return;
+
+  const idType = document.getElementById('cashier-id-type').value;
+  const idNum  = document.getElementById('cashier-id-num').value.trim();
+
+  if (!idType) { showToast('Select supplier ID type'); return; }
+  if (!idNum)  { showToast('Enter supplier ID number'); return; }
+
+  const net    = parseFloat(tx.NET_WEIGHT) || 0;
+  const rate   = parseFloat(tx.PAY_RATE)   || 0;
+  const payout = parseFloat(tx.PAYOUT) || (net * rate);
+
+  const updates = {
+    STATUS:           'COMPLETE',
+    SUPPLIER_ID_TYPE: idType,
+    SUPPLIER_ID_NUM:  idNum
+  };
+  if (!tx.PAYOUT) updates.PAYOUT = payout.toFixed(2);
+
+  try {
+    const data = await apiFetch({ action: 'updateTransaction', tx_id: tx.TX_ID, updates });
+    if (data.ok) {
+      showToast('Payout confirmed — $' + payout.toFixed(2));
+      cashierTx = { ...cashierTx, ...updates };
+    } else {
+      showToast('Error: ' + data.error);
+    }
+  } catch (e) {
+    showToast('Offline — will sync when online');
+  }
+}
+
+function buildReceiptLines(tx) {
+  const mat    = appState.materials.find(m => m.sku === (tx.SKU || tx.sku)) || {};
+  const net    = parseFloat(tx.NET_WEIGHT || tx.net_weight) || 0;
+  const rate   = parseFloat(tx.PAY_RATE   || tx.pay_rate)   || 0;
+  const payout = parseFloat(tx.PAYOUT     || tx.payout)     || (net * rate);
+  const now    = new Date().toLocaleString();
+
+  return [
+    '================================',
+    '      RUSTIC RECYCLING          ',
+    '      YARD RECEIPT              ',
+    '================================',
+    '',
+    'Date:    ' + now,
+    'TX ID:   ' + (tx.TX_ID || tx.tx_id || ''),
+    'Code:    ' + (tx.CODE  || tx.code  || ''),
+    '',
+    'Supplier: ' + (tx.SUPPLIER_NAME || tx.supplier_name || ''),
+    'Material: ' + (mat.name || tx.SKU || ''),
+    '',
+    'Net Wt:  ' + net.toFixed(1) + ' lbs',
+    'Rate:    $' + rate.toFixed(3) + '/lb',
+    '--------------------------------',
+    'PAYOUT:  $' + payout.toFixed(2),
+    '================================',
+    '',
+    'Thank you — Rustic Recycling',
+    '',
+  ];
+}
+
+async function printReceipt() {
+  if (!cashierTx) return;
+  const lines = buildReceiptLines(cashierTx);
+  await printBluetooth(lines);
+}
+
+function showReceiptModal(lines) {
+  document.getElementById('receipt-content').textContent = lines.join('\n');
+  showOverlay('overlay-receipt');
+}
+
+async function printBluetooth(receiptLines) {
+  if (!navigator.bluetooth) { showReceiptModal(receiptLines); return; }
+  try {
+    const device = await navigator.bluetooth.requestDevice({
+      filters: [{ services: ['000018f0-0000-1000-8000-00805f9b34fb'] }]
+    });
+    const server  = await device.gatt.connect();
+    const service = await server.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
+    const char    = await service.getCharacteristic('00002af1-0000-1000-8000-00805f9b34fb');
+    const encoder = new TextEncoder();
+    const ESC = 0x1B, GS = 0x1D;
+    let bytes = [ESC, 0x40]; // init
+    for (const line of receiptLines) {
+      bytes.push(...encoder.encode(line + '\n'));
+    }
+    bytes.push(GS, 0x56, 0x41, 0x10); // partial cut
+    await char.writeValue(new Uint8Array(bytes));
+    showToast('Printed successfully');
+  } catch (e) {
+    showReceiptModal(receiptLines);
+  }
+}
+
+async function sendSMSReceipt() {
+  const tx = cashierTx;
+  if (!tx || !tx.SUPPLIER_PHONE) return;
+
+  const net    = parseFloat(tx.NET_WEIGHT) || 0;
+  const rate   = parseFloat(tx.PAY_RATE)   || 0;
+  const payout = parseFloat(tx.PAYOUT) || (net * rate);
+
+  const text = `Rustic Recycling receipt: ${tx.SUPPLIER_NAME}, ${tx.SKU}, ${net.toFixed(1)}lbs @ $${rate.toFixed(3)}/lb = $${payout.toFixed(2)}. TX: ${tx.TX_ID}. Thank you!`;
+
+  try {
+    const data = await apiFetch({ action: 'sendSMS', to: tx.SUPPLIER_PHONE, text });
+    showToast(data.ok ? 'SMS receipt sent' : 'SMS failed: ' + data.error);
+  } catch (e) {
+    showToast('SMS failed — check connection');
+  }
+}
+
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+async function loadDashboard() {
+  renderBottomNav('bottom-nav-dashboard');
+  updateSyncBadge();
+  const listEl = document.getElementById('dashboard-list');
+  if (!listEl) return;
+
+  listEl.innerHTML = '<div style="text-align:center;padding:30px;"><div class="spinner"></div></div>';
+
+  try {
+    const data = await apiGet({ action: 'getDashboard' });
+    if (!data.ok) { listEl.innerHTML = '<div class="card" style="color:#f87171;">Error loading dashboard</div>'; return; }
+    const txs = data.transactions || [];
+    if (!txs.length) {
+      listEl.innerHTML = '<div style="text-align:center;padding:40px;color:var(--mist);">No open transactions</div>';
+      return;
+    }
+    listEl.innerHTML = txs.map(tx => {
+      const elapsed  = txElapsed(tx.TIMESTAMP);
+      const payout   = parseFloat(tx.PAYOUT) || 0;
+      const statusCls = tx.STATUS === 'OPEN' ? 'chip-open' : tx.STATUS === 'WEIGHED' ? 'chip-weighed' : 'chip-complete';
+      const flagged   = tx.STATUS === 'FLAGGED';
+      const mat       = appState.materials.find(m => m.sku === tx.SKU) || {};
+      const modeTag   = tx.MODE === 'test' ? '<span class="chip chip-test" style="margin-right:4px;">TEST</span>' : '';
+      return `<div class="tx-row ${flagged ? 'flagged' : ''}" onclick="openTxDetail('${tx.TX_ID}')">
+        <div class="tx-row-left">
+          <div class="tx-code">${modeTag}${tx.CODE}</div>
+          <div class="tx-name">${tx.SUPPLIER_NAME || '—'}</div>
+          <div class="tx-mat">${mat.name || tx.SKU || '—'}</div>
+        </div>
+        <div class="tx-row-right">
+          ${payout ? `<div class="tx-payout">$${payout.toFixed(2)}</div>` : ''}
+          <div><span class="chip ${statusCls}">${tx.STATUS}</span></div>
+          <div class="tx-elapsed">${elapsed}</div>
+        </div>
+      </div>`;
+    }).join('');
+  } catch (e) {
+    listEl.innerHTML = '<div class="card" style="color:#f87171;">Cannot reach server. Check connection.</div>';
+  }
+}
+
+function txElapsed(ts) {
+  if (!ts) return '';
+  const diff = Date.now() - new Date(ts).getTime();
+  const mins = Math.floor(diff / 60000);
+  if (mins < 1) return 'just now';
+  if (mins < 60) return mins + 'm ago';
+  return Math.floor(mins / 60) + 'h ago';
+}
+
+// ============================================================
+// TX DETAIL (supervisor)
+// ============================================================
+async function openTxDetail(txId) {
+  const body = document.getElementById('txdetail-body');
+  body.innerHTML = '<div style="text-align:center;padding:40px;"><div class="spinner"></div></div>';
+  showScreen('screen-txdetail');
+
+  try {
+    // Look up by TX_ID — fetch all dashboard txs and find it, or look up directly
+    const data = await apiGet({ action: 'getDashboard' });
+    const tx   = data.transactions && data.transactions.find(t => t.TX_ID === txId);
+    if (!tx) { body.innerHTML = '<div class="card" style="color:#f87171;">Transaction not found</div>'; return; }
+
+    appState.currentTxDetail = tx;
+    document.getElementById('txdetail-code').textContent = tx.CODE;
+    renderTxDetail(tx);
+  } catch (e) {
+    body.innerHTML = `<div class="card" style="color:#f87171;">Error: ${e.message}</div>`;
+  }
+}
+
+function renderTxDetail(tx) {
+  const body   = document.getElementById('txdetail-body');
+  const mat    = appState.materials.find(m => m.sku === tx.SKU) || {};
+  const net    = parseFloat(tx.NET_WEIGHT) || 0;
+  const rate   = parseFloat(tx.PAY_RATE)   || 0;
+  const payout = parseFloat(tx.PAYOUT) || 0;
+  const gross  = parseFloat(tx.GROSS_WEIGHT) || 0;
+  const tare   = parseFloat(tx.TARE_WEIGHT)  || 0;
+
+  let checksHtml = '';
+  if (tx.CHECK_RESULTS) {
+    try {
+      const checks = JSON.parse(tx.CHECK_RESULTS);
+      checksHtml = `<div class="card" style="margin-top:12px;">
+        <div class="card-title" style="margin-bottom:10px;">Verification Checks</div>
+        ${checks.map((c, i) => {
+          const icon = c.overridden ? '⚠️' : c.passed ? '✅' : '❌';
+          const col  = c.overridden ? 'var(--amber)' : c.passed ? '#4ade80' : '#f87171';
+          return `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--stone);">
+            <span style="font-size:18px;">${icon}</span>
+            <div style="flex:1;">
+              <div style="font-size:13px;font-weight:600;color:${col};">${c.q}</div>
+              ${c.overridden ? `<div style="font-size:11px;color:var(--amber);">Override: ${c.override_reason || '—'}</div>` : ''}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>`;
+    } catch (e) {}
+  }
+
+  const photos = [
+    { label: 'Vehicle',   url: tx.PHOTO_VEHICLE    },
+    { label: 'Supplier',  url: tx.PHOTO_SUPPLIER   },
+    { label: 'Bulk',      url: tx.PHOTO_BULK       },
+    { label: 'Individual',url: tx.PHOTO_INDIVIDUAL },
+    { label: 'Scale (G)', url: tx.PHOTO_SCALE_GROSS },
+    { label: 'Scale (T)', url: tx.PHOTO_SCALE_TARE }
+  ];
+
+  const photoGrid = `<div class="card" style="margin-top:12px;">
+    <div class="card-title" style="margin-bottom:10px;">Photos</div>
+    <div class="photo-thumb-grid">
+      ${photos.map(p => p.url
+        ? `<div class="photo-thumb" onclick="window.open('${p.url}','_blank')"><img src="${p.url}" alt="${p.label}"></div>`
+        : `<div class="photo-thumb photo-thumb-empty" title="${p.label}">📷</div>`
+      ).join('')}
+    </div>
+  </div>`;
+
+  const statusCls = tx.STATUS === 'OPEN' ? 'chip-open' : tx.STATUS === 'WEIGHED' ? 'chip-weighed' : 'chip-complete';
+
+  body.innerHTML = `
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+        <span class="chip ${statusCls}">${tx.STATUS}</span>
+        ${tx.MODE === 'test' ? '<span class="chip chip-test">TEST</span>' : ''}
+        <span style="font-size:12px;color:var(--mist);">${tx.TIMESTAMP ? new Date(tx.TIMESTAMP).toLocaleString() : ''}</span>
+      </div>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <div class="detail-item-label">Supplier</div>
+          <div class="detail-item-val">${tx.SUPPLIER_NAME || '—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Phone</div>
+          <div class="detail-item-val">${tx.SUPPLIER_PHONE || '—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Material</div>
+          <div class="detail-item-val">${mat.name || tx.SKU || '—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Staff</div>
+          <div class="detail-item-val">${tx.USER_ID || '—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Gross Wt</div>
+          <div class="detail-item-val">${gross ? gross.toFixed(1) + ' lbs' : '—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Tare Wt</div>
+          <div class="detail-item-val">${tare ? tare.toFixed(1) + ' lbs' : '—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Net Weight</div>
+          <div class="detail-item-val" style="color:#4ade80;">${net ? net.toFixed(1) + ' lbs' : '—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Pay Rate</div>
+          <div class="detail-item-val">${rate ? '$' + rate.toFixed(3) + '/lb' : '—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Payout</div>
+          <div class="detail-item-val" style="color:#4ade80;">${payout ? '$' + payout.toFixed(2) : '—'}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">Tare Flagged</div>
+          <div class="detail-item-val">${tx.TARE_FLAGGED === 'TRUE' ? '⚠ Yes' : 'No'}</div>
+        </div>
+        ${tx.SUPPLIER_ID_TYPE ? `<div class="detail-item">
+          <div class="detail-item-label">ID Type</div>
+          <div class="detail-item-val">${tx.SUPPLIER_ID_TYPE}</div>
+        </div>
+        <div class="detail-item">
+          <div class="detail-item-label">ID Number</div>
+          <div class="detail-item-val">${tx.SUPPLIER_ID_NUM || '—'}</div>
+        </div>` : ''}
+      </div>
+    </div>
+    ${photoGrid}
+    ${checksHtml}
+    <div class="card" style="margin-top:12px;">
+      <div class="card-title" style="margin-bottom:12px;">Supervisor Actions</div>
+      ${tx.STATUS === 'FLAGGED' ? `<button class="btn btn-success btn-block" style="margin-bottom:10px;" onclick="approveFlaggedMaterial('${tx.TX_ID}')">✓ APPROVE FLAGGED MATERIAL</button>` : ''}
+      <button class="btn btn-secondary btn-block" style="margin-bottom:10px;" onclick="openOverrideModal('${tx.TX_ID}','PAY_RATE','${rate}')">OVERRIDE RATE</button>
+      <button class="btn btn-secondary btn-block" style="margin-bottom:10px;" onclick="openOverrideModal('${tx.TX_ID}','NET_WEIGHT','${net}')">OVERRIDE WEIGHT</button>
+      <button class="btn btn-secondary btn-block" onclick="openAddCorrectionModal('${tx.TX_ID}')">ADD CORRECTION</button>
+    </div>`;
+}
+
+async function approveFlaggedMaterial(txId) {
+  try {
+    const data = await apiFetch({ action: 'updateTransaction', tx_id: txId, updates: { STATUS: 'OPEN' } });
+    showToast(data.ok ? 'Material approved' : 'Error: ' + data.error);
+    if (data.ok) loadDashboard();
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+function openOverrideModal(txId, field, currentVal) {
+  appState.pendingOverride = { tx_id: txId, field, original_value: currentVal };
+  document.getElementById('override-field-label').textContent = field;
+  document.getElementById('override-new-val').value    = currentVal;
+  document.getElementById('override-pass').value       = '';
+  document.getElementById('override-reason').value     = '';
+  showOverlay('overlay-override');
+}
+
+async function submitOverride() {
+  const pass   = document.getElementById('override-pass').value;
+  const newVal = document.getElementById('override-new-val').value.trim();
+  const reason = document.getElementById('override-reason').value.trim();
+
+  if (!pass)   { showToast('Enter supervisor password'); return; }
+  if (!reason) { showToast('Enter reason for override'); return; }
+
+  // Verify password
+  try {
+    const auth = await apiFetch({ action: 'login', username: appState.user.username, password: pass });
+    if (!auth.ok) { showToast('Incorrect password'); return; }
+  } catch (e) {
+    showToast('Cannot verify — check connection'); return;
+  }
+
+  const { tx_id, field, original_value } = appState.pendingOverride;
+  try {
+    await apiFetch({ action: 'addCorrection', tx_id, field, original_value, new_value: newVal, reason, supervisor_id: appState.user.userId });
+    showToast('Override applied');
+    closeOverlay('overlay-override');
+    appState.pendingOverride = null;
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+function openAddCorrectionModal(txId) {
+  // Reuse override modal with generic field selector
+  appState.pendingOverride = { tx_id: txId, field: 'NOTES', original_value: '' };
+  document.getElementById('override-field-label').textContent = 'Field (e.g. NOTES, NET_WEIGHT, PAY_RATE)';
+  document.getElementById('override-new-val').value    = '';
+  document.getElementById('override-pass').value       = '';
+  document.getElementById('override-reason').value     = '';
+  showOverlay('overlay-override');
+}
+
+// ============================================================
+// GAYLOAD CLOSE
+// ============================================================
+async function loadGayloads() {
+  const sel = document.getElementById('gl-select');
+  if (!sel) return;
+
+  try {
+    const data = await apiGet({ action: 'getGayloads', status: 'open' });
+    appState.gayloads = data.gayloads || [];
+    if (!appState.gayloads.length) {
+      sel.innerHTML = '<option value="">No open gayloads found</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">Select a gayload…</option>' +
+      appState.gayloads.map(g => `<option value="${g.GAYLOAD_ID}">${g.GAYLOAD_ID} — ${g.MATERIAL_CAT || ''} (${g.SKU || ''})</option>`).join('');
+  } catch (e) {
+    sel.innerHTML = '<option value="">Error loading gayloads</option>';
+  }
+}
+
+function onGayloadSelect() {
+  const id = document.getElementById('gl-select').value;
+  const formEl = document.getElementById('gl-form');
+  if (!id) { formEl.style.display = 'none'; return; }
+  appState.selectedGayload = appState.gayloads.find(g => g.GAYLOAD_ID === id);
+  formEl.style.display = 'block';
+
+  // Set today's date
+  document.getElementById('gl-pay-date').value = new Date().toISOString().slice(0, 10);
+  calcGlVariance();
+  calcGlSummary();
+}
+
+function calcGlVariance() {
+  const simsW = parseFloat(document.getElementById('gl-sims-weight')?.value) || 0;
+  const varEl = document.getElementById('gl-variance');
+  if (!varEl) return;
+
+  if (!simsW || !appState.selectedGayload) { varEl.style.display = 'none'; return; }
+
+  // We don't have Rustic total weight easily here — show placeholder
+  varEl.style.display = 'block';
+  varEl.innerHTML = `<div style="background:var(--ink3);border-radius:var(--r);padding:10px 14px;font-size:13px;">
+    SIMS Weight: <strong>${simsW.toFixed(0)} lbs</strong>
+  </div>`;
+}
+
+function calcGlSummary() {
+  const saleAmt = parseFloat(document.getElementById('gl-sale-amount')?.value) || 0;
+  const summaryEl = document.getElementById('gl-summary');
+  const summaryBody = document.getElementById('gl-summary-body');
+  if (!summaryEl || !summaryBody) return;
+
+  if (!saleAmt) { summaryEl.style.display = 'none'; return; }
+  summaryEl.style.display = 'block';
+
+  summaryBody.innerHTML = `
+    <div class="weight-calc-row flex-between" style="padding:6px 0;">
+      <span class="weight-calc-label">Sale Amount</span>
+      <span class="weight-calc-val">$${saleAmt.toFixed(2)}</span>
+    </div>
+    <div class="weight-calc-row flex-between" style="padding:6px 0;">
+      <span class="weight-calc-label">Est. Net Profit</span>
+      <span class="weight-calc-val variance-ok">Calculated on close</span>
+    </div>`;
+}
+
+function selectPayMethod(pm, el) {
+  appState.payMethod = pm;
+  document.querySelectorAll('.payment-tab').forEach(t => t.classList.remove('active'));
+  if (el) el.classList.add('active');
+  document.getElementById('gl-check-num-wrap').style.display = pm === 'check' ? '' : 'none';
+}
+
+async function closeGayload() {
+  const id       = document.getElementById('gl-select').value;
+  const consumer = document.getElementById('gl-consumer').value.trim();
+  const ticket   = document.getElementById('gl-ticket').value.trim();
+  const simsW    = parseFloat(document.getElementById('gl-sims-weight').value) || 0;
+  const saleAmt  = parseFloat(document.getElementById('gl-sale-amount').value) || 0;
+  const payDate  = document.getElementById('gl-pay-date').value;
+  const checkNum = appState.payMethod === 'check' ? document.getElementById('gl-check-num').value.trim() : '';
+
+  if (!id)      { showToast('Select a gayload'); return; }
+  if (!ticket)  { showToast('Enter SIMS ticket #'); return; }
+  if (!simsW)   { showToast('Enter SIMS weight'); return; }
+  if (!saleAmt) { showToast('Enter sale amount'); return; }
+
+  const payload = {
+    action:          'closeGayload',
+    gayload_id:      id,
+    consumer_id:     consumer,
+    ticket_no:       ticket + (checkNum ? ' / Chk#' + checkNum : ''),
+    sims_weight:     simsW,
+    sale_amount:     saleAmt,
+    payment_method:  appState.payMethod,
+    payment_date:    payDate
+  };
+
+  try {
+    const data = await apiFetch(payload);
+    if (!data.ok) { showToast('Error: ' + data.error); return; }
+
+    const s = data.summary;
+    document.getElementById('gl-summary-body').innerHTML = `
+      <div class="weight-calc-row flex-between" style="padding:6px 0;"><span class="weight-calc-label">TX Count</span><span class="weight-calc-val">${s.tx_count}</span></div>
+      <div class="weight-calc-row flex-between" style="padding:6px 0;"><span class="weight-calc-label">Total Paid Out</span><span class="weight-calc-val">$${parseFloat(s.total_payout).toFixed(2)}</span></div>
+      <div class="weight-calc-row flex-between" style="padding:6px 0;"><span class="weight-calc-label">Sale Amount</span><span class="weight-calc-val">$${parseFloat(s.sale_amount).toFixed(2)}</span></div>
+      <div class="weight-calc-row flex-between" style="padding:6px 0;border-top:1px solid var(--stone);margin-top:6px;padding-top:10px;"><span class="weight-calc-label">Net Profit</span><span class="weight-calc-val variance-ok">$${parseFloat(s.net_profit).toFixed(2)}</span></div>
+      <div class="weight-calc-row flex-between" style="padding:6px 0;"><span class="weight-calc-label">Margin</span><span class="weight-calc-val variance-ok">${s.effective_margin}</span></div>
+      <div class="weight-calc-row flex-between" style="padding:6px 0;"><span class="weight-calc-label">Sell Rate</span><span class="weight-calc-val">$${s.sell_rate}/lb</span></div>
+      <div style="margin-top:12px;font-size:12px;color:var(--mist);">Per-Transaction Profit Share:</div>
+      ${s.transactions.map(t => `<div class="weight-calc-row flex-between" style="padding:4px 0;font-size:12px;"><span style="color:var(--mist);">${t.tx_id}</span><span>$${parseFloat(t.profit_share).toFixed(2)}</span></div>`).join('')}
+      <div style="background:var(--green2);color:var(--green);border-radius:var(--r);padding:10px;text-align:center;margin-top:12px;font-weight:700;">✓ GAYLOAD CLOSED SUCCESSFULLY</div>`;
+
+    showToast('Gayload closed — net profit $' + parseFloat(s.net_profit).toFixed(2));
+  } catch (e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+// ============================================================
+// BOTTOM NAV SETUP
+// ============================================================
+function initBottomNavs() {
+  renderBottomNav('bottom-nav-catalog');
+  renderBottomNav('bottom-nav-scale');
+  renderBottomNav('bottom-nav-cashier');
+  renderBottomNav('bottom-nav-dashboard');
+}
+
+// ============================================================
+// TOAST
+// ============================================================
+let toastTimer = null;
+function showToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+}
+
+// ============================================================
+// ONLINE / OFFLINE
+// ============================================================
+window.addEventListener('online', () => {
+  document.getElementById('offline-banner-login').classList.remove('show');
+  syncPendingTx();
+});
+window.addEventListener('offline', () => {
+  document.getElementById('offline-banner-login').classList.add('show');
+});
+
+// ============================================================
+// SERVICE WORKER (PWA)
+// ============================================================
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'rustic-v2';
+    self.addEventListener('install', e => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll(['.'])));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))));
+      self.clients.claim();
+    });
+    self.addEventListener('fetch', e => {
+      if (e.request.url.includes('appscript') || e.request.url.includes('googleapis')) return;
+      e.respondWith(
+        fetch(e.request).then(r => {
+          const clone = r.clone();
+          caches.open(CACHE).then(c => c.put(e.request, clone));
+          return r;
+        }).catch(() => caches.match(e.request))
+      );
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+
+// ============================================================
+// INIT
+// ============================================================
+(async function init() {
+  idb = await openDB();
+
+  // Restore session
+  const stored = sessionStorage.getItem('rusticUser');
+  if (stored) {
+    try {
+      appState.user = JSON.parse(stored);
+      document.querySelectorAll('[id$="-user-chip"]').forEach(el => {
+        if (el) el.textContent = appState.user.username;
+      });
+      initBottomNavs();
+      routeByRole();
+      return;
+    } catch (e) {}
+  }
+
+  // Check offline
+  if (!navigator.onLine) {
+    document.getElementById('offline-banner-login').classList.add('show');
+  }
+
+  showScreen('screen-login');
+
+  // Load gayloads when dashboard is visited
+  document.getElementById('screen-gayload').addEventListener('transitionend', () => {}, { once: true });
+
+  // Pre-load gayloads list when gayload screen is shown
+  const origShowScreen = showScreen;
+  window.showScreen = function(id) {
+    origShowScreen(id);
+    if (id === 'screen-gayload') loadGayloads();
+    if (id === 'screen-catalog' && appState.user) loadCatalog();
+  };
+
+  // Sync pending on load
+  syncPendingTx();
 })();
+
+// Enter key on login
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    const loginScreen = document.getElementById('screen-login');
+    if (loginScreen && loginScreen.classList.contains('active')) doLogin();
+  }
+});
+
 </script>
 </body>
 </html>
