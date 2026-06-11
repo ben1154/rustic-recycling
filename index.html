@@ -11,7 +11,7 @@
 <title>Rustic Yard Operations</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
-<style>
+<style>h
 :root {
   --rust:#C0390B; --rust2:#E8520D; --rust3:#8B2A08;
   --ink:#0F0F0F; --ink2:#1C1C1C; --ink3:#2A2A2A;
@@ -19,7 +19,7 @@
   --green:#1E7E34; --green2:#D4EDDA; --amber:#856404; --amber2:#FFF3CD;
   --red:#721C24; --red2:#F8D7DA; --blue:#0C5460; --blue2:#D1ECF1;
   --fh:'Barlow Condensed',sans-serif; --fb:'Barlow',sans-serif;
-  --r:12px; --r2:20px;
+  --r:12px; --r2:20px;h
   --shadow:0 2px 12px rgba(0,0,0,.12);
 }
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
@@ -771,7 +771,8 @@ async function doLogin() {
       showLoginError(data.error || 'Login failed');
     }
   } catch (e) {
-    showLoginError('Cannot reach server. Check connection.');
+    console.error('LOGIN ERROR:', e);
+    showLoginError('Cannot reach server: ' + (e.message || e));
   }
 
   btn.disabled  = false;
@@ -1263,7 +1264,10 @@ async function submitIntake() {
 
   // Try to get GPS
   try {
-    const pos = await new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 3000 }));
+    const pos = await Promise.race([
+      new Promise((res, rej) => navigator.geolocation.getCurrentPosition(res, rej, { timeout: 2000 })),
+      new Promise((_, rej) => setTimeout(() => rej(new Error('gps_timeout')), 2000))
+    ]);
     payload.gps = pos.coords.latitude + ',' + pos.coords.longitude;
   } catch (e) {}
 
