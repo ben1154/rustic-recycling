@@ -1333,8 +1333,15 @@ function renderConfirmSlip(txId, code, payRate, offline) {
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
         <span class="text-muted">Pay rate</span><span style="font-weight:600;">$${payRate ? payRate.toFixed(3) : '—'}/lb</span>
       </div>
-      <div style="display:flex;justify-content:space-between;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
         <span class="text-muted">Tare needed</span><span style="font-weight:600;">${s.tare_flagged ? '⚠ YES' : 'No'}</span>
+      </div>
+      <div style="border-top:1px solid var(--stone);margin:10px 0;"></div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+        <span class="text-muted">Weight</span><span style="font-weight:600;color:var(--mist);">— lbs &nbsp;<span style="font-size:11px;font-weight:400;">(measured at scale)</span></span>
+      </div>
+      <div style="display:flex;justify-content:space-between;">
+        <span class="text-muted">Total payout</span><span style="font-weight:600;color:var(--mist);">— &nbsp;<span style="font-size:11px;font-weight:400;">(calculated at scale)</span></span>
       </div>
     </div>
     <div style="margin-top:16px;display:grid;gap:10px;">
