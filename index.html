@@ -241,12 +241,12 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
 <div id="screen-login" class="screen active">
   <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:32px 24px;">
     <div style="text-align:center;margin-bottom:40px;">
-      <div style="font-size:64px;margin-bottom:12px;">♻</div>
+      <div style="font-size:64px;margin-bottom:12px;">â»</div>
       <div style="font-family:var(--fh);font-size:36px;font-weight:800;color:var(--rust2);letter-spacing:2px;">RUSTIC</div>
       <div style="font-family:var(--fh);font-size:16px;font-weight:600;color:var(--smoke);letter-spacing:4px;margin-top:-4px;">YARD OPERATIONS</div>
     </div>
     <div id="offline-banner-login" class="offline-banner" style="width:100%;margin-bottom:16px;border-radius:var(--r);">
-      ⚠ System offline — contact supervisor
+      â  System offline â contact supervisor
     </div>
     <div style="width:100%;max-width:360px;">
       <div class="form-group">
@@ -302,7 +302,7 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
   <div class="wizard-body" id="intake-step-body"></div>
   <div class="wizard-footer">
     <button class="btn btn-secondary" id="intake-back-btn" onclick="intakeBack()" style="display:none;">BACK</button>
-    <button class="btn btn-primary btn-block" id="intake-next-btn" onclick="intakeNext()">NEXT →</button>
+    <button class="btn btn-primary btn-block" id="intake-next-btn" onclick="intakeNext()">NEXT â</button>
   </div>
 </div>
 
@@ -357,7 +357,7 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
       <div class="form-group">
         <label class="form-label">Supplier ID Type</label>
         <select id="cashier-id-type" class="form-input">
-          <option value="">Select ID type…</option>
+          <option value="">Select ID typeâ¦</option>
           <option value="drivers_license">Driver's License</option>
           <option value="state_id">State ID</option>
           <option value="passport">Passport</option>
@@ -369,11 +369,11 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
         <input id="cashier-id-num" class="form-input" type="text" placeholder="Enter ID number" autocapitalize="characters">
       </div>
       <div style="background:var(--amber2);color:var(--amber);border-radius:var(--r);padding:12px 16px;font-size:13px;font-weight:600;margin-bottom:16px;">
-        ⚠ Verify supplier face matches photo before payout
+        â  Verify supplier face matches photo before payout
       </div>
-      <button class="btn btn-success btn-block btn-lg" onclick="confirmPayout()" style="margin-bottom:10px;">CONFIRM PAYOUT — PAY CASH</button>
-      <button class="btn btn-secondary btn-block" onclick="printReceipt()" id="cashier-print-btn" style="display:none;margin-bottom:10px;">🖨 PRINT RECEIPT</button>
-      <button class="btn btn-secondary btn-block" onclick="sendSMSReceipt()" id="cashier-sms-btn" style="display:none;">📱 SEND SMS RECEIPT</button>
+      <button class="btn btn-success btn-block btn-lg" onclick="confirmPayout()" style="margin-bottom:10px;">CONFIRM PAYOUT â PAY CASH</button>
+      <button class="btn btn-secondary btn-block" onclick="printReceipt()" id="cashier-print-btn" style="display:none;margin-bottom:10px;">ð¨ PRINT RECEIPT</button>
+      <button class="btn btn-secondary btn-block" onclick="sendSMSReceipt()" id="cashier-sms-btn" style="display:none;">ð± SEND SMS RECEIPT</button>
     </div>
   </div>
   <div style="flex-shrink:0;"><div id="bottom-nav-cashier"></div></div>
@@ -386,8 +386,8 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
   <div class="topbar">
     <div class="topbar-logo">RUSTIC<span> SUPERVISOR</span></div>
     <div style="display:flex;align-items:center;gap:8px;">
-      <span id="sync-badge" class="sync-badge">⚡ 0 pending</span>
-      <button class="btn btn-secondary btn-sm" onclick="loadDashboard()">↺</button>
+      <span id="sync-badge" class="sync-badge">â¡ 0 pending</span>
+      <button class="btn btn-secondary btn-sm" onclick="loadDashboard()">âº</button>
     </div>
   </div>
   <div style="flex:1;overflow-y:auto;padding:0 0 16px;">
@@ -406,7 +406,7 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
 <div id="screen-txdetail" class="screen">
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:10px;">
-      <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-dashboard')">← Back</button>
+      <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-dashboard')">â Back</button>
       <div class="topbar-logo">TX DETAIL</div>
     </div>
     <span id="txdetail-code" style="font-family:var(--fh);font-size:22px;font-weight:800;color:var(--rust2);"></span>
@@ -420,7 +420,7 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
 <div id="screen-gayload" class="screen">
   <div class="topbar">
     <div style="display:flex;align-items:center;gap:10px;">
-      <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-dashboard')">← Back</button>
+      <button class="btn btn-secondary btn-sm" onclick="showScreen('screen-dashboard')">â Back</button>
       <div class="topbar-logo">CLOSE GAYLOAD</div>
     </div>
   </div>
@@ -428,7 +428,7 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
     <div class="form-group">
       <label class="form-label">Select Gayload</label>
       <select id="gl-select" class="form-input" onchange="onGayloadSelect()">
-        <option value="">Loading…</option>
+        <option value="">Loadingâ¦</option>
       </select>
     </div>
     <div id="gl-form" style="display:none;">
@@ -481,7 +481,7 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
      ============================================================ -->
 <div id="overlay-critfail" class="overlay">
   <div class="overlay-box">
-    <div style="font-size:32px;text-align:center;margin-bottom:8px;">🚨</div>
+    <div style="font-size:32px;text-align:center;margin-bottom:8px;">ð¨</div>
     <div style="font-family:var(--fh);font-size:22px;font-weight:800;color:#f87171;text-align:center;margin-bottom:8px;">CRITICAL FAIL</div>
     <div id="critfail-text" style="font-size:14px;color:var(--smoke);text-align:center;margin-bottom:20px;"></div>
     <div class="form-group">
@@ -501,7 +501,7 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
 <div id="overlay-receipt" class="overlay">
   <div class="overlay-box warn" style="max-width:400px;width:100%;">
     <div style="font-family:var(--fh);font-size:20px;font-weight:800;margin-bottom:4px;">RECEIPT</div>
-    <div style="font-size:12px;color:var(--mist);margin-bottom:16px;">No Bluetooth printer found — screenshot to save</div>
+    <div style="font-size:12px;color:var(--mist);margin-bottom:16px;">No Bluetooth printer found â screenshot to save</div>
     <div id="receipt-content" class="receipt-modal"></div>
     <button class="btn btn-secondary btn-block" style="margin-top:16px;" onclick="closeOverlay('overlay-receipt')">CLOSE</button>
   </div>
@@ -540,27 +540,538 @@ select.form-input{appearance:none;-webkit-appearance:none;background-image:url("
 const APPSCRIPT_URL = "https://script.google.com/macros/s/AKfycbyTDUWXw1UkldR96ytj4OFVIVeUV5LdJ-C1Ib3x-vUgfwsnaXDaLcvNchbRc8sTwXfN/exec"
 ;
 
-const FALLBACK_MATERIALS = [
-  {sku:'26-CU001', name:'Bare Bright Copper', category:'copper', y1_rate:0.47, grade:'top', unit:'lb', description:'Clean bare bright copper wire, 1/16" min diameter, no coating', checks:[
-    {q:'Does it stick to a magnet?', critical:true, fail_text:'If it sticks — NOT copper. Stop and reclassify.'},
-    {q:'Is wire shiny reddish-orange with no coating?', critical:true, fail_text:'Coated or dull wire is not bare bright. Reclassify to #1 or #2 copper.'},
-    {q:'Is it at least 1/16 inch thick?', critical:false, fail_text:''}
-  ]},
-  {sku:'26-CU002', name:'#2 Copper', category:'copper', y1_rate:0.38, grade:'mid', unit:'lb', description:'Copper with some oxidation, coatings, or minor contamination', checks:[
-    {q:'Does it stick to a magnet?', critical:true, fail_text:'Not copper — reclassify to ferrous or reject.'},
-    {q:'Heavy contamination or fire-stripped?', critical:false, fail_text:''}
-  ]},
-  {sku:'26-AL001', name:'Aluminum Cans (UBC)', category:'aluminum', y1_rate:0.73, grade:'top', unit:'lb', description:'Used beverage cans, crushed or whole, aluminum only', checks:[
-    {q:'Does it stick to a magnet?', critical:true, fail_text:'Steel cans present — sort out or reject lot. Steel cans are not UBC.'},
-    {q:'Are cans clean with no excessive liquid?', critical:false, fail_text:''}
-  ]},
-  {sku:'26-BR001', name:'Yellow Brass', category:'brass', y1_rate:0.326, grade:'mid', unit:'lb', description:'Yellow brass fittings, valves, hardware — no iron/steel attached', checks:[
-    {q:'Does it stick to a magnet?', critical:true, fail_text:'Iron/steel attachments present — must be removed before weighing.'},
-    {q:'Is the color yellow-gold (not reddish)?', critical:false, fail_text:'Reddish color may indicate red brass — verify grade.'},
-    {q:'Are there iron/steel attachments to remove?', critical:false, fail_text:''}
-  ]}
-];
+const APP_VERSION = '1.1';
 
+const BASE_IMG = 'https://www.iscrapapp.com/wp-content/uploads/';
+
+const MATERIALS = [
+  // ── COPPER ────────────────────────────────────────────────────────────
+  {
+    id:'26-CU001', cat:'copper', name:'Bare Bright Copper Wire', code:'2040',
+    y1:0.47, grade:'top', unit:'LB', flat:false,
+    img: BASE_IMG + 'Bare-Bright-Copper-600x300.jpg',
+    desc:'Highest copper grade. Clean, shiny, uncoated, unalloyed wire only. No insulation, no solder, no paint. Minimum 1/16" diameter.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No stick — confirmed copper', fail:'Sticks — NOT copper, reclassify', critical:true, failText:'If it sticks to a magnet this is NOT copper. Stop and reclassify.'},
+      {q:'Is the wire shiny reddish-orange with no coating?', pass:'Yes — bare and bright', fail:'Has coating, paint or insulation — downgrade', critical:true},
+      {q:'Is it at least 1/16 inch thick?', pass:'Yes — meets grade', fail:'Too thin — classify as Light Copper', critical:false},
+    ]
+  },
+  {
+    id:'26-CU002', cat:'copper', name:'#2 Copper Tubing', code:'2010',
+    y1:0.38, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + '2-Copper-600x300.jpg',
+    desc:'Copper with oxidation, light coating, solder, or minor contamination. Darker/dull surface. Pipes, fittings, tubing.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No stick — confirmed copper', fail:'Sticks — NOT copper', critical:true},
+      {q:'Is there heavy contamination or is it fire-stripped?', pass:'No — light only', fail:'Yes — downgrade to Burnt Copper', critical:false},
+    ]
+  },
+  {
+    id:'26-CU003', cat:'copper', name:'#1 Copper Tubing', code:'2020',
+    y1:0.43, grade:'top', unit:'LB', flat:false,
+    img: BASE_IMG + '1-Copper-600x300.jpg',
+    desc:'Clean copper pipe and tubing with no fittings, solder, or oxidation. Unalloyed.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No stick — copper confirmed', fail:'Sticks — NOT copper', critical:true},
+      {q:'Is it free of solder, fittings, and paint?', pass:'Yes — clean #1', fail:'Has solder or fittings — downgrade to #2', critical:true},
+    ]
+  },
+  {
+    id:'26-CU004', cat:'copper', name:'Light Copper', code:'2030',
+    y1:0.27, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Light-Copper-600x300.jpg',
+    desc:'Thin copper sheet, flashing, gutters, or wire under 1/16". Can include some oxidation and small fittings.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No stick — copper confirmed', fail:'Sticks — NOT copper', critical:true},
+    ]
+  },
+  {
+    id:'26-CU005', cat:'copper', name:'Insulated Copper Wire', code:'2050',
+    y1:0.20, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Insulated-Copper-Wire-600x300.jpg',
+    desc:'Copper wire with plastic insulation still on. Common household wire.',
+    checks:[
+      {q:'Does it have visible copper inside (peel a small section)?', pass:'Yes — copper confirmed', fail:'Aluminum inside — reclassify as AL wire', critical:true},
+    ]
+  },
+  {
+    id:'26-CU006', cat:'copper', name:'Insulated Copper Cable', code:'2060',
+    y1:0.22, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Insulated-Copper-Cable-600x300.jpg',
+    desc:'Heavy gauge insulated copper cable. Thicker than standard wire, higher copper percentage.',
+    checks:[
+      {q:'Is the conductor copper (peel end to check color)?', pass:'Reddish — copper confirmed', fail:'Silver/grey — may be aluminum', critical:true},
+    ]
+  },
+  {
+    id:'26-CU007', cat:'copper', name:'Christmas Lights', code:'2070',
+    y1:0.07, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Christmas-Lights-600x300.jpg',
+    desc:'Low-grade holiday or string lights. Very thin wire, low copper yield. Accepted by weight.',
+    checks:[
+      {q:'Are these clearly holiday/string lights (not heavy cable)?', pass:'Yes — string lights', fail:'Heavier wire — reclassify', critical:false},
+    ]
+  },
+  {
+    id:'26-CU008', cat:'copper', name:'Communications Wire', code:'2080',
+    y1:0.10, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Communications-Wire-600x300.jpg',
+    desc:'Phone, data, CAT5/6, coax, and low-voltage communication cables. Low copper content.',
+    checks:[
+      {q:'Is this phone, data, or low-voltage cable (not power wire)?', pass:'Yes — comms wire', fail:'Heavier cable — reclassify at higher grade', critical:false},
+    ]
+  },
+  // ── ALUMINUM ──────────────────────────────────────────────────────────
+  {
+    id:'26-AL001', cat:'aluminum', name:'Aluminum Cans (UBC)', code:'1596',
+    y1:0.73, grade:'top', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Cans-600x300.jpg',
+    desc:'Used beverage cans only. Crushes easily by hand. No steel cans, no food containers.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — aluminum confirmed', fail:'Sticks — STEEL can, reject or reclassify', critical:true, failText:'Steel cans are NOT aluminum. Reject or reclassify as Light Iron.'},
+      {q:'Are the cans clean with minimal liquid or food waste?', pass:'Yes — acceptable', fail:'Heavily contaminated — deduct or reject', critical:false},
+    ]
+  },
+  {
+    id:'26-AL002', cat:'aluminum', name:'Sheet Aluminum', code:'1510',
+    y1:0.53, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Sheet-600x300.jpg',
+    desc:'Flat aluminum sheet, siding, flashing, or extrusions. Clean, no iron or heavy paint.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — aluminum', fail:'Sticks — ferrous, reclassify', critical:true},
+      {q:'Is it free of heavy iron attachments?', pass:'Yes — clean', fail:'Remove iron/steel parts before weighing', critical:false},
+    ]
+  },
+  {
+    id:'26-AL003', cat:'aluminum', name:'Cast Aluminum', code:'1520',
+    y1:0.40, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Cast-Aluminum-600x300.jpg',
+    desc:'Engine blocks, housings, wheels, manifolds. Heavy, thick, often has oil residue. Non-magnetic.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — aluminum', fail:'Sticks — cast iron, reclassify', critical:true, failText:'Cast iron sticks strongly to a magnet. If it sticks, it is cast iron at a much lower rate.'},
+    ]
+  },
+  {
+    id:'26-AL004', cat:'aluminum', name:'Aluminum Radiators', code:'1540',
+    y1:0.47, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Radiators-600x300.jpg',
+    desc:'Clean aluminum radiators with no copper, brass, or plastic. Auto or HVAC.',
+    checks:[
+      {q:'Is the radiator aluminum only (no copper fins or brass fittings)?', pass:'Yes — clean aluminum', fail:'Has copper/brass — classify as AL/Cu Radiator', critical:true},
+    ]
+  },
+  {
+    id:'26-AL005', cat:'aluminum', name:'Aluminum Rims', code:'1550',
+    y1:0.60, grade:'top', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Rims-600x300.jpg',
+    desc:'Aluminum alloy wheels from cars/trucks. Non-magnetic. Chrome-plated rims may be steel.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — aluminum rims', fail:'Sticks — STEEL rims, reclassify as ferrous', critical:true},
+    ]
+  },
+  {
+    id:'26-AL006', cat:'aluminum', name:'Painted Aluminum', code:'1515',
+    y1:0.35, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Painted-Aluminum-600x300.jpg',
+    desc:'Aluminum with paint, anodizing, or coating. Siding, window frames, gutters.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — aluminum', fail:'Sticks — steel, reclassify', critical:true},
+    ]
+  },
+  {
+    id:'26-AL007', cat:'aluminum', name:'Clean AL Wire', code:'1560',
+    y1:0.55, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Wire-600x300.jpg',
+    desc:'Clean aluminum electrical wire stripped of insulation. Silver/grey color.',
+    checks:[
+      {q:'Is the wire silver/grey (not reddish copper color)?', pass:'Yes — aluminum wire', fail:'Reddish — copper wire, reclassify', critical:true},
+      {q:'Is insulation removed?', pass:'Yes — clean wire', fail:'Still insulated — reclassify as insulated wire', critical:false},
+    ]
+  },
+  {
+    id:'26-AL008', cat:'aluminum', name:'Aluminum Breakage', code:'1580',
+    y1:0.28, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Breakage-600x300.jpg',
+    desc:'Mixed or contaminated aluminum scrap. Old pots, pans, mixed extrusions, dirty material.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'Mostly no — aluminum breakage accepted', fail:'High magnetic content — sort out ferrous', critical:false},
+    ]
+  },
+  // ── BRASS ─────────────────────────────────────────────────────────────
+  {
+    id:'26-BR001', cat:'brass', name:'Yellow Brass', code:'4076',
+    y1:0.26, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Yellow-Brass-600x300.jpg',
+    desc:'Yellow-gold fittings, valves, plumbing hardware. Does not stick to magnet. Distinctly yellow-gold color.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — non-ferrous confirmed', fail:'Sticks — likely plated steel, NOT brass', critical:true},
+      {q:'Is the color yellow-gold (not reddish)?', pass:'Yes — yellow brass', fail:'Reddish — classify as Red Brass (higher rate)', critical:false},
+      {q:'Are there iron or steel attachments?', pass:'No iron parts', fail:'Remove iron parts before weighing', critical:false},
+    ]
+  },
+  {
+    id:'26-BR002', cat:'brass', name:'Red Brass', code:'4080',
+    y1:0.30, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Red-Brass-600x300.jpg',
+    desc:'Higher copper content than yellow brass. Reddish-gold color. Sprinkler heads, water meters, older plumbing.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — non-ferrous confirmed', fail:'Sticks — plated steel, not brass', critical:true},
+      {q:'Is the color reddish-gold (not bright yellow)?', pass:'Yes — red brass', fail:'Bright yellow — classify as Yellow Brass instead', critical:false},
+    ]
+  },
+  {
+    id:'26-BR003', cat:'brass', name:'Semi-Red Brass', code:'4078',
+    y1:0.27, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Semi-Red-Brass-600x300.jpg',
+    desc:'Between yellow and red brass. Mixed plumbing brass with some lead content.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — non-ferrous', fail:'Sticks — not brass', critical:true},
+    ]
+  },
+  {
+    id:'26-BR004', cat:'brass', name:'Clean Brass Radiators', code:'4090',
+    y1:0.24, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Brass-Radiators-600x300.jpg',
+    desc:'Old-style brass/copper radiators with no iron tanks, plastic, or rubber.',
+    checks:[
+      {q:'Is the radiator free of iron tanks and plastic end caps?', pass:'Yes — clean rad', fail:'Has iron/plastic — deduct or remove', critical:true},
+    ]
+  },
+  {
+    id:'26-BR005', cat:'brass', name:'Dirty Brass Radiators', code:'4092',
+    y1:0.18, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Dirty-Brass-Radiators-600x300.jpg',
+    desc:'Brass/copper radiators with iron tanks, plastic caps, or rubber still attached.',
+    checks:[
+      {q:'Does the radiator have iron tanks or plastic still attached?', pass:'Yes — dirty rad', fail:'All clean — upgrade to Clean Brass Radiators', critical:false},
+    ]
+  },
+  {
+    id:'26-BR006', cat:'brass', name:'Brass Pipe', code:'4085',
+    y1:0.25, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Brass-Pipe-600x300.jpg',
+    desc:'Brass pipe sections, heavy fittings, manifolds. Usually yellow-gold.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — brass confirmed', fail:'Sticks — iron coupling, remove before weighing', critical:true},
+    ]
+  },
+  {
+    id:'26-BR007', cat:'brass', name:'Bronze', code:'4100',
+    y1:0.23, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Bronze-600x300.jpg',
+    desc:'Bronze bushings, bearings, marine hardware, propellers. Darker brown/gold color.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — non-ferrous confirmed', fail:'Sticks — ferrous, not bronze', critical:true},
+      {q:'Is color dark brown-gold (not bright yellow)?', pass:'Yes — bronze', fail:'Bright yellow — may be yellow brass', critical:false},
+    ]
+  },
+  // ── STEEL / FERROUS ───────────────────────────────────────────────────
+  {
+    id:'26-ST001', cat:'ferrous', name:'#1 Heavy Melting Steel', code:'3010',
+    y1:0.16, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'HMS-1-600x300.jpg',
+    desc:'Clean heavy steel: beams, plates, bars, pipe. Minimum 1/4 inch thick. No galvanizing or tin coating.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'Yes — ferrous confirmed', fail:'Does not stick — may be stainless or non-ferrous', critical:true},
+      {q:'Is it at least 1/4 inch thick and free of coatings?', pass:'Yes — #1 HMS', fail:'Thin or coated — downgrade to #2 HMS or Light Iron', critical:false},
+    ]
+  },
+  {
+    id:'26-ST002', cat:'ferrous', name:'#2 Heavy Melting Steel', code:'3020',
+    y1:0.13, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'HMS-2-600x300.jpg',
+    desc:'Heavier steel with some contamination, galvanizing, or mixed with thin material.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'Yes — ferrous confirmed', fail:'Does not stick — non-ferrous, reclassify', critical:true},
+    ]
+  },
+  {
+    id:'26-ST003', cat:'ferrous', name:'Light Iron', code:'3030',
+    y1:0.09, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Light-Iron-600x300.jpg',
+    desc:'Thin steel sheet, car bodies, stampings, tin cans. Under 1/4 inch thick.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'Yes — ferrous/light iron confirmed', fail:'Does not stick — reclassify', critical:true},
+    ]
+  },
+  {
+    id:'26-ST004', cat:'ferrous', name:'Cast Iron', code:'3040',
+    y1:0.11, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Cast-Iron-600x300.jpg',
+    desc:'Heavy grey cast iron: engine blocks, radiators, machine parts. Brittle. Strongly magnetic.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'Yes — ferrous confirmed', fail:'Does not stick — may be cast aluminum, test further', critical:true, failText:'Cast iron sticks strongly to magnet. If it does not stick, it may be cast aluminum which has a much higher rate.'},
+      {q:'Is it heavy and grey/dark (not silver or shiny)?', pass:'Yes — cast iron', fail:'Silver/light — may be cast aluminum', critical:false},
+    ]
+  },
+  {
+    id:'26-ST005', cat:'ferrous', name:'Insulated Steel BX', code:'3050',
+    y1:0.07, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'BX-Cable-600x300.jpg',
+    desc:'BX armored cable — steel spiral armor with insulated copper inside. Weighed as steel.',
+    checks:[
+      {q:'Is this BX/armored cable with steel spiral wrap?', pass:'Yes — BX cable', fail:'Different cable type — reclassify', critical:false},
+    ]
+  },
+  {
+    id:'26-ST006', cat:'ferrous', name:'Rotors', code:'3060',
+    y1:0.10, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Rotors-600x300.jpg',
+    desc:'Brake rotors and drums. Heavy cast iron. Strongly magnetic.',
+    checks:[
+      {q:'Does it stick strongly to the magnet?', pass:'Yes — cast iron rotors confirmed', fail:'Does not stick — unusual, inspect further', critical:true},
+    ]
+  },
+  // ── STAINLESS ─────────────────────────────────────────────────────────
+  {
+    id:'26-SS001', cat:'ferrous', name:'304 Stainless Steel', code:'5010',
+    y1:0.60, grade:'top', unit:'LB', flat:false,
+    img: BASE_IMG + '304-Stainless-Steel-600x300.jpg',
+    desc:'Most common stainless grade. Kitchen equipment, sinks, appliances.',
+    checks:[
+      {q:'Does it stick STRONGLY to the magnet?', pass:'No strong pull — stainless confirmed', fail:'Strong stick — likely carbon steel, not stainless', critical:true, failText:'Carbon steel sticks strongly to a magnet. 304 stainless may have slight pull but will not stick firmly.'},
+    ]
+  },
+  {
+    id:'26-SS002', cat:'ferrous', name:'316 Stainless Steel', code:'5020',
+    y1:0.73, grade:'top', unit:'LB', flat:false,
+    img: BASE_IMG + '316-Stainless-Steel-600x300.jpg',
+    desc:'Marine/medical grade stainless. Marked "316" or "316L". More valuable than 304.',
+    checks:[
+      {q:'Is it marked "316" or "316L"?', pass:'Yes — 316 stainless confirmed', fail:'No marking — classify as 304 to be safe', critical:true},
+      {q:'Does it stick strongly to a magnet?', pass:'No — stainless confirmed', fail:'Strong stick — carbon steel, reclassify', critical:true},
+    ]
+  },
+  {
+    id:'26-SS003', cat:'ferrous', name:'300 Series Stainless', code:'5015',
+    y1:0.55, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Stainless-Steel-600x300.jpg',
+    desc:'Mixed 300-series stainless when exact grade is unknown.',
+    checks:[
+      {q:'Does it stick strongly to a magnet?', pass:'No strong pull — stainless confirmed', fail:'Strong stick — carbon steel, reclassify', critical:true},
+    ]
+  },
+  {
+    id:'26-SS004', cat:'ferrous', name:'Stainless Steel Breakage', code:'5030',
+    y1:0.40, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Stainless-Steel-Breakage-600x300.jpg',
+    desc:'Mixed or contaminated stainless with non-stainless attachments.',
+    checks:[
+      {q:'Does it stick strongly to a magnet?', pass:'No strong pull — stainless breakage', fail:'Strong stick — carbon steel mixed in, sort further', critical:false},
+    ]
+  },
+  {
+    id:'26-SS005', cat:'ferrous', name:'Stainless Steel Sinks', code:'5040',
+    y1:0.35, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Stainless-Steel-Sinks-600x300.jpg',
+    desc:'Kitchen or utility sinks. Usually 304. Rate lower due to plumbing remnants.',
+    checks:[
+      {q:'Does it stick strongly to a magnet?', pass:'No strong pull — stainless confirmed', fail:'Strong stick — porcelain-coated steel sink, reclassify', critical:true, failText:'Porcelain-coated steel sinks are ferrous, not stainless. They are worth much less.'},
+    ]
+  },
+  // ── LEAD ──────────────────────────────────────────────────────────────
+  {
+    id:'26-PB001', cat:'ferrous', name:'Lead', code:'6010',
+    y1:0.47, grade:'top', unit:'LB', flat:false,
+    img: BASE_IMG + 'Lead-600x300.jpg',
+    desc:'Clean lead: pipe, sheet, flashing, weights. Very heavy for its size. Grey, soft.',
+    checks:[
+      {q:'Is it very heavy for its size and grey/dull in color?', pass:'Yes — lead confirmed', fail:'Lighter than expected — may not be lead', critical:true},
+      {q:'Does it scratch easily with a fingernail?', pass:'Yes — soft metal, lead confirmed', fail:'Hard surface — may be zinc or other metal', critical:false},
+    ]
+  },
+  {
+    id:'26-PB002', cat:'ewaste', name:'Lead Batteries', code:'6020',
+    y1:0.28, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Lead-Batteries-600x300.jpg',
+    desc:'Lead-acid batteries (car, truck, marine, UPS). Must not be leaking. Hazmat precautions required.',
+    checks:[
+      {q:'Is the battery intact with no visible cracks or acid leakage?', pass:'Yes — safe to accept', fail:'Cracked or leaking — REJECT, acid hazard', critical:true, failText:'Leaking lead-acid batteries are a hazmat issue. Do NOT accept. Notify supervisor.'},
+    ]
+  },
+  {
+    id:'26-PB003', cat:'ferrous', name:'Lead Wheel Weights', code:'6030',
+    y1:0.37, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Lead-Wheel-Weights-600x300.jpg',
+    desc:'Lead wheel balance weights. Come off rims in bulk. Small clipped or adhesive weights.',
+    checks:[
+      {q:'Are these clearly wheel balance weights?', pass:'Yes — wheel weights confirmed', fail:'Different type — reclassify', critical:false},
+    ]
+  },
+  // ── WIRE ──────────────────────────────────────────────────────────────
+  {
+    id:'26-WR001', cat:'wire', name:'THHN Wire', code:'2090',
+    y1:0.73, grade:'top', unit:'LB', flat:false,
+    img: BASE_IMG + 'THHN-Scrap-Wire-600x300.jpg',
+    desc:'THHN/THWN building wire. Single conductor, nylon jacket. High copper content.',
+    checks:[
+      {q:'Is there a "THHN" or "THWN" marking on the insulation?', pass:'Yes — THHN confirmed', fail:'No marking — verify by stripping a small section', critical:false},
+      {q:'Is the conductor copper (reddish color when stripped)?', pass:'Yes — copper THHN', fail:'Silver — aluminum THHN, reclassify as AL wire', critical:true},
+    ]
+  },
+  {
+    id:'26-WR002', cat:'wire', name:'Romex Wire', code:'2095',
+    y1:0.33, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Romex-Wire-600x300.jpg',
+    desc:'NM-B household wiring. Multiple copper conductors in a plastic sheath.',
+    checks:[
+      {q:'Is this flat, multi-conductor wire with "NM" or "Romex" on sheath?', pass:'Yes — Romex confirmed', fail:'Different cable — reclassify', critical:false},
+    ]
+  },
+  {
+    id:'26-WR003', cat:'wire', name:'500/750 Insulated Cable', code:'2100',
+    y1:0.47, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Insulated-Copper-Cable-600x300.jpg',
+    desc:'Heavy gauge 500MCM or 750MCM copper power cable. Very thick single conductor.',
+    checks:[
+      {q:'Is the conductor copper and very thick (500MCM or larger)?', pass:'Yes — heavy copper cable', fail:'Smaller gauge — reclassify at lower rate', critical:false},
+    ]
+  },
+  {
+    id:'26-WR004', cat:'wire', name:'Computer Wire', code:'2110',
+    y1:0.13, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Computer-Wire-600x300.jpg',
+    desc:'Computer cables, USB, power supplies, mixed data cables. Low copper content.',
+    checks:[
+      {q:'Is this clearly computer/data cable?', pass:'Yes — comms/data wire', fail:'Heavier power cable — reclassify', critical:false},
+    ]
+  },
+  {
+    id:'26-WR005', cat:'wire', name:'Elevator Wire', code:'2115',
+    y1:0.40, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Elevator-Wire-600x300.jpg',
+    desc:'Heavy multi-conductor elevator cable. High copper content, thick insulation.',
+    checks:[
+      {q:'Is this thick multi-conductor cable from elevator work?', pass:'Yes — elevator wire', fail:'Standard cable — reclassify', critical:false},
+    ]
+  },
+  {
+    id:'26-WR006', cat:'wire', name:'CATV Wire', code:'2120',
+    y1:0.10, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'CATV-Wire-600x300.jpg',
+    desc:'Coaxial cable TV wire (RG-6, RG-59). Very low copper content.',
+    checks:[
+      {q:'Is this coaxial cable (round, with center conductor and outer braid)?', pass:'Yes — CATV/coax', fail:'Different cable — reclassify', critical:false},
+    ]
+  },
+  // ── MIXED / RADIATORS ─────────────────────────────────────────────────
+  {
+    id:'26-MX001', cat:'aluminum', name:'AL/Copper Radiators (Clean)', code:'1600',
+    y1:0.40, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Copper-Radiators-600x300.jpg',
+    desc:'Modern auto radiators with aluminum tanks and copper/brass core. No plastic end caps.',
+    checks:[
+      {q:'Are plastic end caps removed?', pass:'Yes — clean rad', fail:'Plastic still on — deduct or remove', critical:true},
+      {q:'Is there no iron attached?', pass:'Yes — no iron', fail:'Iron bracket still on — remove before weighing', critical:false},
+    ]
+  },
+  {
+    id:'26-MX002', cat:'aluminum', name:'AL/Copper Radiators (Dirty)', code:'1605',
+    y1:0.27, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Copper-Radiators-600x300.jpg',
+    desc:'AL/copper radiators with plastic end caps, rubber, or iron still attached.',
+    checks:[
+      {q:'Does the radiator have plastic or iron still on it?', pass:'Yes — accepted as dirty rad', fail:'All clean — upgrade to Clean AL/Cu Rad', critical:false},
+    ]
+  },
+  {
+    id:'26-MX003', cat:'aluminum', name:'AL/Copper Rads w/Iron', code:'1610',
+    y1:0.17, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Copper-Radiators-600x300.jpg',
+    desc:'AL/copper radiators with significant iron content. Iron tanks or heavy iron frames.',
+    checks:[
+      {q:'Does the radiator have iron tanks or heavy iron frame?', pass:'Yes — classified with iron', fail:'Mostly clean — upgrade to Dirty Rad', critical:false},
+    ]
+  },
+  {
+    id:'26-MX004', cat:'aluminum', name:'Aluminum Copper Coil', code:'1620',
+    y1:0.47, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Aluminum-Copper-Coil-600x300.jpg',
+    desc:'HVAC coils with aluminum fins and copper tubing. AC units, heat pumps. Clean, no iron.',
+    checks:[
+      {q:'Is this clearly an HVAC coil (AC or heat pump component)?', pass:'Yes — AL/Cu coil confirmed', fail:'Different radiator type — reclassify', critical:false},
+    ]
+  },
+  // ── MOTORS ────────────────────────────────────────────────────────────
+  {
+    id:'26-EM001', cat:'ewaste', name:'Electric Motors (Copper)', code:'7010',
+    y1:0.33, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Electric-Motors-600x300.jpg',
+    desc:'Electric motors with copper windings. Accepted whole.',
+    checks:[
+      {q:'Is this a standard electric motor (not sealed/hermetic)?', pass:'Yes — accepted', fail:'Hermetic/sealed — lower rate', critical:false},
+    ]
+  },
+  {
+    id:'26-EM002', cat:'ewaste', name:'Electric Motors (Aluminum)', code:'7020',
+    y1:0.20, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Electric-Motors-600x300.jpg',
+    desc:'Smaller electric motors with aluminum windings. Lower value than copper-wound.',
+    checks:[
+      {q:'Is this a small motor or marked as aluminum wound?', pass:'Yes — aluminum motor rate', fail:'Larger motor — verify copper vs aluminum windings', critical:false},
+    ]
+  },
+  // ── AUTO / BATTERY ────────────────────────────────────────────────────
+  {
+    id:'26-AU001', cat:'ewaste', name:'Car/Truck Batteries', code:'6025',
+    y1:0.28, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Car-Batteries-600x300.jpg',
+    desc:'12V lead-acid automotive batteries. Must be intact — no cracks, no acid leakage.',
+    checks:[
+      {q:'Is the battery intact with no cracks or visible acid leakage?', pass:'Yes — safe to accept', fail:'Cracked or leaking — REJECT, supervisor required', critical:true, failText:'Leaking batteries are a hazmat issue. Do NOT accept. Call supervisor immediately.'},
+    ]
+  },
+  {
+    id:'26-AU002', cat:'ewaste', name:'Catalytic Converters', code:'8010',
+    y1:0, grade:'mid', unit:'LB', flat:true,
+    img: BASE_IMG + 'Catalytic-Converters-600x300.jpg',
+    desc:'Priced individually by type — not by weight. Supervisor approval required.',
+    checks:[
+      {q:'Has a supervisor verified the converter type and approved the price?', pass:'Yes — supervisor approved', fail:'No approval — STOP, supervisor must verify', critical:true, failText:'Catalytic converters require supervisor approval. Do not accept without sign-off.'},
+    ]
+  },
+  {
+    id:'26-AU003', cat:'ewaste', name:'Alternators', code:'7030',
+    y1:0.13, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Alternators-600x300.jpg',
+    desc:'Auto alternators. Contain aluminum housing and copper windings. Accepted whole.',
+    checks:[
+      {q:'Is this clearly an alternator (from a vehicle charging system)?', pass:'Yes — accepted', fail:'Starter motor? — check rate, may differ', critical:false},
+    ]
+  },
+  // ── SPECIALTY COPPER ─────────────────────────────────────────────────
+  {
+    id:'26-SP001', cat:'copper', name:'Tin Coated Copper', code:'2130',
+    y1:0.33, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Tin-Coated-Copper-600x300.jpg',
+    desc:'Copper wire or bus bar with tin coating. Silvery appearance. Common in marine and electrical.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — non-ferrous confirmed', fail:'Sticks — ferrous, reclassify', critical:true},
+      {q:'Does scratching reveal copper underneath the silver coating?', pass:'Yes — tin-coated copper confirmed', fail:'No copper underneath — may be tin-coated steel', critical:true},
+    ]
+  },
+  {
+    id:'26-SP002', cat:'copper', name:'Enameled Copper', code:'2140',
+    y1:0.30, grade:'mid', unit:'LB', flat:false,
+    img: BASE_IMG + 'Enameled-Copper-600x300.jpg',
+    desc:'Magnet wire with enamel coating — used in motors and transformers. Hair-thin, reddish under coating.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — confirmed non-ferrous copper', fail:'Sticks — ferrous core, reclassify', critical:true},
+      {q:'Is the wire very fine/hair-like with a colored enamel coating?', pass:'Yes — magnet/enameled wire', fail:'Thicker gauge — reclassify', critical:false},
+    ]
+  },
+  {
+    id:'26-SP003', cat:'copper', name:'Burnt Copper', code:'2150',
+    y1:0.22, grade:'low', unit:'LB', flat:false,
+    img: BASE_IMG + 'Burnt-Copper-600x300.jpg',
+    desc:'Fire-stripped copper wire. Black/charred. Accept with caution — fire-stripping is illegal in many states.',
+    checks:[
+      {q:'Does it stick to the magnet?', pass:'No — copper confirmed', fail:'Sticks — not copper', critical:true},
+      {q:'Any concern this was obtained by illegal fire-stripping?', pass:'No concern — accept', fail:'Suspicious origin — call supervisor', critical:false, failText:'Fire-stripping wire is illegal in many states. If suspicious, call supervisor before accepting.'},
+    ]
+  },
+];
 // App state
 let appState = {
   user: null,        // {userId, role, username, phone}
@@ -588,7 +1099,7 @@ let appState = {
 };
 
 // ============================================================
-// INDEXEDDB — offline queue
+// INDEXEDDB â offline queue
 // ============================================================
 let idb = null;
 
@@ -665,7 +1176,7 @@ async function updateSyncBadge() {
   const badge = document.getElementById('sync-badge');
   if (badge) {
     if (count > 0) {
-      badge.textContent = '⚡ ' + count + ' pending sync';
+      badge.textContent = 'â¡ ' + count + ' pending sync';
       badge.classList.add('show');
     } else {
       badge.classList.remove('show');
@@ -674,7 +1185,7 @@ async function updateSyncBadge() {
 }
 
 // ============================================================
-// API FETCH — proxies through AppScript
+// API FETCH â proxies through AppScript
 // ============================================================
 async function apiFetch(body) {
   const controller = new AbortController();
@@ -766,7 +1277,7 @@ async function doLogin() {
   if (!username || !password) { showLoginError('Enter username and password'); return; }
 
   btn.disabled  = true;
-  btn.innerHTML = '<span class="spinner"></span> CHECKING…';
+  btn.innerHTML = '<span class="spinner"></span> CHECKINGâ¦';
   errEl.style.display = 'none';
 
   try {
@@ -840,7 +1351,7 @@ async function loadCatalog() {
   }
 
   const listEl = document.getElementById('catalog-list');
-  listEl.innerHTML = '<div style="text-align:center;padding:40px;"><div class="spinner"></div><div style="margin-top:12px;color:var(--mist);font-size:13px;">Loading materials…</div></div>';
+  listEl.innerHTML = '<div style="text-align:center;padding:40px;"><div class="spinner"></div><div style="margin-top:12px;color:var(--mist);font-size:13px;">Loading materialsâ¦</div></div>';
 
   try {
     const data = await apiGet({ action: 'getMaterials' });
@@ -950,7 +1461,7 @@ function renderIntakeStep() {
 
   // Next button label
   const nextBtn = document.getElementById('intake-next-btn');
-  nextBtn.textContent = step === total ? 'SUBMIT' : 'NEXT →';
+  nextBtn.textContent = step === total ? 'SUBMIT' : 'NEXT â';
 
   // Render body
   const body = document.getElementById('intake-step-body');
@@ -978,8 +1489,8 @@ function renderIntakeStep1() {
       <label class="form-label">Tare Needed?</label>
       <div style="font-size:13px;color:var(--mist);margin-bottom:10px;">Did supplier arrive in a vehicle or with a container?</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <button class="btn ${s.tare_flagged ? 'btn-primary' : 'btn-secondary'}" onclick="setTare(true)">YES — needs tare</button>
-        <button class="btn ${!s.tare_flagged ? 'btn-primary' : 'btn-secondary'}" onclick="setTare(false)">NO — walk-in</button>
+        <button class="btn ${s.tare_flagged ? 'btn-primary' : 'btn-secondary'}" onclick="setTare(true)">YES â needs tare</button>
+        <button class="btn ${!s.tare_flagged ? 'btn-primary' : 'btn-secondary'}" onclick="setTare(false)">NO â walk-in</button>
       </div>
     </div>
     <div class="form-group">
@@ -987,7 +1498,7 @@ function renderIntakeStep1() {
       <input id="intake-supplier-name" class="form-input" type="text" placeholder="First name" value="${s.supplier_name}" autocapitalize="words">
     </div>
     <div class="form-group">
-      <label class="form-label">Supplier Phone <span style="color:var(--mist);font-weight:400;">(optional — for SMS receipt)</span></label>
+      <label class="form-label">Supplier Phone <span style="color:var(--mist);font-weight:400;">(optional â for SMS receipt)</span></label>
       <input id="intake-supplier-phone" class="form-input" type="tel" placeholder="(555) 555-5555" value="${s.supplier_phone}">
     </div>
   </div>`;
@@ -1001,11 +1512,11 @@ function renderIntakeStep2() {
   const slots = photoKeys.map((k, i) => {
     const hasPhoto = !!s.photos[k];
     const imgTag   = hasPhoto ? `<img src="${s.photos[k]}" alt="${k}">` : '';
-    const checkBadge = hasPhoto ? '<div class="check-badge">✓</div>' : '';
+    const checkBadge = hasPhoto ? '<div class="check-badge">â</div>' : '';
     return `<div>
       <div class="photo-slot ${hasPhoto ? 'captured' : ''}" onclick="capturePhoto('${k}')">
         ${imgTag}
-        ${!hasPhoto ? '<div class="photo-slot-icon">📷</div>' : ''}
+        ${!hasPhoto ? '<div class="photo-slot-icon">ð·</div>' : ''}
         ${checkBadge}
       </div>
       <div class="photo-slot-label">${photoLabels[i]}</div>
@@ -1025,7 +1536,7 @@ function renderIntakeStep3() {
 
   const catClass = mat ? 'theme-' + (mat.category || '').toLowerCase().replace(/[^a-z]/g,'') : '';
   const gradeClass = mat && mat.grade === 'top' ? 'grade-top' : mat && mat.grade === 'mid' ? 'grade-mid' : 'grade-low';
-  const payRate = mat ? (mat.y1_rate * 0.75).toFixed(3) : '—';
+  const payRate = mat ? (mat.y1_rate * 0.75).toFixed(3) : 'â';
 
   const currentMat = mat ? `<div class="card ${catClass}" style="margin-bottom:16px;">
     <div style="display:flex;align-items:center;justify-content:space-between;">
@@ -1039,7 +1550,7 @@ function renderIntakeStep3() {
         <div style="font-size:11px;color:var(--mist);">per lb</div>
       </div>
     </div>
-  </div>` : '<div class="card" style="margin-bottom:16px;text-align:center;color:var(--mist);">No material selected — choose below</div>';
+  </div>` : '<div class="card" style="margin-bottom:16px;text-align:center;color:var(--mist);">No material selected â choose below</div>';
 
   const miniCards = appState.materials.map(m => {
     const isSel = s.sku === m.sku;
@@ -1066,7 +1577,7 @@ function renderIntakeStep4() {
   const s   = appState.intake;
   const mat = s.material;
   if (!mat || !mat.checks || !mat.checks.length) {
-    // No checks — auto-advance
+    // No checks â auto-advance
     setTimeout(() => {
       appState.intake.check_results = [];
       appState.intake.step = 5;
@@ -1084,7 +1595,7 @@ function renderIntakeStep4() {
   }
 
   const check = checks[idx];
-  const critBadge = check.critical ? '<div class="critical-badge">⚠ CRITICAL CHECK</div>' : '';
+  const critBadge = check.critical ? '<div class="critical-badge">â  CRITICAL CHECK</div>' : '';
 
   return `<div>
     <div style="font-size:12px;color:var(--mist);margin-bottom:16px;">Check ${idx + 1} of ${checks.length}</div>
@@ -1092,8 +1603,8 @@ function renderIntakeStep4() {
       ${critBadge}
       <div class="check-question">${check.q}</div>
       <div class="check-btns">
-        <button class="btn check-pass btn-lg" onclick="answerCheck(true)">✓ PASS</button>
-        <button class="btn check-fail btn-lg" onclick="answerCheck(false)">✗ FAIL</button>
+        <button class="btn check-pass btn-lg" onclick="answerCheck(true)">â PASS</button>
+        <button class="btn check-fail btn-lg" onclick="answerCheck(false)">â FAIL</button>
       </div>
     </div>
   </div>`;
@@ -1102,7 +1613,7 @@ function renderIntakeStep4() {
 function renderIntakeStep5() {
   return `<div id="intake-confirm-body" style="text-align:center;padding:20px 0;">
     <div class="spinner" style="margin:0 auto 16px;"></div>
-    <div style="color:var(--mist);">Submitting transaction…</div>
+    <div style="color:var(--mist);">Submitting transactionâ¦</div>
   </div>`;
 }
 
@@ -1285,11 +1796,11 @@ async function submitIntake() {
     payload.gps = pos.coords.latitude + ',' + pos.coords.longitude;
   } catch (e) {}
 
-  // Photos are base64 data URLs — store them as-is for now (Drive upload is future scope)
-  if (s.photos.vehicle)    payload.photo_urls.vehicle    = s.photos.vehicle.substring(0, 200) + '…(base64)';
-  if (s.photos.supplier)   payload.photo_urls.supplier   = s.photos.supplier.substring(0, 200) + '…(base64)';
-  if (s.photos.bulk)       payload.photo_urls.bulk       = s.photos.bulk.substring(0, 200) + '…(base64)';
-  if (s.photos.individual) payload.photo_urls.individual = s.photos.individual.substring(0, 200) + '…(base64)';
+  // Photos are base64 data URLs â store them as-is for now (Drive upload is future scope)
+  if (s.photos.vehicle)    payload.photo_urls.vehicle    = s.photos.vehicle.substring(0, 200) + 'â¦(base64)';
+  if (s.photos.supplier)   payload.photo_urls.supplier   = s.photos.supplier.substring(0, 200) + 'â¦(base64)';
+  if (s.photos.bulk)       payload.photo_urls.bulk       = s.photos.bulk.substring(0, 200) + 'â¦(base64)';
+  if (s.photos.individual) payload.photo_urls.individual = s.photos.individual.substring(0, 200) + 'â¦(base64)';
 
   try {
     let data;
@@ -1322,11 +1833,11 @@ function renderConfirmSlip(txId, code, payRate, offline) {
   const el  = document.getElementById('intake-confirm-body');
   if (!el) return;
 
-  const offlineBanner = offline ? `<div style="background:var(--amber2);color:var(--amber);border-radius:var(--r);padding:10px;font-size:13px;font-weight:600;margin-bottom:16px;">⚡ Saved offline — will sync on reconnect</div>` : '';
+  const offlineBanner = offline ? `<div style="background:var(--amber2);color:var(--amber);border-radius:var(--r);padding:10px;font-size:13px;font-weight:600;margin-bottom:16px;">â¡ Saved offline â will sync on reconnect</div>` : '';
 
   el.innerHTML = `${offlineBanner}
     <div class="code-display">
-      <div class="code-label">Confirmation Code — show to supplier</div>
+      <div class="code-label">Confirmation Code â show to supplier</div>
       <div class="code-big">${code}</div>
       <div style="font-size:12px;color:var(--mist);margin-top:8px;">TX: ${txId}</div>
     </div>
@@ -1335,28 +1846,28 @@ function renderConfirmSlip(txId, code, payRate, offline) {
         <span class="text-muted">Supplier</span><span style="font-weight:600;">${s.supplier_name}</span>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span class="text-muted">Material</span><span style="font-weight:600;">${mat ? mat.name : '—'}</span>
+        <span class="text-muted">Material</span><span style="font-weight:600;">${mat ? mat.name : 'â'}</span>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span class="text-muted">Pay rate</span><span style="font-weight:600;">$${payRate ? payRate.toFixed(3) : '—'}/lb</span>
+        <span class="text-muted">Pay rate</span><span style="font-weight:600;">$${payRate ? payRate.toFixed(3) : 'â'}/lb</span>
       </div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span class="text-muted">Tare needed</span><span style="font-weight:600;">${s.tare_flagged ? '⚠ YES' : 'No'}</span>
+        <span class="text-muted">Tare needed</span><span style="font-weight:600;">${s.tare_flagged ? 'â  YES' : 'No'}</span>
       </div>
       <div style="border-top:1px solid var(--stone);margin:10px 0;"></div>
       <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
-        <span class="text-muted">Weight</span><span style="font-weight:600;color:var(--mist);">— lbs &nbsp;<span style="font-size:11px;font-weight:400;">(measured at scale)</span></span>
+        <span class="text-muted">Weight</span><span style="font-weight:600;color:var(--mist);">â lbs &nbsp;<span style="font-size:11px;font-weight:400;">(measured at scale)</span></span>
       </div>
       <div style="display:flex;justify-content:space-between;">
-        <span class="text-muted">Total payout</span><span style="font-weight:600;color:var(--mist);">— &nbsp;<span style="font-size:11px;font-weight:400;">(calculated at scale)</span></span>
+        <span class="text-muted">Total payout</span><span style="font-weight:600;color:var(--mist);">â &nbsp;<span style="font-size:11px;font-weight:400;">(calculated at scale)</span></span>
       </div>
     </div>
     <div style="margin-top:16px;display:grid;gap:10px;">
-      ${s.supplier_phone ? `<button class="btn btn-secondary btn-block" onclick="sendSMSCode('${code}','${s.supplier_phone}','${txId}')">📱 SEND SMS TO ${s.supplier_phone}</button>` : ''}
+      ${s.supplier_phone ? `<button class="btn btn-secondary btn-block" onclick="sendSMSCode('${code}','${s.supplier_phone}','${txId}')">ð± SEND SMS TO ${s.supplier_phone}</button>` : ''}
       <div style="background:var(--stone);border-radius:var(--r);padding:12px;text-align:center;font-size:13px;color:var(--smoke);">
-        ✓ Supplier has photographed this code
+        â Supplier has photographed this code
       </div>
-      <button class="btn btn-primary btn-block btn-lg" onclick="loadCatalog();showScreen('screen-catalog')">DONE — SEND TO SCALE →</button>
+      <button class="btn btn-primary btn-block btn-lg" onclick="loadCatalog();showScreen('screen-catalog')">DONE â SEND TO SCALE â</button>
     </div>`;
 }
 
@@ -1366,7 +1877,7 @@ async function sendSMSCode(code, phone, txId) {
     await apiFetch({ action: 'sendSMS', to: phone, text });
     showToast('SMS sent to ' + phone);
   } catch (e) {
-    showToast('SMS failed — try again');
+    showToast('SMS failed â try again');
   }
 }
 
@@ -1410,7 +1921,7 @@ function renderScaleTx() {
 
   const photoThumb = tx.PHOTO_SUPPLIER
     ? `<div style="width:56px;height:56px;border-radius:8px;overflow:hidden;flex-shrink:0;"><img src="${tx.PHOTO_SUPPLIER}" style="width:100%;height:100%;object-fit:cover;"></div>`
-    : `<div style="width:56px;height:56px;border-radius:8px;background:var(--stone);display:flex;align-items:center;justify-content:center;font-size:24px;">👤</div>`;
+    : `<div style="width:56px;height:56px;border-radius:8px;background:var(--stone);display:flex;align-items:center;justify-content:center;font-size:24px;">ð¤</div>`;
 
   document.getElementById('scale-tx-summary').innerHTML = `
     <div class="card">
@@ -1423,26 +1934,26 @@ function renderScaleTx() {
         </div>
         <span class="chip ${statusChipClass}">${tx.STATUS}</span>
       </div>
-      ${tare ? '<div style="background:var(--amber2);color:var(--amber);border-radius:var(--r);padding:8px 12px;font-size:13px;font-weight:600;">⚠ TARE REQUIRED — supplier arrived with vehicle/container</div>' : ''}
+      ${tare ? '<div style="background:var(--amber2);color:var(--amber);border-radius:var(--r);padding:8px 12px;font-size:13px;font-weight:600;">â  TARE REQUIRED â supplier arrived with vehicle/container</div>' : ''}
     </div>`;
 
   if (tare) {
     document.getElementById('scale-weight-section').innerHTML = `
       <div class="form-group">
-        <label class="form-label">Gross Weight (lbs) — with vehicle/container</label>
+        <label class="form-label">Gross Weight (lbs) â with vehicle/container</label>
         <div style="display:flex;gap:10px;align-items:center;">
           <input id="scale-gross" class="form-input" type="number" placeholder="0.0" oninput="calcNetWeight()" style="font-family:var(--fh);font-size:22px;font-weight:700;">
-          <button class="btn btn-secondary btn-sm" onclick="captureScalePhoto('gross')">📷</button>
+          <button class="btn btn-secondary btn-sm" onclick="captureScalePhoto('gross')">ð·</button>
         </div>
       </div>
       <div style="background:var(--blue2);color:var(--blue);border-radius:var(--r);padding:10px 14px;font-size:13px;font-weight:600;margin-bottom:12px;">
-        ℹ Ask supplier to remove all material from vehicle/container, then weigh empty.
+        â¹ Ask supplier to remove all material from vehicle/container, then weigh empty.
       </div>
       <div class="form-group">
-        <label class="form-label">Tare Weight (lbs) — empty vehicle/container</label>
+        <label class="form-label">Tare Weight (lbs) â empty vehicle/container</label>
         <div style="display:flex;gap:10px;align-items:center;">
           <input id="scale-tare" class="form-input" type="number" placeholder="0.0" oninput="calcNetWeight()" style="font-family:var(--fh);font-size:22px;font-weight:700;">
-          <button class="btn btn-secondary btn-sm" onclick="captureScalePhoto('tare')">📷</button>
+          <button class="btn btn-secondary btn-sm" onclick="captureScalePhoto('tare')">ð·</button>
         </div>
       </div>`;
   } else {
@@ -1481,7 +1992,7 @@ function calcNetWeight() {
   if (tare) {
     calcEl.innerHTML = `<div class="weight-calc">
       <div class="weight-calc-row"><span class="weight-calc-label">Gross</span><span class="weight-calc-val">${gross.toFixed(1)} lbs</span></div>
-      <div class="weight-calc-row"><span class="weight-calc-label">Tare</span><span class="weight-calc-val">− ${tareW.toFixed(1)} lbs</span></div>
+      <div class="weight-calc-row"><span class="weight-calc-label">Tare</span><span class="weight-calc-val">â ${tareW.toFixed(1)} lbs</span></div>
       <div class="weight-calc-row total"><span class="weight-calc-label">Net Weight</span><span class="weight-calc-val weight-net">${net.toFixed(1)} lbs</span></div>
       ${payRate ? `<div class="weight-calc-row"><span class="weight-calc-label">Est. Payout</span><span class="weight-calc-val" style="color:#4ade80;">$${payout}</span></div>` : ''}
     </div>`;
@@ -1539,7 +2050,7 @@ async function confirmWeights() {
   try {
     const data = await apiFetch({ action: 'updateTransaction', tx_id: tx.TX_ID, updates });
     if (data.ok) {
-      showToast('Weights confirmed — ' + net.toFixed(1) + ' lbs, payout $' + payout.toFixed(2));
+      showToast('Weights confirmed â ' + net.toFixed(1) + ' lbs, payout $' + payout.toFixed(2));
       document.getElementById('scale-code-input').value = '';
       document.getElementById('scale-result').style.display = 'none';
       scaleTx = null;
@@ -1547,7 +2058,7 @@ async function confirmWeights() {
       showToast('Error: ' + (data.error || 'Update failed'));
     }
   } catch (e) {
-    showToast('Offline — weights saved locally');
+    showToast('Offline â weights saved locally');
   }
 }
 
@@ -1588,7 +2099,7 @@ function renderCashierTx() {
 
   const photoThumb = tx.PHOTO_SUPPLIER
     ? `<img src="${tx.PHOTO_SUPPLIER}" style="width:80px;height:80px;border-radius:var(--r);object-fit:cover;border:2px solid var(--rust2);">`
-    : `<div style="width:80px;height:80px;border-radius:var(--r);background:var(--stone);display:flex;align-items:center;justify-content:center;font-size:36px;">👤</div>`;
+    : `<div style="width:80px;height:80px;border-radius:var(--r);background:var(--stone);display:flex;align-items:center;justify-content:center;font-size:36px;">ð¤</div>`;
 
   document.getElementById('cashier-tx-info').innerHTML = `
     <div class="card">
@@ -1615,7 +2126,7 @@ function renderCashierTx() {
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Mode</div>
-          <div class="detail-item-val">${tx.MODE === 'test' ? '🔸 TEST' : '✅ LIVE'}</div>
+          <div class="detail-item-val">${tx.MODE === 'test' ? 'ð¸ TEST' : 'â LIVE'}</div>
         </div>
       </div>
     </div>
@@ -1655,13 +2166,13 @@ async function confirmPayout() {
   try {
     const data = await apiFetch({ action: 'updateTransaction', tx_id: tx.TX_ID, updates });
     if (data.ok) {
-      showToast('Payout confirmed — $' + payout.toFixed(2));
+      showToast('Payout confirmed â $' + payout.toFixed(2));
       cashierTx = { ...cashierTx, ...updates };
     } else {
       showToast('Error: ' + data.error);
     }
   } catch (e) {
-    showToast('Offline — will sync when online');
+    showToast('Offline â will sync when online');
   }
 }
 
@@ -1691,7 +2202,7 @@ function buildReceiptLines(tx) {
     'PAYOUT:  $' + payout.toFixed(2),
     '================================',
     '',
-    'Thank you — Rustic Recycling',
+    'Thank you â Rustic Recycling',
     '',
   ];
 }
@@ -1744,7 +2255,7 @@ async function sendSMSReceipt() {
     const data = await apiFetch({ action: 'sendSMS', to: tx.SUPPLIER_PHONE, text });
     showToast(data.ok ? 'SMS receipt sent' : 'SMS failed: ' + data.error);
   } catch (e) {
-    showToast('SMS failed — check connection');
+    showToast('SMS failed â check connection');
   }
 }
 
@@ -1778,8 +2289,8 @@ async function loadDashboard() {
       return `<div class="tx-row ${flagged ? 'flagged' : ''}" onclick="openTxDetail('${tx.TX_ID}')">
         <div class="tx-row-left">
           <div class="tx-code">${modeTag}${tx.CODE}</div>
-          <div class="tx-name">${tx.SUPPLIER_NAME || '—'}</div>
-          <div class="tx-mat">${mat.name || tx.SKU || '—'}</div>
+          <div class="tx-name">${tx.SUPPLIER_NAME || 'â'}</div>
+          <div class="tx-mat">${mat.name || tx.SKU || 'â'}</div>
         </div>
         <div class="tx-row-right">
           ${payout ? `<div class="tx-payout">$${payout.toFixed(2)}</div>` : ''}
@@ -1811,7 +2322,7 @@ async function openTxDetail(txId) {
   showScreen('screen-txdetail');
 
   try {
-    // Look up by TX_ID — fetch all dashboard txs and find it, or look up directly
+    // Look up by TX_ID â fetch all dashboard txs and find it, or look up directly
     const data = await apiGet({ action: 'getDashboard' });
     const tx   = data.transactions && data.transactions.find(t => t.TX_ID === txId);
     if (!tx) { body.innerHTML = '<div class="card" style="color:#f87171;">Transaction not found</div>'; return; }
@@ -1840,13 +2351,13 @@ function renderTxDetail(tx) {
       checksHtml = `<div class="card" style="margin-top:12px;">
         <div class="card-title" style="margin-bottom:10px;">Verification Checks</div>
         ${checks.map((c, i) => {
-          const icon = c.overridden ? '⚠️' : c.passed ? '✅' : '❌';
+          const icon = c.overridden ? 'â ï¸' : c.passed ? 'â' : 'â';
           const col  = c.overridden ? 'var(--amber)' : c.passed ? '#4ade80' : '#f87171';
           return `<div style="display:flex;align-items:flex-start;gap:10px;padding:8px 0;border-bottom:1px solid var(--stone);">
             <span style="font-size:18px;">${icon}</span>
             <div style="flex:1;">
               <div style="font-size:13px;font-weight:600;color:${col};">${c.q}</div>
-              ${c.overridden ? `<div style="font-size:11px;color:var(--amber);">Override: ${c.override_reason || '—'}</div>` : ''}
+              ${c.overridden ? `<div style="font-size:11px;color:var(--amber);">Override: ${c.override_reason || 'â'}</div>` : ''}
             </div>
           </div>`;
         }).join('')}
@@ -1868,7 +2379,7 @@ function renderTxDetail(tx) {
     <div class="photo-thumb-grid">
       ${photos.map(p => p.url
         ? `<div class="photo-thumb" onclick="window.open('${p.url}','_blank')"><img src="${p.url}" alt="${p.label}"></div>`
-        : `<div class="photo-thumb photo-thumb-empty" title="${p.label}">📷</div>`
+        : `<div class="photo-thumb photo-thumb-empty" title="${p.label}">ð·</div>`
       ).join('')}
     </div>
   </div>`;
@@ -1885,43 +2396,43 @@ function renderTxDetail(tx) {
       <div class="detail-grid">
         <div class="detail-item">
           <div class="detail-item-label">Supplier</div>
-          <div class="detail-item-val">${tx.SUPPLIER_NAME || '—'}</div>
+          <div class="detail-item-val">${tx.SUPPLIER_NAME || 'â'}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Phone</div>
-          <div class="detail-item-val">${tx.SUPPLIER_PHONE || '—'}</div>
+          <div class="detail-item-val">${tx.SUPPLIER_PHONE || 'â'}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Material</div>
-          <div class="detail-item-val">${mat.name || tx.SKU || '—'}</div>
+          <div class="detail-item-val">${mat.name || tx.SKU || 'â'}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Staff</div>
-          <div class="detail-item-val">${tx.USER_ID || '—'}</div>
+          <div class="detail-item-val">${tx.USER_ID || 'â'}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Gross Wt</div>
-          <div class="detail-item-val">${gross ? gross.toFixed(1) + ' lbs' : '—'}</div>
+          <div class="detail-item-val">${gross ? gross.toFixed(1) + ' lbs' : 'â'}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Tare Wt</div>
-          <div class="detail-item-val">${tare ? tare.toFixed(1) + ' lbs' : '—'}</div>
+          <div class="detail-item-val">${tare ? tare.toFixed(1) + ' lbs' : 'â'}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Net Weight</div>
-          <div class="detail-item-val" style="color:#4ade80;">${net ? net.toFixed(1) + ' lbs' : '—'}</div>
+          <div class="detail-item-val" style="color:#4ade80;">${net ? net.toFixed(1) + ' lbs' : 'â'}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Pay Rate</div>
-          <div class="detail-item-val">${rate ? '$' + rate.toFixed(3) + '/lb' : '—'}</div>
+          <div class="detail-item-val">${rate ? '$' + rate.toFixed(3) + '/lb' : 'â'}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Payout</div>
-          <div class="detail-item-val" style="color:#4ade80;">${payout ? '$' + payout.toFixed(2) : '—'}</div>
+          <div class="detail-item-val" style="color:#4ade80;">${payout ? '$' + payout.toFixed(2) : 'â'}</div>
         </div>
         <div class="detail-item">
           <div class="detail-item-label">Tare Flagged</div>
-          <div class="detail-item-val">${tx.TARE_FLAGGED === 'TRUE' ? '⚠ Yes' : 'No'}</div>
+          <div class="detail-item-val">${tx.TARE_FLAGGED === 'TRUE' ? 'â  Yes' : 'No'}</div>
         </div>
         ${tx.SUPPLIER_ID_TYPE ? `<div class="detail-item">
           <div class="detail-item-label">ID Type</div>
@@ -1929,7 +2440,7 @@ function renderTxDetail(tx) {
         </div>
         <div class="detail-item">
           <div class="detail-item-label">ID Number</div>
-          <div class="detail-item-val">${tx.SUPPLIER_ID_NUM || '—'}</div>
+          <div class="detail-item-val">${tx.SUPPLIER_ID_NUM || 'â'}</div>
         </div>` : ''}
       </div>
     </div>
@@ -1937,7 +2448,7 @@ function renderTxDetail(tx) {
     ${checksHtml}
     <div class="card" style="margin-top:12px;">
       <div class="card-title" style="margin-bottom:12px;">Supervisor Actions</div>
-      ${tx.STATUS === 'FLAGGED' ? `<button class="btn btn-success btn-block" style="margin-bottom:10px;" onclick="approveFlaggedMaterial('${tx.TX_ID}')">✓ APPROVE FLAGGED MATERIAL</button>` : ''}
+      ${tx.STATUS === 'FLAGGED' ? `<button class="btn btn-success btn-block" style="margin-bottom:10px;" onclick="approveFlaggedMaterial('${tx.TX_ID}')">â APPROVE FLAGGED MATERIAL</button>` : ''}
       <button class="btn btn-secondary btn-block" style="margin-bottom:10px;" onclick="openOverrideModal('${tx.TX_ID}','PAY_RATE','${rate}')">OVERRIDE RATE</button>
       <button class="btn btn-secondary btn-block" style="margin-bottom:10px;" onclick="openOverrideModal('${tx.TX_ID}','NET_WEIGHT','${net}')">OVERRIDE WEIGHT</button>
       <button class="btn btn-secondary btn-block" onclick="openAddCorrectionModal('${tx.TX_ID}')">ADD CORRECTION</button>
@@ -1976,7 +2487,7 @@ async function submitOverride() {
     const auth = await apiFetch({ action: 'login', username: appState.user.username, password: pass });
     if (!auth.ok) { showToast('Incorrect password'); return; }
   } catch (e) {
-    showToast('Cannot verify — check connection'); return;
+    showToast('Cannot verify â check connection'); return;
   }
 
   const { tx_id, field, original_value } = appState.pendingOverride;
@@ -2014,8 +2525,8 @@ async function loadGayloads() {
       sel.innerHTML = '<option value="">No open gayloads found</option>';
       return;
     }
-    sel.innerHTML = '<option value="">Select a gayload…</option>' +
-      appState.gayloads.map(g => `<option value="${g.GAYLOAD_ID}">${g.GAYLOAD_ID} — ${g.MATERIAL_CAT || ''} (${g.SKU || ''})</option>`).join('');
+    sel.innerHTML = '<option value="">Select a gayloadâ¦</option>' +
+      appState.gayloads.map(g => `<option value="${g.GAYLOAD_ID}">${g.GAYLOAD_ID} â ${g.MATERIAL_CAT || ''} (${g.SKU || ''})</option>`).join('');
   } catch (e) {
     sel.innerHTML = '<option value="">Error loading gayloads</option>';
   }
@@ -2041,7 +2552,7 @@ function calcGlVariance() {
 
   if (!simsW || !appState.selectedGayload) { varEl.style.display = 'none'; return; }
 
-  // We don't have Rustic total weight easily here — show placeholder
+  // We don't have Rustic total weight easily here â show placeholder
   varEl.style.display = 'block';
   varEl.innerHTML = `<div style="background:var(--ink3);border-radius:var(--r);padding:10px 14px;font-size:13px;">
     SIMS Weight: <strong>${simsW.toFixed(0)} lbs</strong>
@@ -2114,9 +2625,9 @@ async function closeGayload() {
       <div class="weight-calc-row flex-between" style="padding:6px 0;"><span class="weight-calc-label">Sell Rate</span><span class="weight-calc-val">$${s.sell_rate}/lb</span></div>
       <div style="margin-top:12px;font-size:12px;color:var(--mist);">Per-Transaction Profit Share:</div>
       ${s.transactions.map(t => `<div class="weight-calc-row flex-between" style="padding:4px 0;font-size:12px;"><span style="color:var(--mist);">${t.tx_id}</span><span>$${parseFloat(t.profit_share).toFixed(2)}</span></div>`).join('')}
-      <div style="background:var(--green2);color:var(--green);border-radius:var(--r);padding:10px;text-align:center;margin-top:12px;font-weight:700;">✓ GAYLOAD CLOSED SUCCESSFULLY</div>`;
+      <div style="background:var(--green2);color:var(--green);border-radius:var(--r);padding:10px;text-align:center;margin-top:12px;font-weight:700;">â GAYLOAD CLOSED SUCCESSFULLY</div>`;
 
-    showToast('Gayload closed — net profit $' + parseFloat(s.net_profit).toFixed(2));
+    showToast('Gayload closed â net profit $' + parseFloat(s.net_profit).toFixed(2));
   } catch (e) {
     showToast('Error: ' + e.message);
   }
