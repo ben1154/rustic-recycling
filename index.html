@@ -1071,6 +1071,7 @@ function renderIntakeStep4() {
       appState.intake.check_results = [];
       appState.intake.step = 5;
       renderIntakeStep();
+      submitIntake();
     }, 100);
     return '<div style="text-align:center;padding:40px;color:var(--mist);">No verification checks for this material.</div>';
   }
@@ -1078,7 +1079,7 @@ function renderIntakeStep4() {
   const checks   = mat.checks;
   const idx      = s.check_index;
   if (idx >= checks.length) {
-    setTimeout(() => { appState.intake.step = 5; renderIntakeStep(); }, 100);
+    setTimeout(() => { appState.intake.step = 5; renderIntakeStep(); submitIntake(); }, 100);
     return '';
   }
 
@@ -1305,7 +1306,7 @@ async function submitIntake() {
     }
   } catch (e) {
     // Save offline
-    await savePendingTx(payload);
+    try { await savePendingTx(payload); } catch (_) {}
     const localCode = 'PEND';
     const localId   = 'OFFLINE-' + Date.now();
     appState.intake.tx_id = localId;
