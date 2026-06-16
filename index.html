@@ -107,7 +107,14 @@ input:disabled,select:disabled{background:#f8fafc;color:#94a3b8}
 .material-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
 .mat-card{background:white;border:1px solid var(--border);border-radius:8px;overflow:hidden;transition:.15s}
 .mat-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1);transform:translateY(-2px)}
-.mat-img{width:100%;height:150px;object-fit:cover;background:#e2e8f0}
+.mat-img{width:100%;height:150px;object-fit:cover;background:#e2e8f0;display:flex;align-items:center;justify-content:center;font-size:52px}
+.cat-img-copper{background:linear-gradient(135deg,#92400e,#d97706)}
+.cat-img-aluminum{background:linear-gradient(135deg,#334155,#94a3b8)}
+.cat-img-brass{background:linear-gradient(135deg,#78350f,#f59e0b)}
+.cat-img-ferrous{background:linear-gradient(135deg,#1e293b,#475569)}
+.cat-img-wire{background:linear-gradient(135deg,#3b0764,#7c3aed)}
+.cat-img-ewaste{background:linear-gradient(135deg,#14532d,#16a34a)}
+.cat-img-other{background:linear-gradient(135deg,#374151,#6b7280)}
 .mat-body{padding:12px}
 .mat-name{font-weight:700;font-size:15px;color:var(--primary);margin-bottom:4px}
 .mat-meta{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
@@ -348,8 +355,9 @@ document.getElementById('auth-pass').addEventListener('keydown',e=>{if(e.key==='
   if(u){document.getElementById('auth-overlay').style.display='none';document.getElementById('user-tag').textContent='👤 '+u;}
 })();
 
+// ─── CATEGORY DISPLAY HELPERS ────────────────────────────────────────────────
+const CAT_EMOJI={copper:'🟠',aluminum:'⚪',brass:'🟡',ferrous:'⚙️',wire:'🔌',ewaste:'💻',other:'♻️'};
 // ─── 55 MATERIALS ────────────────────────────────────────────────────────────
-const BASE_IMG='https://www.iscrapapp.com/wp-content/uploads/';
 const MATERIALS=[
   {id:'26-CU001',cat:'copper',name:'Bare Bright Copper Wire',code:'2040',y1:0.47,grade:'top',img:BASE_IMG+'Bare-Bright-Copper-600x300.jpg',desc:'Highest copper grade. Clean, shiny, uncoated, unalloyed wire only. No insulation, no solder, no paint. Minimum 1/16" diameter.',checks:[{q:'Does it stick to the magnet?',pass:'No stick — confirmed copper',fail:'Sticks — NOT copper, reclassify',critical:true},{q:'Is the wire shiny reddish-orange with no coating?',pass:'Yes — bare and bright',fail:'Has coating, paint or insulation — downgrade',critical:true},{q:'Is it at least 1/16 inch thick?',pass:'Yes — meets grade',fail:'Too thin — classify as Light Copper',critical:false}]},
   {id:'26-CU002',cat:'copper',name:'#2 Copper Tubing',code:'2010',y1:0.38,grade:'mid',img:BASE_IMG+'2-Copper-600x300.jpg',desc:'Copper with oxidation, light coating, solder, or minor contamination. Darker/dull surface. Pipes, fittings, tubing.',checks:[{q:'Does it stick to the magnet?',pass:'No stick — confirmed copper',fail:'Sticks — NOT copper',critical:true},{q:'Is there heavy contamination or is it fire-stripped?',pass:'No — light only',fail:'Yes — downgrade to Burnt Copper',critical:false}]},
@@ -707,7 +715,7 @@ function renderCatalog(){
   });
   grid.innerHTML = filtered.map(m=>`
     <div class="mat-card">
-      <img class="mat-img" src="${m.img}" alt="${m.name}" onerror="this.style.background='#e2e8f0'">
+      <div class="mat-img cat-img-${m.cat}">${CAT_EMOJI[m.cat]||'♻️'}</div>
       <div class="mat-body">
         <div class="mat-name">${m.name}</div>
         <div class="mat-meta">
